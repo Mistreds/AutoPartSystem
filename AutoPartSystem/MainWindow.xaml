@@ -4,9 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem"
+        RenderOptions.BitmapScalingMode="HighQuality"
+        xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+        d:DataContext="{d:DesignInstance Type=ViewModel:MainViewModel}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Background="White"
+        Title="MainWindow" Height="650" Width="1200">
+    <Window.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource  MaterialDesignFlatButton}">
+            <Setter Property="Foreground" Value="White"></Setter>
+            <Setter Property="BorderThickness" Value="0,0,0,2"></Setter>
+            <Setter Property="BorderBrush" Value="Transparent"></Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="BorderBrush" Value="#014a71"></Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="StackPanel">
+            <Setter Property="Background" Value="#2ea2e2"></Setter>
+        </Style>
+    </Window.Resources>
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel  Orientation="Horizontal">
+            <Button Command="{Binding OpenAdminMain}" Height="48" Content="Администратор" ></Button>
+        </StackPanel>
+        <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
+        <StatusBar Grid.Row="2"></StatusBar>
     </Grid>
 </Window>

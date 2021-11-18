@@ -12,19 +12,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-namespace AutoPartSystem
+
+namespace AutoPartSystem.View.Admin
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для MainAdmin.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainAdmin : UserControl
     {
-        public MainWindow(Data.Employee employee)
+        public MainAdmin()
         {
-
             InitializeComponent();
-            DataContext=new ViewModel.MainViewModel(employee);
-            
+            DataContext = ViewModel.MainViewModel.AdminViewModel;
         }
     }
 }
