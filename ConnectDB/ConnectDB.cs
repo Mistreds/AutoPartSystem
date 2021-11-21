@@ -1,23 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 namespace Data
 {
-    public class ConnectDB : DbContext
+    public class ConDB : DbContext
     {
+
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Position> Positions { get; set; }
-        public ConnectDB()
+        public DbSet<City> City { get; set; }
+        public DbSet<Model> Models { get; set; }
+        public DbSet<Mark> Mark { get; set; }
+        public DbSet<Warehouse> Warehouse { get; set; }
+        private string path_connect;
+        private string query_connect;
+        public ConDB()
         {
-            Database.EnsureCreated();
+
+            path_connect = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AutoPartSystem\connect.ini";
+            if (File.Exists(path_connect))
+            {
+                using (FileStream fstream = new FileStream(path_connect, FileMode.OpenOrCreate))
+                {
+                    byte[] array = new byte[fstream.Length];
+                    // считываем данные
+                    fstream.Read(array, 0, array.Length);
+                    // декодируем байты в строку
+                    query_connect = Encoding.Default.GetString(array);
+                    //Database.EnsureDeleted();
+                    Database.EnsureCreated();
+                }
+            }
+
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseMySql(
-                "server=spiriddp.beget.tech;user=spiriddp_auto_te;password=Escort123;database=spiriddp_auto_te;",
+                query_connect,
                 new MySqlServerVersion(new Version(8, 0, 11))
             );
         }
@@ -25,12 +49,20 @@ namespace Data
         {
             base.OnModelCreating(modelBuilder);
             #region Admin
+            modelBuilder.Entity<City>(b => b.ToTable("City"));
             modelBuilder.Entity<Employee>(b => b.ToTable("Employee"));
-            
             modelBuilder.Entity<Position>(b => b.ToTable("Position"));
+            modelBuilder.Entity<City>().HasData(new City[] { new City(1, "Алмата"), new City(2, "Астане"), new City(3, "Актау") });
             modelBuilder.Entity<Position>().HasData(new Position[] { new Position(1, "Администратор"), new Position(2, "Завсклад"), new Position(3, "Продажник"), new Position(4, "Продажник регионал") });
-            modelBuilder.Entity<Employee>().HasData(new Employee[] {new Employee(1, "Администратор", "Admin", "Admin", 1) });
+            modelBuilder.Entity<Employee>().HasData(new Employee[] { new Employee(1, "Администратор", "Admin", "Admin", 1, 1) });
 
+            #endregion
+            #region MarkModel
+            modelBuilder.Entity<Mark>(b => b.ToTable("Mark"));
+            modelBuilder.Entity<Model>(b => b.ToTable("Model"));
+            #endregion
+            #region Warehouse
+            modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
             #endregion
         }
     }

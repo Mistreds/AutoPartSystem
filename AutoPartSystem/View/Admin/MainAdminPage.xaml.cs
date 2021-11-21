@@ -16,13 +16,14 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Admin
 {
     /// <summary>
-    /// Логика взаимодействия для MainAdmin.xaml
+    /// Логика взаимодействия для MainAdminPage.xaml
     /// </summary>
-    public partial class MainAdmin : UserControl
+    public partial class MainAdminPage : UserControl
     {
-        public MainAdmin()
+        public MainAdminPage()
         {
             InitializeComponent();
+            DataContext = ViewModel.MainViewModel.AdminViewModel;
         }
     }
 }

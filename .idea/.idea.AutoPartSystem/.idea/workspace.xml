@@ -4,7 +4,22 @@
     <projectFile>AutoPartSystem/AutoPartSystem.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="" />
+    <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/App.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/App.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/AutoPartSystem.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/AutoPartSystem.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Autorization.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Autorization.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Autorization.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Autorization.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AddUser.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AddUser.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AdminTable.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AdminTable.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/MainAdmin.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Admin/MainAdmin.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/AdminViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/AdminViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ConnectDB/ConnectDB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/ConnectDB.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ConnectDB/ConnectDB.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/ConnectDB.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/UserData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/UserData.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -53,6 +68,7 @@
       <option name="presentableId" value="Default" />
       <updated>1637267294932</updated>
       <workItem from="1637267300000" duration="684000" />
+      <workItem from="1637406531157" duration="1041000" />
     </task>
     <servers />
   </component>
@@ -60,7 +76,7 @@
     <option name="version" value="3" />
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
-  <component name="UnityProjectConfiguration" hasMinimizedUI="null" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

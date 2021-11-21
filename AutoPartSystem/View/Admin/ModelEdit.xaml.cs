@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Admin
 {
     /// <summary>
-    /// Логика взаимодействия для MainAdmin.xaml
+    /// Логика взаимодействия для ModelEdit.xaml
     /// </summary>
-    public partial class MainAdmin : UserControl
+    public partial class ModelEdit : UserControl
     {
-        public MainAdmin()
+        public ModelEdit()
         {
             InitializeComponent();
         }

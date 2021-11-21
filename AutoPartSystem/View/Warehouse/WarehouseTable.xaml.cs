@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutoPartSystem.View.Admin
+namespace AutoPartSystem.View.Warehouse
 {
     /// <summary>
-    /// Логика взаимодействия для MainAdmin.xaml
+    /// Логика взаимодействия для WarehouseTable.xaml
     /// </summary>
-    public partial class MainAdmin : UserControl
+    public partial class WarehouseTable : UserControl
     {
-        public MainAdmin()
+        public WarehouseTable()
         {
             InitializeComponent();
         }

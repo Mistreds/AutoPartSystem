@@ -18,6 +18,12 @@ namespace AutoPartSystem.ViewModel
             get => _main_control;
             set => this.RaiseAndSetIfChanged(ref _main_control, value);
         }
+        private UserControl? _emp_control;
+        public UserControl? EmpControl
+        {
+            get => _emp_control;
+            set => this.RaiseAndSetIfChanged(ref _emp_control, value);
+        }
         private bool _is_add;
         public bool IsAdd
         {
@@ -25,9 +31,9 @@ namespace AutoPartSystem.ViewModel
             set
             {
                 if(value)
-                    MainControl = _controls[1];
+                    EmpControl = _controls_emp[1];
                 else
-                    MainControl = _controls[0];
+                    EmpControl = _controls_emp[0];
                 this.RaiseAndSetIfChanged(ref _is_add, value);
             }
         }
@@ -36,33 +42,84 @@ namespace AutoPartSystem.ViewModel
         {
             get=> _positions;
         }
-        private ObservableCollection<Data.Employee> _employers_table;
-        public ObservableCollection<Data.Employee> EmployersTable
+        private List<Data.City> _cities;
+        public List<Data.City> Cities
+        {
+            get => _cities;
+        }
+        private ObservableCollection<Data.Employee>? _employers_table;
+        public ObservableCollection<Data.Employee>? EmployersTable
         {
             get => _employers_table;
             set => this.RaiseAndSetIfChanged(ref _employers_table, value); 
         }
+        private ObservableCollection<Data.Mark>? _mark_table;
+        public ObservableCollection<Data.Mark>? MarkTable
+        {
+            get => _mark_table;
+            set => this.RaiseAndSetIfChanged(ref _mark_table, value);
+        }
+        private ObservableCollection<Data.Model> _model_table;
+        public ObservableCollection<Data.Model> ModelTable
+        {
+            get => _model_table;
+            set => this.RaiseAndSetIfChanged(ref _model_table, value);
+        }
+        private readonly ObservableCollection<UserControl> _controls_emp;
         private readonly ObservableCollection<UserControl> _controls;
         private Model.Admin.AdminModel AdminModel;
-        private Data.Employee add_employee;
+        private Model.MarkModel.MarkModel MarkModel;
+        private Data.Employee add_mark;
+        private Data.Model _model;
+        public Data.Model AddModel
+        {
+            get => _model;
+            set => this.RaiseAndSetIfChanged(ref _model, value);
+        }
         public Data.Employee AddEmployee
         {
-            get => add_employee;
-            set=>this.RaiseAndSetIfChanged(ref add_employee, value);
+            get => add_mark;
+            set=>this.RaiseAndSetIfChanged(ref add_mark, value);
         }
         public AdminViewModel()
         {
             AdminModel = new Model.Admin.AdminModel();
+            MarkModel = new Model.MarkModel.MarkModel();
             _positions = AdminModel.GetPositions();
+            _cities = AdminModel.GetCities();
             EmployersTable = AdminModel.GetEmployees();
-            _controls = new ObservableCollection<UserControl> { new View.Admin.AdminTable(), new View.Admin.AddUser() };
+            MarkTable = MarkModel.GetMark();
+            ModelTable = MarkModel.GetModels();
+            _controls_emp = new ObservableCollection<UserControl> { new View.Admin.AdminTable(), new View.Admin.AddUser() };
+            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(), new View.Admin.ModelEdit() };
             MainControl = _controls[0];
+            EmpControl = _controls_emp[0];
             AddEmployee = new Data.Employee();
+            AddModel=new Data.Model();
         }
         public ReactiveCommand<Unit, Unit> AddEmmployeeCommand => ReactiveCommand.Create(() => {
 
             EmployersTable = AdminModel.AddEmployers(AddEmployee);
         });
+        public ReactiveCommand<string,Unit > OpenPage=>ReactiveCommand.Create<string>(OpenPageCommand);
+        private void OpenPageCommand(string page_id)
+        {
+            MainControl = _controls[Convert.ToInt32(page_id)];
+        }
         public ReactiveCommand<Unit,Unit> AddOrTable => ReactiveCommand.Create(() => { IsAdd = !IsAdd; });
+        public ReactiveCommand<string, Unit> AddMarkCommand => ReactiveCommand.Create<string>(AddMark);
+        private void AddMark(string name)
+        {
+            MarkModel.AddMark(new Data.Mark(name));
+            MarkTable = MarkModel.GetMark();
+            var a = _controls[1] as View.Admin.MarkEdit;
+            a.MarkText.Clear();
+        }
+        public ReactiveCommand<Unit, Unit> AddModelCommand => ReactiveCommand.Create(() => {
+        
+            MarkModel.AddModel(AddModel);
+            AddModel = new Data.Model();
+            ModelTable = MarkModel.GetModels();
+        });
     }
 }

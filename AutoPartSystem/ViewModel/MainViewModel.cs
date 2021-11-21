@@ -11,7 +11,8 @@ namespace AutoPartSystem.ViewModel
 {
    public class MainViewModel:ReactiveObject
     {
-        public static AdminViewModel AdminViewModel { get; set; }
+        public static AdminViewModel? AdminViewModel { get; set; }
+        public static WarehouseViewModel? WarehouseViewModel { get; set;}
         private Data.Employee? _employee;
         public Data.Employee? Employee
         {
@@ -33,10 +34,14 @@ namespace AutoPartSystem.ViewModel
             {
                 AdminViewModel = new AdminViewModel();
             }
-            
-            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin() };
+            WarehouseViewModel=new WarehouseViewModel();
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage() };
 
         }
-        public ReactiveCommand<Unit, Unit> OpenAdminMain => ReactiveCommand.Create(() => { MainControl = _controls[0]; });
+        public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
+        private void OpenPageCommand(string page_id)
+        {
+            MainControl = _controls[Convert.ToInt32(page_id)];
+        }
     }
 }

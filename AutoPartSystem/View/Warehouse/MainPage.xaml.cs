@@ -13,16 +13,17 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutoPartSystem.View.Admin
+namespace AutoPartSystem.View.Warehouse
 {
     /// <summary>
-    /// Логика взаимодействия для MainAdmin.xaml
+    /// Логика взаимодействия для MainPage.xaml
     /// </summary>
-    public partial class MainAdmin : UserControl
+    public partial class MainPage : UserControl
     {
-        public MainAdmin()
+        public MainPage()
         {
             InitializeComponent();
+            DataContext = ViewModel.MainViewModel.WarehouseViewModel;
         }
     }
 }

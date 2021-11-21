@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem"
         xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
+        mc:Ignorable="d" 
         RenderOptions.CachingHint="Cache"
         RenderOptions.EdgeMode="Unspecified"
         Background="White"
@@ -25,7 +25,15 @@
                 <DropShadowEffect BlurRadius="15"  Color="Gray"  ShadowDepth="7" />
             </Border.Effect>
             <StackPanel   Orientation="Vertical" >
-                <TextBlock  Text="Авторизация" FontSize="30" FontWeight="Bold" Margin="20,5,0,0"></TextBlock>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock  Text="Авторизация" FontSize="30" FontWeight="Bold" Margin="20,5,0,0"></TextBlock>
+                    <Button Grid.Column="1" Style="{StaticResource MaterialDesignFlatButton}" Margin="0,5,0,0" Content="Настройка подключения"></Button>
+                </Grid>
+                
                 <TextBox FontSize="14" Width="350" x:Name="Login" Margin="10"  wpf:HintAssist.Hint="Логин" wpf:HintAssist.IsFloating="True"></TextBox>
                 <PasswordBox FontSize="14" Width="350"  x:Name="Password"  Margin="10"  PasswordChar="*" wpf:HintAssist.Hint="Пароль" wpf:HintAssist.IsFloating="True"></PasswordBox>
                 <Button Margin="10" Width="150" Style="{StaticResource    MaterialDesignOutlinedButton}" Click="Button_Click">Войти</Button>
