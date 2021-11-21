@@ -12,6 +12,7 @@ namespace AutoPartSystem.Model.MarkModel
     {
         public ObservableCollection<Data.Model> GetModels();
         public ObservableCollection<Data.Mark> GetMark();
+        public ObservableCollection<Data.Model> GetModelFromMarkId(int markId);
         public void AddMark(Data.Mark mark);
         public void AddModel(Data.Model model);
     }
@@ -34,6 +35,12 @@ namespace AutoPartSystem.Model.MarkModel
         {
             using var db = new ConDB();
             return new ObservableCollection<Mark>(db.Mark.ToList());
+        }
+
+        public ObservableCollection<Data.Model> GetModelFromMarkId(int markId)
+        {
+            using var db = new ConDB();
+            return new ObservableCollection<Data.Model>(db.Models.Include(p => p.Mark).Where(p=>p.MarkId==markId).ToList());
         }
 
         public ObservableCollection<Data.Model> GetModels()
