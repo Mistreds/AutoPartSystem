@@ -13,13 +13,7 @@ namespace AutoPartSystem.ViewModel
     {
         public static AdminViewModel? AdminViewModel { get; set; }
         public static WarehouseViewModel? WarehouseViewModel { get; set;}
-        private Data.Employee? _employee;
-        public Data.Employee? Employee
-        {
-            get => _employee;
-            set=>this.RaiseAndSetIfChanged(ref _employee, value);
-
-        }
+        public static Data.Employee? Employee { get;private set; }
         private UserControl? _main_control;
         public UserControl? MainControl
         {

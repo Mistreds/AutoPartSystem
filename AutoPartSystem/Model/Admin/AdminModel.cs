@@ -36,7 +36,7 @@ namespace AutoPartSystem.Model.Admin
         public ObservableCollection<Employee> GetEmployees()
         {
             using var db = new ConDB();
-            return new ObservableCollection<Employee>(db.Employees.Include(p => p.Position).Include(p=>p.City).Select(p => new Employee(p.Id, p.Name, p.Login, p.PositionId, p.Position,p.CityId, p.City)));
+            return new ObservableCollection<Employee>(db.Employees.Include(p => p.Position).Include(p=>p.City).Select(p => new Employee(p.Id, p.Name, p.Login, p.PositionId, p.Position,p.CityId, p.City, p.PhoneNumber)));
         }
 
         public List<Position> GetPositions()

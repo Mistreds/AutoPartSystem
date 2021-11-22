@@ -10,8 +10,14 @@
                xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
                 x:Name="MainControl"
              Background="White"
+             xmlns:conv="clr-namespace:AutoPartSystem.Model.Warehouse"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <conv:StringNullToEmpty x:Key="StringNull"></conv:StringNullToEmpty>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <Grid DataContext="{Binding Warehouse}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -22,29 +28,31 @@
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Width="350" >
-            <ComboBox x:Name="ComboBoxMark" IsTextSearchEnabled="True" IsEditable="True"  ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Mark}" SelectedValuePath="Id" DisplayMemberPath="Name"  wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True">
+            <ComboBox SelectedItem="{Binding Mark}" wpf:BottomDashedLineAdorner.Brush="Aquamarine"   Text="{Binding MarkName, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"  ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Mark,Mode=OneWay}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding ElementName=MainControl, Path=DataContext.SelectModelFromMark}" CommandParameter="{Binding ElementName=ComboBoxMark, Path=SelectedValue}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </ComboBox>
-            <ComboBox IsTextSearchEnabled="True" IsEditable="True"   ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Models}" SelectedValuePath="Id" DisplayMemberPath="Name"    wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True"></ComboBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Описание товара" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Артикул" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Алмате " wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Астане" wpf:HintAssist.IsFloating="True"></TextBox>
+            <ComboBox Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}" SelectedItem="{Binding Goods.Model,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"    wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True"></ComboBox>
+
+
+            <TextBox Text="{Binding Goods.Description}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Описание товара" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding Goods.Article}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Артикул" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding InAlmata}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Алмате " wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding InAstana}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Астане" wpf:HintAssist.IsFloating="True"></TextBox>
            
         </StackPanel>
         <StackPanel Width="350" Grid.Column="1">
             
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Актау" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Цена приходная" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Место на складе" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Цена рекомендуемая" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Вид оплаты" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox Text="{Binding RegNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Заметка" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding InAktau}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Актау" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding Goods.InputPrice}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Цена приходная" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding WarehousePlace}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Место на складе" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding Goods.RecomPrice}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Цена рекомендуемая" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding TypePay}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Вид оплаты" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox Text="{Binding Note}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Заметка" wpf:HintAssist.IsFloating="True"></TextBox>
         </StackPanel>
-        <Button Width="150" Content="Добавить" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
+        <Button Command="{Binding ElementName=MainControl, Path=DataContext.AddWarehous}" Width="150" Content="Добавить" Grid.ColumnSpan="2" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center"></Button>
     </Grid>
 </UserControl>

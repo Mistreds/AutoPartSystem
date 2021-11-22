@@ -28,5 +28,19 @@ namespace Data
             get=> _mark;
             set=>this.RaiseAndSetIfChanged(ref _mark, value);
         }
+        public  Model(){}
+
+        public Model(string name, Mark Mark)
+        {
+
+            Name = name;
+            this.Mark = Mark;
+        }
+        public Model(string name, int MarkId)
+        {
+
+            Name = name;
+            this.MarkId = MarkId;
+        }
     }
 }

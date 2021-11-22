@@ -15,9 +15,20 @@ namespace AutoPartSystem.Model.MarkModel
         public ObservableCollection<Data.Model> GetModelFromMarkId(int markId);
         public void AddMark(Data.Mark mark);
         public void AddModel(Data.Model model);
+        public ObservableCollection<Data.Mark> GetMarkFromName(string name);
+        public Mark GetMarkFromNameFind(string name);
+        public ObservableCollection<Data.Model> GetModelFromMarkId(string name, int markId);
+        public Data.Model GetModelFromNameFind(string name, int id);
     }
     public class MarkModel : IMarkModel
     {
+        private ObservableCollection<Data.Model>Model;
+        private ObservableCollection<Data.Mark>? Mark;
+        public MarkModel()
+        {
+            Model = GetModels();
+            Mark= GetMark();
+        }
         public void AddMark(Mark mark)
         {
             using var db = new ConDB();
@@ -37,10 +48,29 @@ namespace AutoPartSystem.Model.MarkModel
             return new ObservableCollection<Mark>(db.Mark.ToList());
         }
 
+        public ObservableCollection<Mark> GetMarkFromName(string name)
+        {
+            return new ObservableCollection<Mark>(Mark.Where(p=>p.Name.ToLower().Contains(name.ToLower())).ToList());
+        }
+
+        public Mark GetMarkFromNameFind(string name)
+        {
+            return Mark.FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
+        }
+
         public ObservableCollection<Data.Model> GetModelFromMarkId(int markId)
         {
-            using var db = new ConDB();
-            return new ObservableCollection<Data.Model>(db.Models.Include(p => p.Mark).Where(p=>p.MarkId==markId).ToList());
+            return new ObservableCollection<Data.Model>(Model.Where(p=>p.MarkId==markId).ToList());
+        }
+
+        public ObservableCollection<Data.Model> GetModelFromMarkId(string name, int markId)
+        {
+            return new ObservableCollection<Data.Model>(Model.Where(p => p.Name.ToLower().Contains(name.ToLower()) && p.MarkId==markId).ToList());
+        }
+
+        public Data.Model GetModelFromNameFind(string name,int id)
+        {
+            return Model.FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase) && p.MarkId==id);
         }
 
         public ObservableCollection<Data.Model> GetModels()

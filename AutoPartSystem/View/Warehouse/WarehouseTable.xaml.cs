@@ -20,9 +20,29 @@ namespace AutoPartSystem.View.Warehouse
     /// </summary>
     public partial class WarehouseTable : UserControl
     {
+        private int id;
+        private int modelId;
+        private Data.Model model;
+        private string description;
+        private string article;
+        private int inAlmata;
+        private int inAstana;
+        private int inAktau;
+        private double inputPrice;
+        private int warehousePlace;
+        private double recomPrice;
+        private string typePay;
+        private string note;
+
         public WarehouseTable()
         {
             InitializeComponent();
+        }
+
+
+        private void DataGrid_OnLoadingRow(object? sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex()+1).ToString(); 
         }
     }
 }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    [Migration("20211121125540_warehouse")]
-    partial class warehouse
+    [Migration("20211122140632_good_inv")]
+    partial class good_inv
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -68,6 +68,9 @@ namespace ConnectDB.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
@@ -89,6 +92,65 @@ namespace ConnectDB.Migrations
                             Password = "887375DAEC62A9F02D32A63C9E14C7641A9A8A42E4FA8F6590EB928D9744B57BB5057A1D227E4D40EF911AC030590BBCE2BFDB78103FF0B79094CEE8425601F5",
                             PositionId = 1
                         });
+                });
+
+            modelBuilder.Entity("Data.Goods", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Article")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
+
+                    b.Property<double>("InputPrice")
+                        .HasColumnType("double");
+
+                    b.Property<int>("ModelId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("RecomPrice")
+                        .HasColumnType("double");
+
+                    b.Property<int>("WarehouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModelId");
+
+                    b.HasIndex("WarehouseId")
+                        .IsUnique();
+
+                    b.ToTable("Goods");
+                });
+
+            modelBuilder.Entity("Data.GoodsInvoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoodId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("GoodsId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TransPrice")
+                        .HasColumnType("double");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoodsId");
+
+                    b.ToTable("GoodsInvoice");
                 });
 
             modelBuilder.Entity("Data.Mark", b =>
@@ -166,11 +228,8 @@ namespace ConnectDB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("Article")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                    b.Property<int>("GoodId")
+                        .HasColumnType("int");
 
                     b.Property<int>("InAktau")
                         .HasColumnType("int");
@@ -181,24 +240,16 @@ namespace ConnectDB.Migrations
                     b.Property<int>("InAstana")
                         .HasColumnType("int");
 
-                    b.Property<double>("InputPrice")
-                        .HasColumnType("double");
+                    b.Property<string>("Note")
+                        .HasColumnType("longtext");
 
-                    b.Property<int?>("ModelId")
-                        .HasColumnType("int");
-
-                    b.Property<double>("RecomPrice")
-                        .HasColumnType("double");
-
-                    b.Property<string>("RegNumber")
+                    b.Property<string>("TypePay")
                         .HasColumnType("longtext");
 
                     b.Property<int>("WarehousePlace")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ModelId");
 
                     b.ToTable("Warehouse");
                 });
@@ -222,6 +273,34 @@ namespace ConnectDB.Migrations
                     b.Navigation("Position");
                 });
 
+            modelBuilder.Entity("Data.Goods", b =>
+                {
+                    b.HasOne("Data.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Warehouse", "Warehouse")
+                        .WithOne("Goods")
+                        .HasForeignKey("Data.Goods", "WarehouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Model");
+
+                    b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("Data.GoodsInvoice", b =>
+                {
+                    b.HasOne("Data.Goods", "Goods")
+                        .WithMany()
+                        .HasForeignKey("GoodsId");
+
+                    b.Navigation("Goods");
+                });
+
             modelBuilder.Entity("Data.Model", b =>
                 {
                     b.HasOne("Data.Mark", "Mark")
@@ -235,11 +314,7 @@ namespace ConnectDB.Migrations
 
             modelBuilder.Entity("Data.Warehouse", b =>
                 {
-                    b.HasOne("Data.Model", "Model")
-                        .WithMany()
-                        .HasForeignKey("ModelId");
-
-                    b.Navigation("Model");
+                    b.Navigation("Goods");
                 });
 #pragma warning restore 612, 618
         }

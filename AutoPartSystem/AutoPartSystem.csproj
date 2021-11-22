@@ -26,8 +26,4 @@
     <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Model\Warehouse\" />
-  </ItemGroup>
-
 </Project>

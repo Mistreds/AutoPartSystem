@@ -14,10 +14,11 @@
         <Border Background="White" >
             <StackPanel DataContext="{Binding AddEmployee}" Background="White" Orientation="Vertical" VerticalAlignment="Center" MinHeight="400" MinWidth="450" MaxWidth="800" >
                 <TextBox Text="{Binding Name }" wpf:HintAssist.HintOpacity="1"  Margin="15,30,15,15" wpf:HintAssist.Hint="Имя пользователя" wpf:HintAssist.IsFloating="True"></TextBox>
-                <TextBox Text="{Binding Login}" wpf:HintAssist.HintOpacity="1" Margin="15" wpf:HintAssist.Hint="Логин" wpf:HintAssist.IsFloating="True"></TextBox>
-                <TextBox Text="{Binding Password}" wpf:HintAssist.HintOpacity="1" Margin="15" wpf:HintAssist.Hint="Пароль" wpf:HintAssist.IsFloating="True"></TextBox>
-                <ComboBox SelectedValue="{Binding PositionId}" ItemsSource="{Binding ElementName=Control, Path=DataContext.Positions}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1" Margin="15" wpf:HintAssist.Hint="Должность" wpf:HintAssist.IsFloating="True"></ComboBox>
-                <ComboBox SelectedValue="{Binding CityId}" ItemsSource="{Binding ElementName=Control, Path=DataContext.Cities}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1" Margin="15" wpf:HintAssist.Hint="Город" wpf:HintAssist.IsFloating="True"></ComboBox>
+                <TextBox Text="{Binding Login}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Логин" wpf:HintAssist.IsFloating="True"></TextBox>
+                <TextBox Text="{Binding Password}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Пароль" wpf:HintAssist.IsFloating="True"></TextBox>
+                <TextBox Text="{Binding PhoneNumber}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Номер телефона" wpf:HintAssist.IsFloating="True"></TextBox>
+                <ComboBox SelectedValue="{Binding PositionId}" ItemsSource="{Binding ElementName=Control, Path=DataContext.Positions}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Должность" wpf:HintAssist.IsFloating="True"></ComboBox>
+                <ComboBox SelectedValue="{Binding CityId}" ItemsSource="{Binding ElementName=Control, Path=DataContext.Cities}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Город" wpf:HintAssist.IsFloating="True"></ComboBox>
                 <Button  Command="{Binding ElementName=Control, Path=DataContext.AddEmmployeeCommand}" HorizontalAlignment="Center" Width="150" Style="{StaticResource  MaterialDesignFlatDarkBgButton }" >Добавить</Button>
         </StackPanel>
         </Border>

@@ -60,8 +60,14 @@ namespace Data
             get => _city;
             set => this.RaiseAndSetIfChanged(ref _city, value);
         }
+        private string _phone_number;
+        public string PhoneNumber
+        {
+            get => _phone_number;
+            set => this.RaiseAndSetIfChanged(ref _phone_number, value);
+        }
         public Employee() { }
-        public Employee(int id, string name, string login, int position_id, Position position,int CityId, City City) {
+        public Employee(int id, string name, string login, int position_id, Position position,int CityId, City City, string phone) {
             this.Id = id;
             this.Name = name;
             this.Login = login;
@@ -69,6 +75,7 @@ namespace Data
             this.Position = position;
             this.CityId = CityId;   
             this.City = City;
+            this.PhoneNumber= phone;
         }
         public void HashPassword()
         {

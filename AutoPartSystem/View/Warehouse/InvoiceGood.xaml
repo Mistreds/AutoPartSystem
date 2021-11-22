@@ -1,0 +1,65 @@
+﻿<Window x:Class="AutoPartSystem.View.Warehouse.InvoiceGood"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
+       xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+             d:DataContext="{d:DesignInstance Type=ViewModel:InvoiceWinViewModel}"
+         xmlns:conv="clr-namespace:AutoPartSystem.Model.Warehouse"
+         xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:conv1="clr-namespace:System.ComponentModel;assembly=netstandard"
+        mc:Ignorable="d"
+        Title="InvoiceGood" Height="450" Width="800">
+    <Window.Resources>
+        <ResourceDictionary>
+            <conv:DateTimeConverter x:Key="DateTimeConverter"></conv:DateTimeConverter>
+</ResourceDictionary>
+    </Window.Resources>
+    <Grid DataContext="{Binding Invoice}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="15"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition ></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <TextBlock Margin="50,0,0,0" FontSize="17" ><Run Text="Накладная №"></Run><Run Text="{Binding Id}"></Run></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontSize="17"><Run Text="от "></Run><Run Text="{Binding Date, Converter={StaticResource DateTimeConverter}}"></Run></TextBlock>
+        </StackPanel>
+        <Rectangle Grid.Column="1"  VerticalAlignment="Top" Height="1" Grid.Row="1" Fill="Black"></Rectangle>
+        <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal" DataContext="{Binding Employee}">
+            <TextBlock Margin="50,0,0,0" FontSize="17" ><Run Text="Продавец:"></Run><Run Text="{Binding Name}"></Run></TextBlock>
+            <TextBlock Margin="10,0,0,0" FontSize="17"><Run Text="телефон:"></Run><Run Text="{Binding PhoneNumber}"></Run></TextBlock>
+        </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal" DataContext="{Binding Client}">
+            <TextBlock Margin="50,0,0,0" FontSize="17" ><Run Text="Покупатель:" ></Run></TextBlock>
+            <TextBox  Margin="10,0,0,0" Height="30" Width="150" Text="{Binding Name}"></TextBox>
+            <TextBlock Margin="10,0,0,0" FontSize="17" ><Run Text="телефон: "></Run></TextBlock>
+            <TextBox  Margin="10,0,0,0" Height="30" Width="150" Text="{Binding PhoneName}"></TextBox>
+        </StackPanel>
+        <DataGrid AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Grid.Column="1" Grid.Row="4" ItemsSource="{Binding GoodsInvoice}" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Марка" Binding="{Binding Goods.Model.Mark.Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Модель" Binding="{Binding Goods.Model.Name}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Описание" Binding="{Binding Goods.Description}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Артикуль" Binding="{Binding Goods.Article}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Кол-во" Binding="{Binding Count}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Цена за единицу" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Расходы на транспорт" Binding="{Binding TransPrice}"></DataGridTextColumn>
+                <DataGridTextColumn Header="Общая сумма" Binding="{Binding AllPrice, Mode=OneWay}"></DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="5">
+            <TextBlock Margin="50,0,0,0"  > <Run Text="Всего отпущено "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run> <Run Text=" наименования"></Run></TextBlock>
+            <TextBlock   Margin="10,0,0,0"> <Run Text="на сумму "></Run><Run Text="{Binding AllPrice, Mode=OneWay}"></Run> <Run Text=" тенге"></Run></TextBlock>
+        </StackPanel>
+    </Grid>
+</Window>

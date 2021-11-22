@@ -17,6 +17,10 @@ namespace Data
         public DbSet<Model> Models { get; set; }
         public DbSet<Mark> Mark { get; set; }
         public DbSet<Warehouse> Warehouse { get; set; }
+        public DbSet<Goods> Goods { get; set; }
+        public DbSet<GoodsInvoice> GoodsInvoices { get; set;}
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Client> Clients { get; set; }
         private string path_connect;
         private string query_connect;
         public ConDB()
@@ -63,6 +67,10 @@ namespace Data
             #endregion
             #region Warehouse
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
+            modelBuilder.Entity<Goods>(b=>b.ToTable("Goods"));
+            modelBuilder.Entity<GoodsInvoice>(b => b.ToTable("GoodsInvoice"));
+            modelBuilder.Entity<Invoice>(b => b.ToTable("Invoice"));
+            modelBuilder.Entity<Client>(b => b.ToTable("Client"));
             #endregion
         }
     }
