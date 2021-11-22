@@ -12,7 +12,7 @@ using ReactiveUI;
 namespace AutoPartSystem.ViewModel
 {
     
-   public class WarehouseAdd:Data.Warehouse
+    public class WarehouseAdd:Data.Warehouse
     {
         private string model_name;
         public string ModelName
@@ -69,6 +69,16 @@ namespace AutoPartSystem.ViewModel
         {
             get => _main_control;
             set=>this.RaiseAndSetIfChanged(ref _main_control, value);
+        }
+        private bool _is_model_find;
+        public bool IsModelFind
+        {
+            get => _is_model_find;
+            set
+            {
+                Console.WriteLine(value);
+                this.RaiseAndSetIfChanged(ref _is_model_find, value);
+            }
         }
         private ObservableCollection<Data.Model>? _models;
         public ObservableCollection<Data.Model> Models

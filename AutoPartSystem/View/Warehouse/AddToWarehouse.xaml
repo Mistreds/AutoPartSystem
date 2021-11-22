@@ -47,6 +47,7 @@
         <StackPanel Width="350" Grid.Column="1">
             
             <TextBox Text="{Binding InAktau}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Остаток в Актау" wpf:HintAssist.IsFloating="True"></TextBox>
+            
             <TextBox Text="{Binding Goods.InputPrice}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Цена приходная" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox Text="{Binding WarehousePlace}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Место на складе" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox Text="{Binding Goods.RecomPrice}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Цена рекомендуемая" wpf:HintAssist.IsFloating="True"></TextBox>

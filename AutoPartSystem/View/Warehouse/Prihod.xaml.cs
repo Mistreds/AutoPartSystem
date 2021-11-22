@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Warehouse
 {
     /// <summary>
-    /// Логика взаимодействия для WarehouseTable.xaml
+    /// Логика взаимодействия для Prihod.xaml
     /// </summary>
-    public partial class WarehouseTable : UserControl
+    public partial class Prihod : Page
     {
-        public WarehouseTable()
+        public Prihod()
         {
             InitializeComponent();
         }
