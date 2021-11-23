@@ -51,7 +51,7 @@
             <MenuItem Header="Администратор">
                 <MenuItem Header="Сотрудники"></MenuItem>
                 <MenuItem Header="Марки и модели"></MenuItem>
-            </MenuItem>
+            </MenuItem>                                 
         </Menu>
         <!--<StackPanel Style="{StaticResource NavStackPanel}" Orientation="Horizontal">
             <Button Style="{StaticResource MenuButton}" Command="{Binding OpenPage}" CommandParameter="0" Height="48" Content="Окно завсклада" ></Button>
