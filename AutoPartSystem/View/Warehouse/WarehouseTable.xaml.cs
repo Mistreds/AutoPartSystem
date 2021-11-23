@@ -24,5 +24,17 @@ namespace AutoPartSystem.View.Warehouse
         {
             InitializeComponent();
         }
+
+        private void ModelText_TextInput(object sender, TextCompositionEventArgs e)
+        {
+            Console.WriteLine(e.Text);
+        }
+
+
+
+        private void model_sort_a_Checked(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

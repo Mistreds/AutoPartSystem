@@ -40,10 +40,23 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Style="{StaticResource NavStackPanel}" Orientation="Horizontal">
+        <Menu>
+            <MenuItem Header="Файл">
+                <MenuItem Header="Добавить товар"></MenuItem>
+                <MenuItem Header="Закрыть"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Таблицы">
+                <MenuItem Header="Таблица завсклада"></MenuItem>
+            </MenuItem>
+            <MenuItem Header="Администратор">
+                <MenuItem Header="Сотрудники"></MenuItem>
+                <MenuItem Header="Марки и модели"></MenuItem>
+            </MenuItem>
+        </Menu>
+        <!--<StackPanel Style="{StaticResource NavStackPanel}" Orientation="Horizontal">
             <Button Style="{StaticResource MenuButton}" Command="{Binding OpenPage}" CommandParameter="0" Height="48" Content="Окно завсклада" ></Button>
             <Button Style="{StaticResource MenuButton}" Command="{Binding OpenPage}" CommandParameter="1" Height="48" Content="Администратор" ></Button>
-        </StackPanel>
+        </StackPanel>-->
         <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
         <StatusBar Grid.Row="2"></StatusBar>
     </Grid>

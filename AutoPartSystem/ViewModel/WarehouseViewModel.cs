@@ -62,6 +62,25 @@ namespace AutoPartSystem.ViewModel
         }
         
     }
+    public class MarkModelFind:ReactiveObject
+    {
+        public int model_id { get; set; }
+        public string model_name { get; set; }
+        private bool _is_selected;
+        public bool IsSelected
+        {
+            get => _is_selected;
+            set=>this.RaiseAndSetIfChanged(ref _is_selected, value);
+        }
+        public MarkModelFind() { }
+        public MarkModelFind(int id, string name)
+        {
+            model_id=id;
+            model_name = name;
+            IsSelected=true;
+        }
+    }
+
     public class WarehouseViewModel:ReactiveObject
     {
         private UserControl? _main_control;
@@ -76,7 +95,7 @@ namespace AutoPartSystem.ViewModel
             get => _is_model_find;
             set
             {
-                Console.WriteLine(value);
+              
                 this.RaiseAndSetIfChanged(ref _is_model_find, value);
             }
         }
@@ -102,6 +121,12 @@ namespace AutoPartSystem.ViewModel
         public Model.MarkModel.MarkModel? MarkModel;
         private Model.Warehouse.WarehouseModel WarehouseModel;
         private Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel;
+        private ObservableCollection<MarkModelFind>? _mark_model_find;
+        public ObservableCollection<MarkModelFind> MarkModelFind
+        {
+            get => _mark_model_find;
+            set => this.RaiseAndSetIfChanged(ref _mark_model_find, value);
+        }
         private WarehouseAdd? _warehouse;
         public WarehouseAdd? Warehouse
         {
@@ -119,6 +144,8 @@ namespace AutoPartSystem.ViewModel
             WarehouseModel = new WarehouseModel();
             WarehousesTable = WarehouseModel.GetAllWarehouse();
             WarehouseInvoceModel=new WarehouseInvoceModel();
+            MarkModelFind = MarkModel.MarkModelFind("");
+            
         }
         public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
         private void OpenPageCommand(string page_id)
@@ -171,7 +198,56 @@ namespace AutoPartSystem.ViewModel
             WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p=>p.IsSelected==true)));
 
             InvoiceWinViewModel  invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel);
+        });
+        public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
+        private void SelectFindModelCommand(string name)
+        {
+            Console.WriteLine(name);
+            MarkModelFind = MarkModel.MarkModelFind(name);
+        }
+        public ReactiveCommand<string, Unit> SortWarehouse => ReactiveCommand.Create<string>(SortWarehouseCommand);
+        private void SortWarehouseCommand(string name)
+        {
+           switch(name)
+            {
+                case "ModelDown":
+                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p => $"{p.Goods.Model.Mark.Name} {p.Goods.Model.Name}").ToList());
+                    break;
+                case "ModelUp":
+                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => $"{p.Goods.Model.Mark.Name} {p.Goods.Model.Name}").ToList());
+                    break;
+            }
+        }
+        public ReactiveCommand<int, Unit> SelectAllModel => ReactiveCommand.Create<int>(SelectAllModelCommand);
+        private void SelectAllModelCommand(int name)
+        {
+           var bools = MarkModelFind.Where(p => p.model_id == 0).FirstOrDefault();
+            if (name == 0)
+            {
+                if(bools.IsSelected)
+                {
+                    foreach(var model in MarkModelFind)
+                    {
+                        model.IsSelected = true;
+                    }
+                }
+                else
+                {
+                    foreach(var model in MarkModelFind)
+                    {
+                        model.IsSelected = false;
+                    }
+                }
+            }
+            else
+            {
+                bools.IsSelected = false;
+            }
+        }
+        public ReactiveCommand<Unit, Unit> AddNewWarehouseWinOpen => ReactiveCommand.Create(() => {
 
+            View.Warehouse.AddToWarehousePage addToWarehousePage = new View.Warehouse.AddToWarehousePage();
+            addToWarehousePage.Show();
         });
     }
 }

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Data;
+using AutoPartSystem.ViewModel;
+
 namespace AutoPartSystem.Model.MarkModel
 {
     public interface IMarkModel
@@ -19,6 +21,7 @@ namespace AutoPartSystem.Model.MarkModel
         public Mark GetMarkFromNameFind(string name);
         public ObservableCollection<Data.Model> GetModelFromMarkId(string name, int markId);
         public Data.Model GetModelFromNameFind(string name, int id);
+        public ObservableCollection<ViewModel.MarkModelFind> MarkModelFind(string name);
     }
     public class MarkModel : IMarkModel
     {
@@ -41,28 +44,23 @@ namespace AutoPartSystem.Model.MarkModel
             db.Models.Add(model);
             db.SaveChanges();
         }
-
         public ObservableCollection<Mark> GetMark()
         {
             using var db = new ConDB();
             return new ObservableCollection<Mark>(db.Mark.ToList());
         }
-
         public ObservableCollection<Mark> GetMarkFromName(string name)
         {
             return new ObservableCollection<Mark>(Mark.Where(p=>p.Name.ToLower().Contains(name.ToLower())).ToList());
         }
-
         public Mark GetMarkFromNameFind(string name)
         {
             return Mark.FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
-
         public ObservableCollection<Data.Model> GetModelFromMarkId(int markId)
         {
             return new ObservableCollection<Data.Model>(Model.Where(p=>p.MarkId==markId).ToList());
         }
-
         public ObservableCollection<Data.Model> GetModelFromMarkId(string name, int markId)
         {
             return new ObservableCollection<Data.Model>(Model.Where(p => p.Name.ToLower().Contains(name.ToLower()) && p.MarkId==markId).ToList());
@@ -77,6 +75,13 @@ namespace AutoPartSystem.Model.MarkModel
         {
             using var db = new ConDB();
             return new ObservableCollection<Data.Model>(db.Models.Include(p => p.Mark).ToList());
+        }
+
+        public ObservableCollection<MarkModelFind> MarkModelFind(string name)
+        {
+            var a= new ObservableCollection<MarkModelFind>(Model.Where(p => $"{p.Mark.Name} {p.Name}".ToLower().Contains(name.ToLower())).Select(p=>new ViewModel.MarkModelFind(p.Id, $"{p.Mark.Name} {p.Name}")).OrderBy(p=>p.model_name));
+            a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
+            return a;
         }
     }
 }
