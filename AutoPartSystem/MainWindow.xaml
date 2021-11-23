@@ -42,15 +42,15 @@
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="Файл">
-                <MenuItem Header="Добавить товар"></MenuItem>
-                <MenuItem Header="Закрыть"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар"></MenuItem>
+                <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
             </MenuItem>
             <MenuItem Header="Таблицы">
-                <MenuItem Header="Таблица завсклада"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
             </MenuItem>
             <MenuItem Header="Администратор">
-                <MenuItem Header="Сотрудники"></MenuItem>
-                <MenuItem Header="Марки и модели"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
             </MenuItem>                                 
         </Menu>
         <!--<StackPanel Style="{StaticResource NavStackPanel}" Orientation="Horizontal">

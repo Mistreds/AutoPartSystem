@@ -35,7 +35,26 @@ namespace AutoPartSystem.ViewModel
         public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
         private void OpenPageCommand(string page_id)
         {
-            MainControl = _controls[Convert.ToInt32(page_id)];
+            switch (page_id)
+            {
+                case "AddNewGoods":
+                    MainControl = _controls[0];
+                    WarehouseViewModel.AddNewWarehouseWinOpenCommand();
+                    break;
+                case "ZavSkladTable":
+                    MainControl = _controls[0];
+                    WarehouseViewModel.OpenPageCommand(page_id);
+                    break;
+                case "AdminEmp":
+                    MainControl = _controls[1];
+                    AdminViewModel.OpenPageCommand(page_id);
+                    break;
+                case "AdminModel":
+                    MainControl = _controls[1];
+                    AdminViewModel.OpenPageCommand(page_id);
+                    break;
+            }
+            
         }
     }
 }

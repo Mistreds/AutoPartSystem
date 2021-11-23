@@ -15,6 +15,8 @@ namespace AutoPartSystem.Model.Warehouse
     {
         public void AddWarehouse(Data.Warehouse warehouse);
         public ObservableCollection<WarehouseTable> GetAllWarehouse();
+        public ObservableCollection<ViewModel.MarkModelFind> GetAllDesctiption(string name);
+        public ObservableCollection<ViewModel.MarkModelFind> GetAllArticle(string name);
     }
     
     public class WarehouseModel:IWarehouseModel
@@ -47,37 +49,21 @@ namespace AutoPartSystem.Model.Warehouse
         {
             return Warehouses;
         }
-    }
-    public interface IWarehouseInvoce
-    {
-        public void SetWarehouse(ObservableCollection<WarehouseTable> warehouses);
-        public ObservableCollection<WarehouseTable> GetWarehouseTables();
-        public ObservableCollection<Data.Warehouse> GetWarehouse();
-    }
-    public class WarehouseInvoceModel : IWarehouseInvoce
-    {
-        ObservableCollection<WarehouseTable> warehouses;
-        private Data.Warehouse GetWarehouseFromTable(WarehouseTable _warehouse_table)
+
+        public ObservableCollection<MarkModelFind> GetAllDesctiption(string name)
         {
-            return _warehouse_table as Data.Warehouse;
-        }
-        public ObservableCollection<Data.Warehouse> GetWarehouse()
-        {
-            return new ObservableCollection<Data.Warehouse>(warehouses.Select(p=>GetWarehouseFromTable(p)).ToList());
+
+            var a=new ObservableCollection<MarkModelFind>(Warehouses.Where(p=>p.Goods.Description.ToLower().Contains(name.ToLower())).GroupBy(x => new { x.Id, x.Goods.Description }).Select(p=>new MarkModelFind(p.Key.Id, p.Key.Description)).ToList());
+            a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
+            return a;
         }
 
-        public ObservableCollection<WarehouseTable> GetWarehouseTables()
+        public ObservableCollection<MarkModelFind> GetAllArticle(string name)
         {
-            return warehouses;
-        }
-
-        public void SetWarehouse(ObservableCollection<WarehouseTable> warehouses)
-        {
-            this.warehouses = warehouses;
-            foreach(var warehouse in warehouses)
-            {
-               
-            }
+            var a = new ObservableCollection<MarkModelFind>(Warehouses.Where(p => p.Goods.Article.ToLower().Contains(name.ToLower())).GroupBy(x => new { x.Id, x.Goods.Article }).Select(p => new MarkModelFind(p.Key.Id, p.Key.Article)).ToList());
+            a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
+            return a;
         }
     }
+    
 }

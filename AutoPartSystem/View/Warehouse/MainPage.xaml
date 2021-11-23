@@ -21,6 +21,14 @@
         </Style>
     </UserControl.Resources>
     <Grid>
-        <ContentControl Grid.Column="1" Content="{Binding MainControl}" ></ContentControl>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <ToolBar>
+            <Button Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Добавить товар</Button>
+            <!--<Button FontSize="12" Margin="10,0,0,0" Padding="0">Добавить товар из эксель</Button>-->
+        </ToolBar>
+        <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding MainControl}" ></ContentControl>
     </Grid>
 </UserControl>

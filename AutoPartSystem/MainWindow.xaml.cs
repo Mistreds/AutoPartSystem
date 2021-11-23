@@ -26,5 +26,10 @@ namespace AutoPartSystem
             DataContext=new ViewModel.MainViewModel(employee);
             
         }
+
+        private void Close_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

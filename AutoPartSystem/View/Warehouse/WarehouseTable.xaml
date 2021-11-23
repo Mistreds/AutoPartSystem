@@ -13,6 +13,12 @@
              x:Name="warehousetable"
              >
     <UserControl.Resources>
+        <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+            <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.LightBlue.xaml" />
+        </ResourceDictionary.MergedDictionaries>
         <PathGeometry x:Key="put" Figures="">
         </PathGeometry>
         <Style TargetType="ToggleButton" x:Key="Tooglefilter">
@@ -39,9 +45,10 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <DataGrid Margin="25,25,0,0" HeadersVisibility="All"  x:Name="warehouse" SelectionMode="Extended"   ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" >
+        <DataGrid  GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse" SelectionMode="Extended"   ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False" >
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.HeaderTemplate>
@@ -106,7 +113,7 @@
                     </DataGridTemplateColumn.HeaderTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding Goods.Model.Mark.Name}"></TextBlock>
                                 <TextBlock Margin="10,0,0,0" Text="{Binding Goods.Model.Name}"></TextBlock>
                             </StackPanel>
@@ -118,15 +125,136 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Описание" Binding="{Binding Goods.Description}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Артикуль" Binding="{Binding Goods.Article}"></DataGridTextColumn>
+                <DataGridTextColumn CanUserSort="False"   Binding="{Binding Goods.Description}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Описание"></TextBlock>
+                                <ToggleButton  Margin="10,0,0,0" Width="15" Height="15" Style="{StaticResource Tooglefilter}" x:Name="Filter" IsChecked="{Binding ElementName=warehousetable, Path=DataContext.IsDesctiptionFind}" ></ToggleButton>
+                                <Popup  StaysOpen="False" IsOpen="{Binding ElementName=warehousetable, Path=DataContext.IsDesctiptionFind}">
+                                    <Border  MaxHeight="400" Height="320" MinWidth="230" BorderBrush="Black" BorderThickness="1">
+                                        <Grid Background="White" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="60"></RowDefinition>
+                                                <RowDefinition Height="50"></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition Height="50"></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="220">
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding Path=DataContext.SortWarehouse,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="DescriptionDown" Content="Сортировать по убыванию"></Button>
+                                                <Button Command="{Binding Path=DataContext.SortWarehouse,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="DescriptionUp" Style="{StaticResource MaterialDesignFlatButton}" Content="Сортировать по возрастанию"></Button>
+                                            </StackPanel>
+                                            <TextBox x:Name="ModelText"   wpf:HintAssist.HintOpacity="1" Grid.Row="1" wpf:HintAssist.Hint="Артикуль" wpf:HintAssist.IsFloating="True" Width="220"  HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" >
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="PreviewKeyUp">
+                                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectFindDesctiption,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding ElementName=ModelText, Path=Text, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </TextBox>
+                                            <DataGrid Width="220" AutoGenerateColumns="False" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" IsReadOnly="True" CanUserResizeRows="False" CanUserSortColumns="False"   HeadersVisibility="None" ItemsSource="{Binding Path=DataContext.DescriptionFind,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="3*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"  >
+                                                                    <i:Interaction.Triggers>
+                                                                        <i:EventTrigger EventName="Click">
+                                                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectAllDesctiption,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding model_id}"/>
+                                                                        </i:EventTrigger>
+                                                                    </i:Interaction.Triggers>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTextColumn Width="7*" Binding="{Binding model_name}"></DataGridTextColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                            <Grid Grid.Row="3"  >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Button Grid.Column="1" Content="Ок"></Button>
+                                                <Button Grid.Column="3" Content="Отмена"></Button>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
+                <DataGridTextColumn CanUserSort="False"  Binding="{Binding Goods.Article}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Артикуль"></TextBlock>
+                                <ToggleButton  Margin="10,0,0,0" Width="15" Height="15" Style="{StaticResource Tooglefilter}" x:Name="Filter" IsChecked="{Binding ElementName=warehousetable, Path=DataContext.IsArticleFind}" ></ToggleButton>
+                                <Popup  StaysOpen="False" IsOpen="{Binding ElementName=warehousetable, Path=DataContext.IsArticleFind}">
+                                    <Border  MaxHeight="400" Height="320" MinWidth="230" BorderBrush="Black" BorderThickness="1">
+                                        <Grid Background="White" >
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="60"></RowDefinition>
+                                                <RowDefinition Height="50"></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition Height="50"></RowDefinition>
+                                            </Grid.RowDefinitions>
+                                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Width="220">
+                                                <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding Path=DataContext.SortWarehouse,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="ArticleDown" Content="Сортировать по убыванию"></Button>
+                                                <Button Command="{Binding Path=DataContext.SortWarehouse,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="ArticleUp" Style="{StaticResource MaterialDesignFlatButton}" Content="Сортировать по возрастанию"></Button>
+                                            </StackPanel>
+                                            <TextBox x:Name="ModelText"   wpf:HintAssist.HintOpacity="1" Grid.Row="1" wpf:HintAssist.Hint="Описание" wpf:HintAssist.IsFloating="True" Width="220"  HorizontalAlignment="Center" VerticalAlignment="Top" Height="40" >
+                                                <i:Interaction.Triggers>
+                                                    <i:EventTrigger EventName="PreviewKeyUp">
+                                                        <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectFindArticle,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding ElementName=ModelText, Path=Text, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </i:EventTrigger>
+                                                </i:Interaction.Triggers>
+                                            </TextBox>
+                                            <DataGrid Width="220" AutoGenerateColumns="False" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" IsReadOnly="True" CanUserResizeRows="False" CanUserSortColumns="False"   HeadersVisibility="None" ItemsSource="{Binding Path=DataContext.ArticleFind,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
+                                                <DataGrid.Columns>
+                                                    <DataGridTemplateColumn Width="3*">
+                                                        <DataGridTemplateColumn.CellTemplate>
+                                                            <DataTemplate>
+                                                                <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"  >
+                                                                    <i:Interaction.Triggers>
+                                                                        <i:EventTrigger EventName="Click">
+                                                                            <i:InvokeCommandAction Command="{Binding Path=DataContext.SelectAllArticle,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding model_id}"/>
+                                                                        </i:EventTrigger>
+                                                                    </i:Interaction.Triggers>
+                                                                </CheckBox>
+                                                            </DataTemplate>
+                                                        </DataGridTemplateColumn.CellTemplate>
+                                                    </DataGridTemplateColumn>
+                                                    <DataGridTextColumn Width="7*" Binding="{Binding model_name}"></DataGridTextColumn>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                            <Grid Grid.Row="3"  >
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                                                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Button Grid.Column="1" Content="Ок"></Button>
+                                                <Button Grid.Column="3" Content="Отмена"></Button>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </Popup>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
+                </DataGridTextColumn>
                 <DataGridTextColumn Header="Остаток в Алмате" Binding="{Binding InAlmata}"></DataGridTextColumn>
                 <DataGridTextColumn Header="В Астане" Binding="{Binding InAstana}"></DataGridTextColumn>
                 <DataGridTextColumn Header="В Актау" Binding="{Binding InAktau}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Цена приходная" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Место на складе" Binding="{Binding WarehousePlace}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Цена рекомендуемая" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Вид оплаты" Binding="{Binding TypePay}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>

@@ -91,7 +91,7 @@ namespace AutoPartSystem.ViewModel
             MarkTable = MarkModel.GetMark();
             ModelTable = MarkModel.GetModels();
             _controls_emp = new ObservableCollection<UserControl> { new View.Admin.AdminTable(), new View.Admin.AddUser() };
-            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(), new View.Admin.ModelEdit() };
+            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit() };
             MainControl = _controls[0];
             EmpControl = _controls_emp[0];
             AddEmployee = new Data.Employee();
@@ -101,10 +101,18 @@ namespace AutoPartSystem.ViewModel
 
             EmployersTable = AdminModel.AddEmployers(AddEmployee);
         });
-        public ReactiveCommand<string,Unit > OpenPage=>ReactiveCommand.Create<string>(OpenPageCommand);
-        private void OpenPageCommand(string page_id)
+      
+        public void OpenPageCommand(string page_id)
         {
-            MainControl = _controls[Convert.ToInt32(page_id)];
+            switch(page_id)
+            {
+                case "AdminEmp":
+                    MainControl = _controls[0];
+                    break;
+                case "AdminModel":
+                    MainControl = _controls[1];
+                    break;
+            }
         }
         public ReactiveCommand<Unit,Unit> AddOrTable => ReactiveCommand.Create(() => { IsAdd = !IsAdd; });
         public ReactiveCommand<string, Unit> AddMarkCommand => ReactiveCommand.Create<string>(AddMark);
