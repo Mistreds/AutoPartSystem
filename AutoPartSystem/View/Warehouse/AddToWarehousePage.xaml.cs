@@ -23,6 +23,7 @@ namespace AutoPartSystem.View.Warehouse
         public AddToWarehousePage()
         {
             InitializeComponent();
+            DataContext = ViewModel.MainViewModel.WarehouseViewModel;
         }
         private void ComboBoxMark_TextInput(object sender, TextCompositionEventArgs e)
         {
@@ -39,14 +40,19 @@ namespace AutoPartSystem.View.Warehouse
         {
             var tb = (TextBox)e.OriginalSource;
             var text = tb.Text;
+          
+            tb.CaretIndex = tb.Text.Length;
+
             if (tb.SelectionStart != 0)
             {
-                ComboBoxMark.SelectedItem = null; // Если набирается текст сбросить выбраный элемент
+                
+                //ComboBoxMark.SelectedItem = null; // Если набирается текст сбросить выбраный элемент
             }
             if (tb.SelectionStart == 0 && ComboBoxMark.SelectedItem == null)
             {
-                ComboBoxMark.IsDropDownOpen = false; // Если сбросили текст и элемент не выбран, сбросить фокус выпадающего списка
+                //ComboBoxMark.IsDropDownOpen = false; // Если сбросили текст и элемент не выбран, сбросить фокус выпадающего списка
             }
+           // tb.Select(0, 0);
             ComboBoxMark.IsDropDownOpen = true;
             if (ComboBoxMark.SelectedItem == null)
             {
@@ -61,6 +67,7 @@ namespace AutoPartSystem.View.Warehouse
         {
             var tb = (TextBox)e.OriginalSource;
             var text = tb.Text;
+            tb.CaretIndex = tb.Text.Length;
             if (tb.SelectionStart != 0)
             {
                 ComboBoxModel.SelectedItem = null; // Если набирается текст сбросить выбраный элемент
@@ -73,6 +80,7 @@ namespace AutoPartSystem.View.Warehouse
             ComboBoxModel.IsDropDownOpen = true;
             if (ComboBoxModel.SelectedItem == null)
             {
+               
                 if (ComboBoxMark.SelectedItem is Data.Mark mark)
                 {
                     if (ViewModel.MainViewModel.WarehouseViewModel == null) return;
@@ -82,9 +90,58 @@ namespace AutoPartSystem.View.Warehouse
                 }
                 else
                 {
-                    ComboBoxMark.ItemsSource = new ObservableCollection<Data.Model>();
+                    int mark_id= ViewModel.MainViewModel.WarehouseViewModel.MarkModel.GetMarkIdFromName(ComboBoxMark.Text);
+                    if(mark_id!=0)
+                    {
+                        ComboBoxModel.ItemsSource =
+                           ViewModel.MainViewModel.WarehouseViewModel.MarkModel.GetModelFromMarkId(text, mark_id);
+                    }
+                    else
+                    {
+                        ComboBoxMark.ItemsSource = new ObservableCollection<Data.Model>();
+                    }
+                    
                 }
             }
+        }
+
+        private void ComboBoxMark_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+        }
+
+        private void ComboBoxModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ComboBoxMark_GotFocus(object sender, RoutedEventArgs e)
+        {
+            var tb = (TextBox)e.OriginalSource;
+            var text = tb.Text;
+
+            tb.CaretIndex = tb.Text.Length;
+        }
+
+        private void ComboBoxMark_GotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+            var tb = (TextBox)e.OriginalSource;
+            var text = tb.Text;
+            tb.CaretIndex = tb.Text.Length;
+        }
+
+        private void ComboBoxMark_Selected(object sender, RoutedEventArgs e)
+        {
+            var tb = (TextBox)e.OriginalSource;
+            var text = tb.Text;
+            tb.CaretIndex = tb.Text.Length;
+        }
+
+        private void ComboBoxMark_KeyDown(object sender, KeyEventArgs e)
+        {
+            var tb = (TextBox)e.OriginalSource;
+            var text = tb.Text;
+            tb.CaretIndex = tb.Text.Length;
         }
     }
 }

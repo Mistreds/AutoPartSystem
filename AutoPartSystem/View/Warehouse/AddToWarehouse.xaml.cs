@@ -89,5 +89,10 @@ namespace AutoPartSystem.View.Warehouse
                 }
             }
         }
+
+        private void ComboBoxMark_PreviewGotKeyboardFocus(object sender, KeyboardFocusChangedEventArgs e)
+        {
+
+        }
     }
 }

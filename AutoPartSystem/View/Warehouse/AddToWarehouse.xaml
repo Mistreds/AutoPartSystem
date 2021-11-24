@@ -28,7 +28,7 @@
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Width="350" >
-            <ComboBox SelectedItem="{Binding Mark}" wpf:BottomDashedLineAdorner.Brush="Aquamarine"   Text="{Binding MarkName, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"  ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Mark,Mode=OneWay}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True">
+            <ComboBox SelectedItem="{Binding Mark}" wpf:BottomDashedLineAdorner.Brush="Aquamarine"  PreviewGotKeyboardFocus="ComboBoxMark_PreviewGotKeyboardFocus"  Text="{Binding MarkName, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"  ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Mark,Mode=OneWay}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <i:InvokeCommandAction Command="{Binding ElementName=MainControl, Path=DataContext.SelectModelFromMark}" CommandParameter="{Binding ElementName=ComboBoxMark, Path=SelectedValue}"/>

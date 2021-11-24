@@ -27,6 +27,7 @@
         </Grid.RowDefinitions>
         <ToolBar>
             <Button Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Добавить товар</Button>
+            <Button Margin="15,0,0,0" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Продать выбранные</Button>
             <!--<Button FontSize="12" Margin="10,0,0,0" Padding="0">Добавить товар из эксель</Button>-->
         </ToolBar>
         <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding MainControl}" ></ContentControl>

@@ -48,7 +48,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <DataGrid  GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse" SelectionMode="Extended"   ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False" >
+        <DataGrid   GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False" >
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.HeaderTemplate>
@@ -102,7 +102,7 @@
                                                     <ColumnDefinition Width="4*"></ColumnDefinition>
                                                     <ColumnDefinition Width="1*"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="1" Content="Ок"></Button>
+                                                <Button Grid.Column="1" Command="{Binding Path=DataContext.SetFilter,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Content="Ок"></Button>
                                                 <Button Grid.Column="3" Content="Отмена"></Button>
                                             </Grid>
                                         </Grid>
@@ -125,7 +125,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn CanUserSort="False"   Binding="{Binding Goods.Description}">
+                <DataGridTextColumn  IsReadOnly="True" CanUserSort="False"   Binding="{Binding Goods.Description}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -177,7 +177,7 @@
                                                     <ColumnDefinition Width="4*"></ColumnDefinition>
                                                     <ColumnDefinition Width="1*"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="1" Content="Ок"></Button>
+                                                <Button Grid.Column="1" Command="{Binding Path=DataContext.SetFilter,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Content="Ок"></Button>
                                                 <Button Grid.Column="3" Content="Отмена"></Button>
                                             </Grid>
                                         </Grid>
@@ -187,7 +187,7 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn CanUserSort="False"  Binding="{Binding Goods.Article}">
+                <DataGridTextColumn  IsReadOnly="True"  CanUserSort="False"  Binding="{Binding Goods.Article}">
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -239,7 +239,7 @@
                                                     <ColumnDefinition Width="4*"></ColumnDefinition>
                                                     <ColumnDefinition Width="1*"></ColumnDefinition>
                                                 </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="1" Content="Ок"></Button>
+                                                <Button Grid.Column="1" Command="{Binding Path=DataContext.SetFilter,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Content="Ок"></Button>
                                                 <Button Grid.Column="3" Content="Отмена"></Button>
                                             </Grid>
                                         </Grid>
@@ -249,13 +249,22 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="Остаток в Алмате" Binding="{Binding InAlmata}"></DataGridTextColumn>
-                <DataGridTextColumn Header="В Астане" Binding="{Binding InAstana}"></DataGridTextColumn>
-                <DataGridTextColumn Header="В Актау" Binding="{Binding InAktau}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Цена приходная" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Место на складе" Binding="{Binding WarehousePlace}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Цена рекомендуемая" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="ALA" Binding="{Binding InAlmata}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="NQZ" Binding="{Binding InAstana}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="SCO" Binding="{Binding InAktau}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Место" Binding="{Binding WarehousePlace}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Цена прих" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding InAktau}"></DataGridTextColumn>
+                <DataGridTextColumn   Header="Кол-во для продажи" Binding="{Binding InAktau}"></DataGridTextColumn>
+                <DataGridTextColumn   Header="Цена продажи" Binding="{Binding InAktau}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Продажа">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected,UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>
                 <ContextMenu x:Key="Menu1">
@@ -268,7 +277,7 @@
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                     <Setter Property="ContextMenu" Value="{StaticResource Menu1 }"></Setter>
-                    <Setter Property="IsSelected" Value="{Binding IsSelected,UpdateSourceTrigger=PropertyChanged}"></Setter>
+                   
                 </Style>
             </DataGrid.RowStyle>
         </DataGrid>

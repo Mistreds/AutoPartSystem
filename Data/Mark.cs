@@ -42,5 +42,12 @@ namespace Data
             Name = name;
             this.MarkId = MarkId;
         }
+        public Model(string name, int MarkId, Mark Mark)
+        {
+
+            Name = name;
+            this.MarkId = MarkId;
+            this.Mark = Mark;
+        }
     }
 }

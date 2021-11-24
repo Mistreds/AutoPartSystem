@@ -5,25 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/AutoPartSystem.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/AutoPartSystem.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/MarkModel/MarkModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/MarkModel/MarkModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AddUser.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AddUser.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AdminTable.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AdminTable.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehouse.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehouse.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehouse.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehouse.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehousePage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehousePage.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehousePage.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehousePage.xaml.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/MainPage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/MainPage.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/ConnectDB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/ConnectDB.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/20211121125540_warehouse.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/20211121125540_warehouse.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Mark.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Mark.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/UserData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/UserData.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Warehouse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Warehouse.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +80,7 @@
       <workItem from="1637267300000" duration="684000" />
       <workItem from="1637406531157" duration="1041000" />
       <workItem from="1637561280154" duration="12720000" />
+      <workItem from="1637740620767" duration="1903000" />
     </task>
     <servers />
   </component>
@@ -108,8 +100,28 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs</url>
+          <line>197</line>
+          <properties documentPath="C:\Users\Ilya\Documents\MyProject\Kwork\AutoPartSystem\AutoPartSystem\ViewModel\WarehouseViewModel.cs" initialLine="197">
+            <startOffsets>
+              <option value="6779" />
+            </startOffsets>
+            <endOffsets>
+              <option value="6806" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -22,6 +22,7 @@ namespace AutoPartSystem.Model.MarkModel
         public ObservableCollection<Data.Model> GetModelFromMarkId(string name, int markId);
         public Data.Model GetModelFromNameFind(string name, int id);
         public ObservableCollection<ViewModel.MarkModelFind> MarkModelFind(string name);
+        public int GetMarkIdFromName(string name);
     }
     public class MarkModel : IMarkModel
     {
@@ -57,6 +58,12 @@ namespace AutoPartSystem.Model.MarkModel
         {
             return Mark.FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
+
+        public int GetMarkIdFromName(string name)
+        {
+            return Mark.Where(p => p.Name.ToLower().Contains(name.ToLower())).Select(p=>p.Id).FirstOrDefault();
+        }
+
         public ObservableCollection<Data.Model> GetModelFromMarkId(int markId)
         {
             return new ObservableCollection<Data.Model>(Model.Where(p=>p.MarkId==markId).ToList());

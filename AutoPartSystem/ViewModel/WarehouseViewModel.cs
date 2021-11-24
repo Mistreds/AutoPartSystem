@@ -32,6 +32,27 @@ namespace AutoPartSystem.ViewModel
             get => mark_name;
             set => this.RaiseAndSetIfChanged(ref mark_name, value);
         }
+        public WarehouseAdd()
+        {
+            this.Goods = new Data.Goods();
+            this.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel>();
+        }
+    }
+    public class ModelAdd:Data.Model
+    {
+        private string mark_name;
+        public string MarkName
+        {
+            get => mark_name;
+            set => this.RaiseAndSetIfChanged(ref mark_name, value);
+        }
+
+        private Data.Model _model;
+        public Data.Model Model
+        {
+            get => _model;
+            set=>this.RaiseAndSetIfChanged(ref _model, value);
+        }
     }
     public class WarehouseTable : Data.Warehouse
     {
@@ -111,6 +132,12 @@ namespace AutoPartSystem.ViewModel
             get => _warehouse;
             set => this.RaiseAndSetIfChanged(ref _warehouse, value);
         }
+        private ModelAdd _model;
+        public ModelAdd Model
+        {
+            get => _model;
+            set=>this.RaiseAndSetIfChanged(ref _model, value);
+        }
         #endregion
         #region WarehouseTableData
         private ObservableCollection<WarehouseTable> _warehouses_table;
@@ -171,14 +198,61 @@ namespace AutoPartSystem.ViewModel
             MarkModel = new Model.MarkModel.MarkModel();
             Mark = MarkModel.GetMark();
             Warehouse = new WarehouseAdd();
-            Warehouse.Goods = new Data.Goods();
             WarehouseModel = new WarehouseModel();
             WarehousesTable = WarehouseModel.GetAllWarehouse();
             WarehouseInvoceModel = new WarehouseInvoceModel();
             MarkModelFind = MarkModel.MarkModelFind("");
             DescriptionFind = WarehouseModel.GetAllDesctiption("");
             ArticleFind = WarehouseModel.GetAllArticle("");
+            Model = new ModelAdd();
         }
+        public ReactiveCommand<Unit, Unit> AddModelToWareTable => ReactiveCommand.Create(() => {
+
+
+            if (Model.Mark != null)
+            {
+                if (Model.Model != null)
+                {
+                    Model.Model.Mark = Model.Mark;
+                    Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model= Model.Model,ModelId=Model.Id });
+                }
+                else
+                {
+                    Model.Model = MarkModel.GetModelFromNameFind(Model.Name, Model.Mark.Id);
+                    if (Model.Model != null)
+                    {
+                        Model.Model.Mark = Model.Mark;
+                        Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = Model.Model, ModelId = Model.Id });
+                    }
+                    else
+                    {
+                        Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, Model.Mark.Id, Model.Mark) });
+                    }
+                }
+            }
+            else
+            {
+                Model.Mark = MarkModel.GetMarkFromNameFind(Model.MarkName);
+                if (Model.Mark != null)
+                {
+                   Model.Model = MarkModel.GetModelFromNameFind(Model.Name, Model.Mark.Id);
+                    if (Model.Model != null)
+                    {
+                        Model.Model.Mark = Model.Mark;
+                        Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = Model.Model, ModelId = Model.Id });
+                    }
+                    else
+                    {
+                        Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, Model.Mark.Id,Model.Mark) });
+                    }
+                }
+                else
+                {
+                    Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, new Data.Mark(Model.MarkName)) });
+                }
+            }
+
+        });
         public void OpenPageCommand(string page_id)
         {
             switch (page_id)
@@ -195,37 +269,19 @@ namespace AutoPartSystem.ViewModel
             Models = MarkModel.GetModelFromMarkId(mark_id);
         }
         public ReactiveCommand<Unit, Unit> AddWarehous => ReactiveCommand.Create(() => {
-            if (Warehouse.Mark != null)
+            foreach(var a in Warehouse.Goods.GoodsModel)
             {
-                if (Warehouse.Goods.Model != null)
+                Console.WriteLine(a.ModelId);
+                if(a.ModelId!=0)
                 {
-                    Warehouse.Goods.ModelId = Warehouse.Goods.Model.Id;
-                    Warehouse.Goods.Model = null;
+                    a.Model=null;
                 }
                 else
                 {
-                    Warehouse.Goods.Model = new Data.Model(Warehouse.ModelName, Warehouse.Mark.Id);
-                }
-            }
-            else
-            {
-                Warehouse.Mark = MarkModel.GetMarkFromNameFind(Warehouse.MarkName);
-                if (Warehouse.Mark != null)
-                {
-                    Warehouse.Goods.Model = MarkModel.GetModelFromNameFind(Warehouse.ModelName, Warehouse.Mark.Id);
-                    if (Warehouse.Goods.Model != null)
+                    if(a.Model.MarkId!=0)
                     {
-                        Warehouse.Goods.ModelId = Warehouse.Goods.Model.Id;
-                        Warehouse.Goods.Model = null;
+                        a.Model.Mark=null;
                     }
-                    else
-                    {
-                        Warehouse.Goods.Model = new Data.Model(Warehouse.ModelName, Warehouse.Mark.Id);
-                    }
-                }
-                else
-                {
-                    Warehouse.Goods.Model = new Data.Model(Warehouse.ModelName, new Data.Mark(Warehouse.MarkName));
                 }
             }
             WarehouseModel.AddWarehouse(Warehouse);
@@ -238,127 +294,131 @@ namespace AutoPartSystem.ViewModel
         });
         #region WarehouseSortFilterCommand
         
-        public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
-        private void SelectFindModelCommand(string name)
-        {
-            Console.WriteLine(name);
-            MarkModelFind = MarkModel.MarkModelFind(name);
-        }
-        public ReactiveCommand<string, Unit> SelectFindDesctiption => ReactiveCommand.Create<string>(SelectFindDesctiptionCommand);
-        private void SelectFindDesctiptionCommand(string name)
-        {
-            Console.WriteLine(name);
-            DescriptionFind = WarehouseModel.GetAllDesctiption(name);
-        }
-        public ReactiveCommand<string, Unit> SelectFindArticle => ReactiveCommand.Create<string>(SelectFindArticleCommand);
-        private void SelectFindArticleCommand(string name)
-        {
-            
-            ArticleFind = WarehouseModel.GetAllArticle(name);
-        }
-        public ReactiveCommand<string, Unit> SortWarehouse => ReactiveCommand.Create<string>(SortWarehouseCommand);
-        private void SortWarehouseCommand(string name)
-        {
-            switch (name)
+            public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
+            private void SelectFindModelCommand(string name)
             {
-                case "ModelDown":
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p => $"{p.Goods.Model.Mark.Name} {p.Goods.Model.Name}").ToList());
-                    break;
-                case "ModelUp":
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => $"{p.Goods.Model.Mark.Name} {p.Goods.Model.Name}").ToList());
-                    break;
-                case "DescriptionDown":
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p =>p.Goods.Description).ToList());
-                    break;
-                case "DescriptionUp":
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.Description).ToList());
-                    break;
-                case "ArticleDown":
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p =>p.Goods.Article).ToList());
-                    break;
-                case "ArticleUp":
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.Article).ToList());
-                    break;
+                Console.WriteLine(name);
+                MarkModelFind = MarkModel.MarkModelFind(name);
             }
-        }
-        public ReactiveCommand<int, Unit> SelectAllModel => ReactiveCommand.Create<int>(SelectAllModelCommand);
-        private void SelectAllModelCommand(int name)
-        {
-            var bools = MarkModelFind.Where(p => p.model_id == 0).FirstOrDefault();
-            if (name == 0)
+            public ReactiveCommand<string, Unit> SelectFindDesctiption => ReactiveCommand.Create<string>(SelectFindDesctiptionCommand);
+            private void SelectFindDesctiptionCommand(string name)
             {
-                if (bools.IsSelected)
+                Console.WriteLine(name);
+                DescriptionFind = WarehouseModel.GetAllDesctiption(name);
+            }
+            public ReactiveCommand<string, Unit> SelectFindArticle => ReactiveCommand.Create<string>(SelectFindArticleCommand);
+            private void SelectFindArticleCommand(string name)
+            {   
+                
+                ArticleFind = WarehouseModel.GetAllArticle(name);
+            }
+            public ReactiveCommand<string, Unit> SortWarehouse => ReactiveCommand.Create<string>(SortWarehouseCommand);
+            private void SortWarehouseCommand(string name)
+            {
+                switch (name)
                 {
-                    foreach (var model in MarkModelFind)
+                    case "ModelDown":
+                       // WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p => $"{p.Goods.Model.Mark.Name} {p.Goods.Model.Name}").ToList());
+                        break;
+                    case "ModelUp":
+                       // WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => $"{p.Goods.Model.Mark.Name} {p.Goods.Model.Name}").ToList());
+                        break;
+                    case "DescriptionDown":
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p =>p.Goods.Description).ToList());
+                        break;
+                    case "DescriptionUp":
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.Description).ToList());
+                        break;
+                    case "ArticleDown":
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p =>p.Goods.Article).ToList());
+                        break;
+                    case "ArticleUp":
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.Article).ToList());
+                        break;
+                }
+            }
+            public ReactiveCommand<int, Unit> SelectAllModel => ReactiveCommand.Create<int>(SelectAllModelCommand);
+            private void SelectAllModelCommand(int name)
+            {
+                var bools = MarkModelFind.FirstOrDefault(p => p.model_id == 0);
+                if (name == 0)
+                {
+                    if (bools.IsSelected)
                     {
-                        model.IsSelected = true;
+                        foreach (var model in MarkModelFind)
+                        {
+                            model.IsSelected = true;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var model in MarkModelFind)
+                        {
+                            model.IsSelected = false;
+                        }
                     }
                 }
                 else
                 {
-                    foreach (var model in MarkModelFind)
-                    {
-                        model.IsSelected = false;
-                    }
+                    bools.IsSelected = false;
                 }
             }
-            else
+            public ReactiveCommand<int, Unit> SelectAllDesctiption => ReactiveCommand.Create<int>(SelectAllDesctiptionCommand);
+            private void SelectAllDesctiptionCommand(int name)
             {
-                bools.IsSelected = false;
-            }
-        }
-        public ReactiveCommand<int, Unit> SelectAllDesctiption => ReactiveCommand.Create<int>(SelectAllDesctiptionCommand);
-        private void SelectAllDesctiptionCommand(int name)
-        {
-            var bools = DescriptionFind.Where(p => p.model_id == 0).FirstOrDefault();
-            if (name == 0)
-            {
-                if (bools.IsSelected)
+                var bools = DescriptionFind.Where(p => p.model_id == 0).FirstOrDefault();
+                if (name == 0)
                 {
-                    foreach (var model in DescriptionFind)
+                    if (bools.IsSelected)
                     {
-                        model.IsSelected = true;
+                        foreach (var model in DescriptionFind)
+                        {
+                            model.IsSelected = true;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var model in DescriptionFind)
+                        {
+                            model.IsSelected = false;
+                        }
                     }
                 }
                 else
                 {
-                    foreach (var model in DescriptionFind)
-                    {
-                        model.IsSelected = false;
-                    }
+                    bools.IsSelected = false;
                 }
             }
-            else
+            public ReactiveCommand<int, Unit> SelectAllArticle => ReactiveCommand.Create<int>(SelectAllArticleCommand);
+            private void SelectAllArticleCommand(int name)
             {
-                bools.IsSelected = false;
-            }
-        }
-        public ReactiveCommand<int, Unit> SelectAllArticle => ReactiveCommand.Create<int>(SelectAllArticleCommand);
-        private void SelectAllArticleCommand(int name)
-        {
-            var bools = ArticleFind.Where(p => p.model_id == 0).FirstOrDefault();
-            if (name == 0)
-            {
-                if (bools.IsSelected)
+                var bools = ArticleFind.Where(p => p.model_id == 0).FirstOrDefault();
+                if (name == 0)
                 {
-                    foreach (var model in ArticleFind)
+                    if (bools.IsSelected)
                     {
-                        model.IsSelected = true;
+                        foreach (var model in ArticleFind)
+                        {
+                            model.IsSelected = true;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var model in ArticleFind)
+                        {
+                            model.IsSelected = false;
+                        }
                     }
                 }
                 else
                 {
-                    foreach (var model in ArticleFind)
-                    {
-                        model.IsSelected = false;
-                    }
+                    bools.IsSelected = false;
                 }
             }
-            else
-            {
-                bools.IsSelected = false;
-            }
-        }
+            public ReactiveCommand<Unit, Unit> SetFilter => ReactiveCommand.Create(() => {
+                WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind));
+                
+            });
         #endregion
 
         public ReactiveCommand<Unit, Unit> AddNewWarehouseWinOpen => ReactiveCommand.Create(AddNewWarehouseWinOpenCommand);

@@ -21,6 +21,7 @@ namespace Data
         public DbSet<GoodsInvoice> GoodsInvoices { get; set;}
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Client> Clients { get; set; }
+        public DbSet<GoodsModel> GoodModel { get; set; }
         private string path_connect;
         private string query_connect;
         public ConDB()
@@ -71,6 +72,7 @@ namespace Data
             modelBuilder.Entity<GoodsInvoice>(b => b.ToTable("GoodsInvoice"));
             modelBuilder.Entity<Invoice>(b => b.ToTable("Invoice"));
             modelBuilder.Entity<Client>(b => b.ToTable("Client"));
+            modelBuilder.Entity<GoodsModel>(b => b.ToTable("GoodModel"));
             #endregion
         }
     }

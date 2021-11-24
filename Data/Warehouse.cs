@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -74,12 +75,6 @@ namespace Data
             get => _id;
             set => this.RaiseAndSetIfChanged(ref _id, value);
         }
-        private int _model_id;
-        public int ModelId
-        {
-            get => _model_id;
-            set => this.RaiseAndSetIfChanged(ref _model_id, value);
-        }
         private int _warehouse_id;
         public int WarehouseId
         {
@@ -92,11 +87,11 @@ namespace Data
             get => _warehouse;
             set => this.RaiseAndSetIfChanged(ref _warehouse, value);
         }
-        private Model _model;
-        public Model Model
+        private ObservableCollection<GoodsModel> _good_model;
+        public ObservableCollection<GoodsModel> GoodsModel
         {
-            get => _model;
-            set => this.RaiseAndSetIfChanged(ref _model, value);
+            get => _good_model;
+            set => this.RaiseAndSetIfChanged(ref _good_model, value);
         }
 
         private string _description;
@@ -122,6 +117,40 @@ namespace Data
         {
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
+        }
+    }
+    public class GoodsModel:ReactiveObject
+    {
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set=>this.RaiseAndSetIfChanged(ref _id, value);
+        }
+        private int _goods_id;
+        public int GoodsId
+        {
+            get => _goods_id;
+            set=>this.RaiseAndSetIfChanged(ref _goods_id, value);
+        }
+        private Goods _goods;
+        public Goods Goods
+        {
+            get => _goods;
+            set => this.RaiseAndSetIfChanged(ref _goods, value);
+        }
+        private int _model_id;
+        public int ModelId
+        {
+            get => _model_id;
+            set => this.RaiseAndSetIfChanged(ref _model_id, value);
+        }
+        
+        private Model _model;
+        public Model Model
+        {
+            get => _model;
+            set => this.RaiseAndSetIfChanged(ref _model, value);
         }
     }
     public class GoodsInvoice : ReactiveObject
