@@ -36,7 +36,7 @@ namespace AutoPartSystem.Model.Warehouse
         public WarehouseModel()
         {
             using var db = new Data.ConDB();
-          //  Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods.Model).ThenInclude(p => p.Mark).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note)).ToList());
+            Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods.GoodsModel).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note)).ToList());
         }
         public void AddWarehouse(Data.Warehouse warehouse)
         {

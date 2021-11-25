@@ -10,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AutoPartSystem.View.Warehouse
 {
     /// <summary>
-    /// Логика взаимодействия для Prihod.xaml
+    /// Логика взаимодействия для ArrivelGoods.xaml
     /// </summary>
-    public partial class Prihod : Page
+    public partial class ArrivelGoods : Window
     {
-        public Prihod()
+        public ArrivelGoods()
         {
             InitializeComponent();
         }

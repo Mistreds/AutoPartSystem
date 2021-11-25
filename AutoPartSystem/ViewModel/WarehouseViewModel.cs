@@ -69,7 +69,7 @@ namespace AutoPartSystem.ViewModel
         }
 
         public WarehouseTable(int id = default, Data.Goods good = null, int inAlmata = default, int inAstana = default, int inAktau = default,
-         int warehousePlace = default,
+         string warehousePlace = default,
             string typePay = null, string note = null)
         {
             Id = id;
@@ -272,14 +272,16 @@ namespace AutoPartSystem.ViewModel
             foreach(var a in Warehouse.Goods.GoodsModel)
             {
                 Console.WriteLine(a.ModelId);
-                if(a.ModelId!=0)
+                if(a.Model.Id!=0)
                 {
+                    a.ModelId = a.Model.Id;
                     a.Model=null;
                 }
                 else
                 {
-                    if(a.Model.MarkId!=0)
+                    if(a.Model.Mark.Id!=0)
                     {
+                        a.Model.MarkId=a.Model.Mark.Id;
                         a.Model.Mark=null;
                     }
                 }
@@ -420,7 +422,12 @@ namespace AutoPartSystem.ViewModel
                 
             });
         #endregion
-
+        public ReactiveCommand<WarehouseTable, Unit> CreatePrihod => ReactiveCommand.Create<WarehouseTable>(CreatePrihodCommand);
+        private void CreatePrihodCommand(WarehouseTable table)
+        {
+            var ArrGoods= new View.Warehouse.ArrivelGoods();
+            ArrGoods.Show();
+        }
         public ReactiveCommand<Unit, Unit> AddNewWarehouseWinOpen => ReactiveCommand.Create(AddNewWarehouseWinOpenCommand);
         public void AddNewWarehouseWinOpenCommand()
         {

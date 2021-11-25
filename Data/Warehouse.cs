@@ -46,8 +46,8 @@ namespace Data
             set => this.RaiseAndSetIfChanged(ref _in_aktau, value);
         }
        
-        private int _warehouse_place;
-        public int WarehousePlace
+        private string _warehouse_place;
+        public string WarehousePlace
         {
             get => _warehouse_place;
             set=>this.RaiseAndSetIfChanged(ref _warehouse_place, value);

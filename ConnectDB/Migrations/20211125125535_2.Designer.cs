@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    [Migration("20211122142407_invoice")]
-    partial class invoice
+    [Migration("20211125125535_2")]
+    partial class _2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -136,9 +136,6 @@ namespace ConnectDB.Migrations
                     b.Property<double>("InputPrice")
                         .HasColumnType("double");
 
-                    b.Property<int>("ModelId")
-                        .HasColumnType("int");
-
                     b.Property<double>("RecomPrice")
                         .HasColumnType("double");
 
@@ -146,8 +143,6 @@ namespace ConnectDB.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ModelId");
 
                     b.HasIndex("WarehouseId")
                         .IsUnique();
@@ -186,6 +181,27 @@ namespace ConnectDB.Migrations
                     b.HasIndex("InvoiceId");
 
                     b.ToTable("GoodsInvoice");
+                });
+
+            modelBuilder.Entity("Data.GoodsModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoodsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ModelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoodsId");
+
+                    b.HasIndex("ModelId");
+
+                    b.ToTable("GoodModel");
                 });
 
             modelBuilder.Entity("Data.Invoice", b =>
@@ -311,8 +327,8 @@ namespace ConnectDB.Migrations
                     b.Property<string>("TypePay")
                         .HasColumnType("longtext");
 
-                    b.Property<int>("WarehousePlace")
-                        .HasColumnType("int");
+                    b.Property<string>("WarehousePlace")
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -359,19 +375,11 @@ namespace ConnectDB.Migrations
 
             modelBuilder.Entity("Data.Goods", b =>
                 {
-                    b.HasOne("Data.Model", "Model")
-                        .WithMany()
-                        .HasForeignKey("ModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Data.Warehouse", "Warehouse")
                         .WithOne("Goods")
                         .HasForeignKey("Data.Goods", "WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Model");
 
                     b.Navigation("Warehouse");
                 });
@@ -391,6 +399,25 @@ namespace ConnectDB.Migrations
                     b.Navigation("Goods");
 
                     b.Navigation("Invoice");
+                });
+
+            modelBuilder.Entity("Data.GoodsModel", b =>
+                {
+                    b.HasOne("Data.Goods", "Goods")
+                        .WithMany("GoodsModel")
+                        .HasForeignKey("GoodsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Data.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Goods");
+
+                    b.Navigation("Model");
                 });
 
             modelBuilder.Entity("Data.Invoice", b =>
@@ -421,6 +448,11 @@ namespace ConnectDB.Migrations
                         .IsRequired();
 
                     b.Navigation("Mark");
+                });
+
+            modelBuilder.Entity("Data.Goods", b =>
+                {
+                    b.Navigation("GoodsModel");
                 });
 
             modelBuilder.Entity("Data.Invoice", b =>
