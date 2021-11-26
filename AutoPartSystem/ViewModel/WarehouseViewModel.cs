@@ -1,4 +1,5 @@
 ﻿#nullable enable
+#pragma warning disable CS8603 
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -54,35 +55,7 @@ namespace AutoPartSystem.ViewModel
             set=>this.RaiseAndSetIfChanged(ref _model, value);
         }
     }
-    public class WarehouseTable : Data.Warehouse
-    {
-        private bool _is_selected;
-        public bool IsSelected
-        {
-            get => _is_selected;
-            set => this.RaiseAndSetIfChanged(ref _is_selected, value);
-
-        }
-
-        public WarehouseTable()
-        {
-        }
-
-        public WarehouseTable(int id = default, Data.Goods good = null, int inAlmata = default, int inAstana = default, int inAktau = default,
-         string warehousePlace = default,
-            string typePay = null, string note = null)
-        {
-            Id = id;
-            Goods = good;
-            InAlmata = inAlmata;
-            InAstana = inAstana;
-            InAktau = inAktau;
-            WarehousePlace = warehousePlace;
-            TypePay = typePay;
-            Note = note;
-        }
-
-    }
+    
     public class MarkModelFind : ReactiveObject
     {
         public int model_id { get; set; }
@@ -182,6 +155,7 @@ namespace AutoPartSystem.ViewModel
         public ObservableCollection<MarkModelFind> DescriptionFind
         {
             get => _description_find;
+
             set => this.RaiseAndSetIfChanged(ref _description_find, value);
         }
         private ObservableCollection<MarkModelFind>? _article_find;
@@ -193,12 +167,12 @@ namespace AutoPartSystem.ViewModel
         #endregion
         public WarehouseViewModel()
         {
-            _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable(), new View.Warehouse.AddToWarehouse() };
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable() };
             MainControl = _controls[0];
             MarkModel = new Model.MarkModel.MarkModel();
             Mark = MarkModel.GetMark();
             Warehouse = new WarehouseAdd();
-            WarehouseModel = new WarehouseModel();
+            WarehouseModel = new WarehouseModel(this);
             WarehousesTable = WarehouseModel.GetAllWarehouse();
             WarehouseInvoceModel = new WarehouseInvoceModel();
             MarkModelFind = MarkModel.MarkModelFind("");
@@ -263,7 +237,7 @@ namespace AutoPartSystem.ViewModel
             }
 
         }
-        public ReactiveCommand<int, Unit> SelectModelFromMark => ReactiveCommand.Create<int>(SelectModelFromMarkCommand);
+        public ReactiveCommand<int, Unit> SelectModelFromMark => ReactiveCommand.Create<int>(SelectModelFromMarkCommand); 
         private void SelectModelFromMarkCommand(int mark_id)
         {
             Models = MarkModel.GetModelFromMarkId(mark_id);
@@ -425,7 +399,7 @@ namespace AutoPartSystem.ViewModel
         public ReactiveCommand<WarehouseTable, Unit> CreatePrihod => ReactiveCommand.Create<WarehouseTable>(CreatePrihodCommand);
         private void CreatePrihodCommand(WarehouseTable table)
         {
-            var ArrGoods= new View.Warehouse.ArrivelGoods();
+            var ArrGoods= new View.Warehouse.ArrivelGoods(table,WarehouseModel);
             ArrGoods.Show();
         }
         public ReactiveCommand<Unit, Unit> AddNewWarehouseWinOpen => ReactiveCommand.Create(AddNewWarehouseWinOpenCommand);
@@ -434,6 +408,13 @@ namespace AutoPartSystem.ViewModel
             View.Warehouse.AddToWarehousePage addToWarehousePage = new View.Warehouse.AddToWarehousePage();
             Mark = MarkModel.GetMark();
             addToWarehousePage.Show();
+        }
+        public ReactiveCommand<Unit, Unit> UpdateTable => ReactiveCommand.Create(() => { WarehousesTable = WarehouseModel.GetAllWarehouse(); });
+        public ReactiveCommand<WarehouseTable, Unit> SetWarePrice => ReactiveCommand.Create<WarehouseTable>(SetWarePriceCommand);
+        private void SetWarePriceCommand(WarehouseTable table)
+        {
+            var SetWare = new View.Warehouse.SetWarePrice(table, WarehouseModel);
+            SetWare.Show();
         }
     }
 }

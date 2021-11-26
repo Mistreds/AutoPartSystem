@@ -5,10 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
        xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" 
-      d:DesignHeight="150" d:DesignWidth="400"
+      Height="170" Width="350"
+        xmlns:ViewModel="clr-namespace:AutoPartSystem.View.Warehouse"
+
+           
       Title="Приход" Background="White">
 
-    <Grid>
+    <Grid DataContext="{Binding table}">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="60"></RowDefinition>
@@ -19,10 +22,10 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock FontSize="16" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Приход товара"></Run><Run></Run></TextBlock>
-        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Алмата" wpf:HintAssist.IsFloating="True"  Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
-        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Астана" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
-        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Актау" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
-        <Button Grid.Column="1" Grid.Row="2" MaxWidth="150">Добавить</Button>
+        <TextBlock FontSize="16" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Приход товара "></Run><Run Text="{Binding Goods.Description}"></Run><Run Text=" артикул "></Run> <Run Text="{Binding Goods.Article}"></Run></TextBlock>
+        <TextBox x:Name="Almata" PreviewTextInput="NumberValidationTextBox" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Алмата" wpf:HintAssist.IsFloating="True"  Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
+        <TextBox x:Name="Astana" PreviewTextInput="NumberValidationTextBox" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Астана" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
+        <TextBox x:Name="Actau" PreviewTextInput="NumberValidationTextBox" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Актау" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
+        <Button Grid.Column="1" Grid.Row="2" MaxWidth="150" Click="Button_Click">Добавить</Button>
     </Grid>
 </Window>

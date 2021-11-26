@@ -16,13 +16,13 @@ namespace Data
             set => this.RaiseAndSetIfChanged(ref _id, value);
         }
         private int _good_id;
-        public int GoodId
+        public  int GoodId
         {
             get => _good_id;
             set=>this.RaiseAndSetIfChanged(ref _good_id, value);
         }
         private Goods _goods;
-        public Goods Goods
+        public virtual Goods Goods
         {
             get => _goods;
             set=>this.RaiseAndSetIfChanged(ref _goods, value);
@@ -106,17 +106,30 @@ namespace Data
             get => _article;
             set => this.RaiseAndSetIfChanged(ref _article, value);
         }
-        private double _input_price;
-        public double InputPrice
+        private  double _input_price;
+        public virtual double InputPrice
         {
             get => _input_price;
             set => this.RaiseAndSetIfChanged(ref _input_price, value);
         }
         private double _recom_price;
-        public double RecomPrice
+        public virtual double RecomPrice
         {
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
+        }
+        public Goods() { }
+        public Goods(Goods goods)
+        {
+            this.Id = goods.Id;
+            this.WarehouseId = goods.WarehouseId;
+            this.Warehouse =goods.Warehouse;
+            this.GoodsModel = goods.GoodsModel;
+            this.Description= goods.Description;
+            this.Article = goods.Article;
+            this.InputPrice = goods.InputPrice;
+            this.RecomPrice = goods.RecomPrice;
+
         }
     }
     public class GoodsModel:ReactiveObject

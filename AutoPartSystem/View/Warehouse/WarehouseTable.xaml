@@ -273,11 +273,20 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Приход">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Сделать приход"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.CreatePrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>
                 <ContextMenu x:Key="Menu1">
                     <MenuItem Header="Добавить товар" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
+                    <MenuItem Header="Сделать приход" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.CreatePrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
                     <MenuItem Header="Сделать продажу" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
+                    <MenuItem Header="Установить цену" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.SetWarePrice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
                     <MenuItem Header="Переместить на другой склад"></MenuItem>
                     
                 </ContextMenu>

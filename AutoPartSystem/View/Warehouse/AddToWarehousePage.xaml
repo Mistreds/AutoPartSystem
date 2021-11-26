@@ -10,7 +10,7 @@
         xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
          xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         x:Name="MainControl"
-        Title="AddToWarehousePage" Height="400" Width="800">
+        Title="AddToWarehousePage" Height="400" Width="900">
 
     <Grid  DataContext="{Binding Warehouse}">
         <Grid.RowDefinitions>
@@ -44,7 +44,7 @@
             </StackPanel>
             <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Description}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Описание товара" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Article}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Артикул" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Note}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Заметка" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding WarehousePlace}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Место" wpf:HintAssist.IsFloating="True"></TextBox>
         </StackPanel>
         <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>

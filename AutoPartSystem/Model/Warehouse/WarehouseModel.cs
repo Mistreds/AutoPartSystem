@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoPartSystem.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +20,14 @@ namespace AutoPartSystem.Model.Warehouse
         public ObservableCollection<ViewModel.MarkModelFind> GetAllDesctiption(string name);
         public ObservableCollection<ViewModel.MarkModelFind> GetAllArticle(string name);
         public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
+        public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id);
+        public void UpdateWarehouseMainPrice(double input_price, double rec_price, int id);
+        public void UpdateWarehouse(WarehouseTable warehouse);
     }
     
     public class WarehouseModel:IWarehouseModel
     {
         private ObservableCollection<WarehouseTable> Warehouses;
-
         private async Task _get_warehouse_from_db()
         {
             await Task.Run(() =>
@@ -32,12 +36,15 @@ namespace AutoPartSystem.Model.Warehouse
                // Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Model).ThenInclude(p => p.Mark)
                    // .ToList());
             });
-        }
-        public WarehouseModel()
+        } 
+        private WarehouseViewModel _view_model;
+        public WarehouseModel(ViewModel.WarehouseViewModel ViewModel)
         {
+            _view_model = ViewModel;
             using var db = new Data.ConDB();
             Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods.GoodsModel).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note)).ToList());
         }
+        
         public void AddWarehouse(Data.Warehouse warehouse)
         {
             using var db = new Data.ConDB();
@@ -48,7 +55,6 @@ namespace AutoPartSystem.Model.Warehouse
         {
             return Warehouses;
         }
-
         public ObservableCollection<MarkModelFind> GetAllDesctiption(string name)
         {
             if(Warehouses==null)
@@ -71,8 +77,27 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
         {
-            //return new ObservableCollection<WarehouseTable>(Warehouses.Where(p=>model.Where(m=>m.IsSelected==true).Select(m=>m.model_id).ToList().Contains(p.Goods.ModelId) && desctiption.Where(m => m.IsSelected == true).Select(d=>d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));r
+            return new ObservableCollection<WarehouseTable>(Warehouses.Where(p=>model.Any(m=>m.IsSelected==true && p.Goods.GoodsModel.Select(p=>p.ModelId).ToList().Contains(m.model_id) ) && desctiption.Where(m => m.IsSelected == true).Select(d=>d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));
             return null;
+        }
+        public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id)
+        {
+            var Warehouse=Warehouses.Where(p=>p.Id==war_id).FirstOrDefault();
+            Warehouse.SetArrivel(almata, astana, ackau);
+            UpdateWarehouse(Warehouse);
+        }
+        public void UpdateWarehouseMainPrice(double input_price, double rec_price, int war_id)
+        {
+            var Warehouse = Warehouses.Where(p => p.Id == war_id).FirstOrDefault();
+            Warehouse.SetPrice(input_price, rec_price);
+            UpdateWarehouse(Warehouse);
+        }
+        public void UpdateWarehouse(WarehouseTable warehouse)
+        {
+            using var db = new Data.ConDB();
+            db.Warehouse.Update(warehouse);
+            db.SaveChanges();
+            _view_model.WarehousesTable = GetAllWarehouse();
         }
     }
     
