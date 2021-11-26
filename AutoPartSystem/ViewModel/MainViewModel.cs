@@ -13,7 +13,9 @@ namespace AutoPartSystem.ViewModel
     {
         public static AdminViewModel? AdminViewModel { get; set; }
         public static WarehouseViewModel? WarehouseViewModel { get; set;}
+        public static ClientViewModel? ClientViewModel { get; set; }
         public static Data.Employee? Employee { get;private set; }
+        private Model.MarkModel.MarkModel? _markModel;
         private UserControl? _main_control;
         public UserControl? MainControl
         {
@@ -24,11 +26,13 @@ namespace AutoPartSystem.ViewModel
         public MainViewModel(Data.Employee employee)
         {
             Employee = employee;
-            if(Employee.PositionId==1)
+            _markModel=new Model.MarkModel.MarkModel();
+            if (Employee.PositionId==1)
             {
-                AdminViewModel = new AdminViewModel();
+                AdminViewModel = new AdminViewModel(_markModel);
             }
-            WarehouseViewModel=new WarehouseViewModel();
+            WarehouseViewModel=new WarehouseViewModel(_markModel);
+            ClientViewModel = new ClientViewModel(_markModel);
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage() };
 
         }

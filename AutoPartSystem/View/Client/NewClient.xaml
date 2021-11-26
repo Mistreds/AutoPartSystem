@@ -1,0 +1,33 @@
+﻿<Window x:Class="AutoPartSystem.View.Client.NewClient"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoPartSystem.View.Client"
+         xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" 
+         xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+             d:DataContext="{d:DesignInstance Type=ViewModel:ClientViewModel}"
+        mc:Ignorable="d"
+        Title="NewClient" Height="450" Width="800" > 
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+            <ColumnDefinition Width="3*" ></ColumnDefinition>
+            <ColumnDefinition Width="0.3*" ></ColumnDefinition>
+            <ColumnDefinition Width="3*"></ColumnDefinition>
+            <ColumnDefinition Width="1*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="ФИО" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="1" Height="40"></TextBox>
+        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Номер" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="3" Height="40"></TextBox>
+        <ComboBox  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True" Grid.Row="2" Grid.Column="1"  Height="40"></ComboBox>
+        <ComboBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True" Grid.Row="2" Grid.Column="3"  Height="40"></ComboBox>
+        <Button Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" Width="150">Добавить</Button>
+    </Grid>
+</Window>

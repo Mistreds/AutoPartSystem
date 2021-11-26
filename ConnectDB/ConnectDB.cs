@@ -68,10 +68,14 @@ namespace Data
             #endregion
             #region Warehouse
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
+            modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
             modelBuilder.Entity<Goods>(b=>b.ToTable("Goods"));
+            modelBuilder.Entity<Goods>().Ignore(p=>p.CountCell);
+            modelBuilder.Entity<Goods>().Ignore(p=>p.PriceCell);
             modelBuilder.Entity<GoodsInvoice>(b => b.ToTable("GoodsInvoice"));
             modelBuilder.Entity<Invoice>(b => b.ToTable("Invoice"));
             modelBuilder.Entity<Client>(b => b.ToTable("Client"));
+            modelBuilder.Entity<Client>().Ignore(p=>p.Mark);
             modelBuilder.Entity<GoodsModel>(b => b.ToTable("GoodModel"));
             #endregion
         }

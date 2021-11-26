@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DynamicData;
+using DynamicData.Binding;
 using ReactiveUI;
 namespace Data
 {
@@ -40,7 +43,10 @@ namespace Data
             set
             {
                 this.RaiseAndSetIfChanged(ref _good_invoice, value);
-                SetAllCountAndAllPrice();
+                foreach (var s in GoodsInvoice)
+                {
+                    s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
+                }
             }
         }
         private int _client_id;
@@ -75,15 +81,21 @@ namespace Data
         }
         private void SetAllCountAndAllPrice()
         {
-            all_price = GoodsInvoice.Sum(p => p.AllPrice);
-            all_count = GoodsInvoice.Sum(p => p.Count);
+            Console.WriteLine("123");
+            AllPrice = GoodsInvoice.Sum(p => p.AllPrice);
+            AllCount = GoodsInvoice.Sum(p => p.Count);
         }
         public Invoice() { }
         public Invoice(ObservableCollection<Warehouse> warehouses,Employee employee)
         {
             GoodsInvoice = new ObservableCollection<GoodsInvoice>(warehouses.Select(p => new Data.GoodsInvoice(p.Goods)));
             Client= new Client();
+            Client.new_mark_model();
             Employee=employee;
+            foreach(var s in GoodsInvoice)
+            {
+                s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
+            }
             Date = DateTime.Now;
         }
     }
@@ -101,7 +113,12 @@ namespace Data
             get => _model;
             set=>this.RaiseAndSetIfChanged(ref _model, value);
         }
-
+        private Mark _mark;
+        public Mark Mark
+        {
+            get => _mark;
+            set=>this.RaiseAndSetIfChanged(ref _mark, value);
+        }
         private string _phone_name;
         public string PhoneName
         {
@@ -120,6 +137,9 @@ namespace Data
             get => _city;
             set=>this.RaiseAndSetIfChanged(ref _city,value);
         }
-    
+        public void new_mark_model()
+        {
+            Mark=new Mark();
+        }
     }
 }

@@ -264,8 +264,8 @@
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена прих" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding InAktau}"></DataGridTextColumn>
-                <DataGridTextColumn   Header="Кол-во для продажи" Binding="{Binding InAktau}"></DataGridTextColumn>
-                <DataGridTextColumn   Header="Цена продажи" Binding="{Binding InAktau}"></DataGridTextColumn>
+                <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell}"></DataGridTextColumn>
+                <DataGridTextColumn   Header="Цена продажи" Binding="{Binding Goods.PriceCell}"></DataGridTextColumn>
                 <DataGridTemplateColumn Header="Продажа">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

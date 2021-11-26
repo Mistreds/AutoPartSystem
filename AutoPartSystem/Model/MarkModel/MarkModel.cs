@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Data;
 using AutoPartSystem.ViewModel;
-
+using ReactiveUI;
 namespace AutoPartSystem.Model.MarkModel
 {
     public interface IMarkModel
@@ -26,12 +26,21 @@ namespace AutoPartSystem.Model.MarkModel
         public ObservableCollection<ViewModel.MarkModelFind> MarkModelFind(string name);
         public int GetMarkIdFromName(string name);
     }
-    public class MarkModel : IMarkModel
+    public class MarkModel :ReactiveObject, IMarkModel
     {
-        private ObservableCollection<Data.Model>Model;
+        private ObservableCollection<Data.Model> _model;
+        public ObservableCollection<Data.Model> Model
+        {
+            get => _model;
+            private set {
+                Console.WriteLine("блаблабла");
+                this.RaiseAndSetIfChanged(ref _model, value);
+            }
+        }
         private ObservableCollection<Data.Mark>? Mark;
         public MarkModel()
         {
+            Console.WriteLine("Тип создалась модель");
             Model = GetModels();
             Mark= GetMark();
         }
@@ -44,8 +53,11 @@ namespace AutoPartSystem.Model.MarkModel
         public void AddModel(Data.Model model)
         {
             using var db = new ConDB();
+            
             db.Models.Add(model);
             db.SaveChanges();
+            Model.Add(model);
+            
         }
         public ObservableCollection<Mark> GetMark()
         {

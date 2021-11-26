@@ -54,8 +54,7 @@ namespace AutoPartSystem.ViewModel
             get => _model;
             set=>this.RaiseAndSetIfChanged(ref _model, value);
         }
-    }
-    
+    }  
     public class MarkModelFind : ReactiveObject
     {
         public int model_id { get; set; }
@@ -74,7 +73,6 @@ namespace AutoPartSystem.ViewModel
             IsSelected = true;
         }
     }
-
     public class WarehouseViewModel : ReactiveObject
     {
         #region UserControls
@@ -165,11 +163,11 @@ namespace AutoPartSystem.ViewModel
             set => this.RaiseAndSetIfChanged(ref _article_find, value);
         }
         #endregion
-        public WarehouseViewModel()
+        public WarehouseViewModel(Model.MarkModel.MarkModel markModel)
         {
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable() };
             MainControl = _controls[0];
-            MarkModel = new Model.MarkModel.MarkModel();
+            MarkModel = markModel;
             Mark = MarkModel.GetMark();
             Warehouse = new WarehouseAdd();
             WarehouseModel = new WarehouseModel(this);
@@ -179,6 +177,7 @@ namespace AutoPartSystem.ViewModel
             DescriptionFind = WarehouseModel.GetAllDesctiption("");
             ArticleFind = WarehouseModel.GetAllArticle("");
             Model = new ModelAdd();
+            this.WhenAnyValue(s => s.MarkModel.Model).Subscribe(_ => TestModel());
         }
         public ReactiveCommand<Unit, Unit> AddModelToWareTable => ReactiveCommand.Create(() => {
 
@@ -264,9 +263,9 @@ namespace AutoPartSystem.ViewModel
             Warehouse = new WarehouseAdd();
         });
         public ReactiveCommand<Unit, Unit> AddSale => ReactiveCommand.Create(() => {
-            WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true)));
+            WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true).Select(p=> ViewModel.WarehouseTable.NewTable(p)).ToList()));
 
-            InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel);
+            InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel, MarkModel);
         });
         #region WarehouseSortFilterCommand
         
@@ -408,6 +407,10 @@ namespace AutoPartSystem.ViewModel
             View.Warehouse.AddToWarehousePage addToWarehousePage = new View.Warehouse.AddToWarehousePage();
             Mark = MarkModel.GetMark();
             addToWarehousePage.Show();
+        }
+        private void TestModel()
+        {
+            Console.WriteLine("Тип должна обновится модель тачки");
         }
         public ReactiveCommand<Unit, Unit> UpdateTable => ReactiveCommand.Create(() => { WarehousesTable = WarehouseModel.GetAllWarehouse(); });
         public ReactiveCommand<WarehouseTable, Unit> SetWarePrice => ReactiveCommand.Create<WarehouseTable>(SetWarePriceCommand);

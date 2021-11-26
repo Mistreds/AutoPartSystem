@@ -81,10 +81,10 @@ namespace AutoPartSystem.ViewModel
             get => add_mark;
             set=>this.RaiseAndSetIfChanged(ref add_mark, value);
         }
-        public AdminViewModel()
+        public AdminViewModel(Model.MarkModel.MarkModel markModel)
         {
             AdminModel = new Model.Admin.AdminModel();
-            MarkModel = new Model.MarkModel.MarkModel();
+            MarkModel = markModel;
             _positions = AdminModel.GetPositions();
             _cities = AdminModel.GetCities();
             EmployersTable = AdminModel.GetEmployees();

@@ -65,6 +65,7 @@ namespace Data
             get=> _note;
             set=>this.RaiseAndSetIfChanged(ref _note, value);
         }
+        
         public Warehouse() { }
     }
     public class Goods:ReactiveObject
@@ -107,16 +108,32 @@ namespace Data
             set => this.RaiseAndSetIfChanged(ref _article, value);
         }
         private  double _input_price;
-        public virtual double InputPrice
+        public  double InputPrice
         {
             get => _input_price;
             set => this.RaiseAndSetIfChanged(ref _input_price, value);
         }
         private double _recom_price;
-        public virtual double RecomPrice
+        public double RecomPrice
         {
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
+        }
+        private int _count_cell;
+        public int CountCell
+        {
+            get => _count_cell;
+            set => this.RaiseAndSetIfChanged(ref _count_cell, value);
+        }
+        private double _price_cell;
+        public double PriceCell
+        {
+            get => _price_cell;
+            set { this.RaiseAndSetIfChanged(ref _price_cell, value);
+
+               
+                this.RaisePropertyChanging();
+            }
         }
         public Goods() { }
         public Goods(Goods goods)
@@ -129,6 +146,8 @@ namespace Data
             this.Article = goods.Article;
             this.InputPrice = goods.InputPrice;
             this.RecomPrice = goods.RecomPrice;
+            this.PriceCell = goods.PriceCell;
+            this.CountCell = goods.CountCell;
 
         }
     }
@@ -173,7 +192,9 @@ namespace Data
         {
             GoodId = goods.Id;
             Goods = goods;
-            Count = 1;
+            this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
+            Count = Goods.CountCell;
+            UpdatePrice();
         }
         private int _id;
         public int Id
@@ -189,17 +210,6 @@ namespace Data
                 this.RaiseAndSetIfChanged(ref _count, value);
                 UpdatePrice();
             }
-        }
-        private double _trans_price;
-        public double TransPrice
-        {
-            get => _trans_price;
-            set
-            {
-                this.RaiseAndSetIfChanged(ref _trans_price, value);
-                UpdatePrice();
-            }
-
         }
         private int _good_id;
         public int GoodId
@@ -221,7 +231,8 @@ namespace Data
         }
         private void UpdatePrice()
         {
-            _all_price = Goods.RecomPrice * Count - TransPrice;
+            Console.WriteLine("update");
+            AllPrice = Goods.PriceCell * Count;
         }
         private int _invoice_id;
         public int InvoiceId
@@ -240,8 +251,10 @@ namespace Data
         {
             get => _goods;
             set {
+                Console.WriteLine("good");
                 this.RaiseAndSetIfChanged(ref _goods, value);
                 UpdatePrice();
+
             }
         }
     }
