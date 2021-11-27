@@ -9,9 +9,10 @@
              d:DataContext="{d:DesignInstance Type=ViewModel:ClientViewModel}"
         mc:Ignorable="d"
         Title="NewClient" Height="450" Width="800" > 
-    <Grid>
+    <Grid DataContext="{Binding Client}">
         <Grid.RowDefinitions>
             <RowDefinition Height="2*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
@@ -20,14 +21,17 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"></ColumnDefinition>
             <ColumnDefinition Width="3*" ></ColumnDefinition>
+
             <ColumnDefinition Width="0.3*" ></ColumnDefinition>
             <ColumnDefinition Width="3*"></ColumnDefinition>
             <ColumnDefinition Width="1*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="ФИО" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="1" Height="40"></TextBox>
-        <TextBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Номер" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="3" Height="40"></TextBox>
-        <ComboBox  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True" Grid.Row="2" Grid.Column="1"  Height="40"></ComboBox>
-        <ComboBox wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True" Grid.Row="2" Grid.Column="3"  Height="40"></ComboBox>
-        <Button Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="3" Width="150">Добавить</Button>
+        <TextBox Text="{Binding Name}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="ФИО" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="1" Height="40"></TextBox>
+        <TextBox Text="{Binding PhoneName}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Номер" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="3" Height="40"></TextBox>
+        <ComboBox DisplayMemberPath="Name" SelectedValuePath="Id" SelectedValue="{Binding CityId}"  ItemsSource="{Binding Path=DataContext.Cities,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Город
+                   " wpf:HintAssist.IsFloating="True" Grid.Row="2" Grid.Column="1"  Height="40"></ComboBox>
+        <ComboBox SelectedItem="{Binding Mark}" ItemsSource="{Binding Path=DataContext.Mark,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Марка" DisplayMemberPath="Name" wpf:HintAssist.IsFloating="True" Grid.Row="3" Grid.Column="1"  Height="40"></ComboBox>
+        <ComboBox  ItemsSource="{Binding Path=DataContext.Models,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" wpf:HintAssist.HintOpacity="1" SelectedValue="{Binding ModelId}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True" Grid.Row="3" Grid.Column="3"  Height="40"></ComboBox>
+        <Button Grid.Column="1" Command="{Binding Path=DataContext.AddClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Grid.Row="4" Grid.ColumnSpan="3" Width="150">Добавить</Button>
     </Grid>
 </Window>

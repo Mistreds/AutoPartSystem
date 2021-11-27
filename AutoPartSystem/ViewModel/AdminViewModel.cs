@@ -83,7 +83,7 @@ namespace AutoPartSystem.ViewModel
         }
         public AdminViewModel(Model.MarkModel.MarkModel markModel)
         {
-            AdminModel = new Model.Admin.AdminModel();
+            AdminModel = MainViewModel.AdminModel;
             MarkModel = markModel;
             _positions = AdminModel.GetPositions();
             _cities = AdminModel.GetCities();

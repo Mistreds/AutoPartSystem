@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AutoPartSystem.View.Client"
+             xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+             d:DataContext="{d:DesignInstance Type=ViewModel:ClientViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <Grid>
@@ -12,8 +14,9 @@
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             <ToolBar>
-            <Button Height="35" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Добавить нового клиента</Button>
+            <Button Height="35" Command="{Binding OpenPage}" CommandParameter="NewClient" FontSize="12" Padding="0">Добавить нового клиента</Button>
             <!--<Button FontSize="12" Margin="10,0,0,0" Padding="0">Добавить товар из эксель</Button>-->
             </ToolBar>
+        <ContentControl Grid.Row="1" Content="{Binding MainControl }"></ContentControl>
         </Grid>
 </UserControl>

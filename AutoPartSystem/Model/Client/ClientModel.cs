@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,17 +20,20 @@ namespace AutoPartSystem.Model.Client
         public ClientModel()
         {
             using var db=new Data.ConDB();
-            Client=new ObservableCollection<Data.Client>(db.Clients.ToList());
+            Client=new ObservableCollection<Data.Client>(db.Clients.Include(p=>p.City).Include(p=>p.Model).ThenInclude(p=>p.Mark).Select(p=>new Data.Client(p)).ToList());
         }
 
         public void AddClient(Data.Client client)
         {
-            throw new NotImplementedException();
+            using var db = new Data.ConDB();
+            db.Clients.Add(client);
+            db.SaveChanges();
+            Client.Add(client);
         }
 
         public ObservableCollection<Data.Client> GetClient()
         {
-            throw new NotImplementedException();
+            return Client;
         }
     }
 }

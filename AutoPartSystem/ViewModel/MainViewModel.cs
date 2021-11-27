@@ -16,6 +16,8 @@ namespace AutoPartSystem.ViewModel
         public static ClientViewModel? ClientViewModel { get; set; }
         public static Data.Employee? Employee { get;private set; }
         private Model.MarkModel.MarkModel? _markModel;
+        public static Model.Admin.AdminModel AdminModel;
+        public static Model.Client.ClientModel ClientModel;
         private UserControl? _main_control;
         public UserControl? MainControl
         {
@@ -27,13 +29,15 @@ namespace AutoPartSystem.ViewModel
         {
             Employee = employee;
             _markModel=new Model.MarkModel.MarkModel();
+            AdminModel= new Model.Admin.AdminModel();
+            ClientModel=new Model.Client.ClientModel();
             if (Employee.PositionId==1)
             {
                 AdminViewModel = new AdminViewModel(_markModel);
             }
             WarehouseViewModel=new WarehouseViewModel(_markModel);
             ClientViewModel = new ClientViewModel(_markModel);
-            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage() };
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage() };
 
         }
         public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
@@ -56,6 +60,10 @@ namespace AutoPartSystem.ViewModel
                 case "AdminModel":
                     MainControl = _controls[1];
                     AdminViewModel.OpenPageCommand(page_id);
+                    break;
+                case "OpenClientTable":
+                    MainControl = _controls[2];
+                    ClientViewModel.OpenPageCommand(page_id);
                     break;
             }
             

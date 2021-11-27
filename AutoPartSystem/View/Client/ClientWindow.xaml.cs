@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,16 @@ namespace AutoPartSystem.View.Client
     /// </summary>
     public partial class ClientWindow : Window
     {
-        public ClientWindow()
+        public ObservableCollection<Data.Client> clients { get; set; }  
+        public View.Client.ClientTable ClientTable { get; set; }
+        public Data.Invoice Invoice { get; set; }
+        public ClientWindow(ObservableCollection<Data.Client> clients, Data.Invoice invoice)
         {
             InitializeComponent();
+            this.clients = clients;
+            Invoice = invoice;
+            DataContext = this;
+            ClientTable = new ClientTable(this);
         }
     }
 }

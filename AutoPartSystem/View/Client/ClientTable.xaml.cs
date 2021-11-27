@@ -24,5 +24,26 @@ namespace AutoPartSystem.View.Client
         {
             InitializeComponent();
         }
+        private ClientWindow clientWindow;
+        public ClientTable(ClientWindow clientWindow)
+        {
+            InitializeComponent();
+            DataContext = clientWindow;
+            this.clientWindow = clientWindow;
+            clientTable.ItemsSource = clientWindow.clients;
+            clientTable.IsReadOnly = true;
+            clientTable.MouseDoubleClick += ClientTable_MouseDoubleClick;
+            
+        }
+
+        private void ClientTable_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            Data.Client? client = clientTable.SelectedItem as Data.Client;
+            if(client!=null)
+            {
+                clientWindow.Invoice.Client = new Data.Client(client);
+                clientWindow.Close();
+            }
+        }
     }
 }

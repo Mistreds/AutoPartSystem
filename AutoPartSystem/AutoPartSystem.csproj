@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.8.3" />
     <PackageReference Include="MaterialDesignThemes" Version="4.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
       <PrivateAssets>all</PrivateAssets>
@@ -24,10 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ConnectDB\ConnectDB.csproj" />
     <ProjectReference Include="..\Data\Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="View\Invoice\" />
   </ItemGroup>
 
 </Project>

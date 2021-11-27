@@ -137,6 +137,21 @@ namespace Data
             get => _city;
             set=>this.RaiseAndSetIfChanged(ref _city,value);
         }
+        public Client()
+        {
+
+        }
+        public Client(Client p)
+        {
+            this.Id = p.Id;
+            this.PhoneName = p.PhoneName;
+            this.CityId = p.CityId;
+            this.City = p.City;
+            this.Name = p.Name;
+            this.Model = p.Model;
+            this.Mark=p.Model.Mark;
+            this.ModelId = p.ModelId;
+        }
         public void new_mark_model()
         {
             Mark=new Mark();

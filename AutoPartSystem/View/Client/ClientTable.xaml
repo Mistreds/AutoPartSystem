@@ -4,20 +4,32 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AutoPartSystem.View.Client"
+             xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+             d:DataContext="{d:DesignInstance Type=ViewModel:ClientViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <Grid>
-        <DataGrid AutoGenerateColumns="False" GridLinesVisibility="All" CanUserAddRows="False">
+        <DataGrid AutoGenerateColumns="False" x:Name="clientTable"  ItemsSource="{Binding ClientTable}" GridLinesVisibility="All" CanUserAddRows="False">
             <DataGrid.Columns>
-                <DataGridTemplateColumn Width="1*" Header="Модель">
+                <DataGridTemplateColumn Width="1*"  Header="Модель">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock></TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Model.Mark.Name}"></TextBlock>
+                                <TextBlock Margin="10,0,0,0"  Text="{Binding Model.Name}"></TextBlock>
+                            </StackPanel>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn  Width="1*" Header="ФИО"></DataGridTextColumn>
-                <DataGridTextColumn Width="1*" Header="Телефон"></DataGridTextColumn>
+                <DataGridTextColumn  Width="1*" Header="ФИО" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTextColumn Width="1*" Header="Телефон" Binding="{Binding PhoneName}"></DataGridTextColumn>
+                <DataGridTemplateColumn Width="1*" Header="Город">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding City.Name}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

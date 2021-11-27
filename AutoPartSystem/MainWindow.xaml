@@ -47,7 +47,7 @@
             </MenuItem>
             <MenuItem Header="Таблицы">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица с клиентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
             </MenuItem>
             <MenuItem Header="Администратор">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
