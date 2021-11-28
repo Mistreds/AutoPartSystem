@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ReactiveUI;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DynamicData;
-using DynamicData.Binding;
-using ReactiveUI;
 namespace Data
 {
-   public class Invoice:ReactiveObject
+    public class Invoice:ReactiveObject
     {
         private int _id;
         public int Id
