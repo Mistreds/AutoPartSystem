@@ -77,8 +77,22 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
         {
-            return new ObservableCollection<WarehouseTable>(Warehouses.Where(p=>model.Any(m=>m.IsSelected==true && p.Goods.GoodsModel.Select(p=>p.ModelId).ToList().Contains(m.model_id) ) && desctiption.Where(m => m.IsSelected == true).Select(d=>d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));
-            return null;
+            var a =new ObservableCollection<WarehouseTable>(Warehouses.Where(p=>model.Any(m=>m.IsSelected==true && p.Goods.GoodsModel.Select(p=>p.ModelId).ToList().Contains(m.model_id) ) && desctiption.Where(m => m.IsSelected == true).Select(d=>d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));
+            if(model.Count()==model.Where(p=>p.IsSelected==true).Count())
+            {
+                return a;
+            }
+            var b = new ObservableCollection<WarehouseTable>();
+            foreach (var item in a)
+            {
+                foreach (var item2 in item.Goods.GoodsModel.Where(p=>model.Where(p=>p.IsSelected==true).Select(s=>s.model_id).Contains(p.ModelId)))
+                {
+                    var bi = WarehouseTable.NewTable(item);
+                    bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
+                    b.Add(bi);
+                }
+            }
+            return b;
         }
         public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id)
         {

@@ -272,7 +272,7 @@ namespace AutoPartSystem.ViewModel
             public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
             private void SelectFindModelCommand(string name)
             {
-                Console.WriteLine(name);
+                
                 MarkModelFind = MarkModel.MarkModelFind(name);
             }
             public ReactiveCommand<string, Unit> SelectFindDesctiption => ReactiveCommand.Create<string>(SelectFindDesctiptionCommand);
@@ -322,6 +322,12 @@ namespace AutoPartSystem.ViewModel
                     {
                         foreach (var model in MarkModelFind)
                         {
+                        if (model.model_id == 0)
+                        {
+                            continue;
+                        }
+                        var mod = MarkModel.MarkModelFinds.Where(p => p.model_id == model.model_id).FirstOrDefault(); ;
+                        mod.IsSelected = true;
                             model.IsSelected = true;
                         }
                     }
@@ -330,13 +336,21 @@ namespace AutoPartSystem.ViewModel
                         foreach (var model in MarkModelFind)
                         {
                             model.IsSelected = false;
+                        if(model.model_id==0)
+                        {
+                            continue;
                         }
+                        var mod = MarkModel.MarkModelFinds.Where(p => p.model_id == model.model_id).FirstOrDefault(); ;
+                        mod.IsSelected = false;
+                    }
                     }
                 }
                 else
                 {
                     bools.IsSelected = false;
-                }
+                    var mod = MarkModel.MarkModelFinds.Where(p => p.model_id == name).FirstOrDefault();
+                    mod.IsSelected=MarkModelFind.FirstOrDefault(p => p.model_id == name).IsSelected;
+            }
             }
             public ReactiveCommand<int, Unit> SelectAllDesctiption => ReactiveCommand.Create<int>(SelectAllDesctiptionCommand);
             private void SelectAllDesctiptionCommand(int name)

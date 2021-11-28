@@ -9,7 +9,7 @@
 
              d:DataContext="{d:DesignInstance Type=ViewModel:WarehouseViewModel}"
              d:DesignHeight="450" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" d:DesignWidth="800"
+             xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" d:DesignWidth="600"
              x:Name="warehousetable"
              >
     <UserControl.Resources>

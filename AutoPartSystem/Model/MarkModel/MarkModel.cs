@@ -38,11 +38,19 @@ namespace AutoPartSystem.Model.MarkModel
             }
         }
         private ObservableCollection<Data.Mark>? Mark;
+        private ObservableCollection<ViewModel.MarkModelFind> _markModel;
+        public ObservableCollection<MarkModelFind> MarkModelFinds
+        {
+            get=> _markModel;
+            set=>this.RaiseAndSetIfChanged(ref _markModel, value);
+        }
         public MarkModel()
         {
             Console.WriteLine("Тип создалась модель");
             Model = GetModels();
-            Mark= GetMark();
+            
+            Mark = GetMark();
+            MarkModelFinds = new ObservableCollection<MarkModelFind>(Model.Select(p => new ViewModel.MarkModelFind(p.Id, $"{p.Mark.Name} {p.Name}")).OrderBy(p => p.model_name));
         }
         public void AddMark(Mark mark)
         {
@@ -100,7 +108,7 @@ namespace AutoPartSystem.Model.MarkModel
 
         public ObservableCollection<MarkModelFind> MarkModelFind(string name)
         {
-            var a= new ObservableCollection<MarkModelFind>(Model.Where(p => $"{p.Mark.Name} {p.Name}".ToLower().Contains(name.ToLower())).Select(p=>new ViewModel.MarkModelFind(p.Id, $"{p.Mark.Name} {p.Name}")).OrderBy(p=>p.model_name));
+            var a= new ObservableCollection<MarkModelFind>(MarkModelFinds.Where(p => p.model_name.ToLower().Contains(name.ToLower())).OrderBy(p=>p.model_name));
             a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
             return a;
         }

@@ -74,6 +74,12 @@ namespace Data
                 this.RaiseAndSetIfChanged(ref all_price, value);
             }
         }
+        private bool _is_invoice;
+        public bool IsInvoice
+        {
+            get => _is_invoice;
+            set=>this.RaiseAndSetIfChanged(ref _is_invoice,value);
+        }
         private void SetAllCountAndAllPrice()
         {
             Console.WriteLine("123");

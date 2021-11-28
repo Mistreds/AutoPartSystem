@@ -14,5 +14,15 @@
             <RowDefinition></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="Менеджер" VerticalAlignment="Center"></TextBlock>
+            <TextBox Grid.Column="1" VerticalAlignment="Center" ></TextBox>
+        </Grid>
     </Grid>
 </Window>
