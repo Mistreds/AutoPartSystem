@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace AutoPartSystem.View.Invoice
 {
     /// <summary>
-    /// Логика взаимодействия для InvocePage.xaml
+    /// Логика взаимодействия для CreateInvoice.xaml
     /// </summary>
-    public partial class InvocePage : Window
+    public partial class CreateInvoice : UserControl
     {
-        public InvocePage()
+        public CreateInvoice()
         {
             InitializeComponent();
         }

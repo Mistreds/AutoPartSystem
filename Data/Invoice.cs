@@ -82,11 +82,24 @@ namespace Data
         }
         private void SetAllCountAndAllPrice()
         {
-            Console.WriteLine("123");
             AllPrice = GoodsInvoice.Sum(p => p.AllPrice);
             AllCount = GoodsInvoice.Sum(p => p.Count);
         }
         public Invoice() { }
+        public Invoice(Invoice inv)
+        {
+            this.Id = inv.Id;
+            this.IsInvoice = inv.IsInvoice;
+            this.EmployeeId = inv.EmployeeId;
+            this.AllCount = inv.AllCount;
+            this.Date=inv.Date;
+            this.ClientId = inv.ClientId;
+            if(ClientId==0)
+            {
+                Client=inv.Client;
+            }
+            this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p=>new Data.GoodsInvoice(p)));
+        }
         public Invoice(ObservableCollection<Warehouse> warehouses,Employee employee)
         {
             GoodsInvoice = new ObservableCollection<GoodsInvoice>(warehouses.Select(p => new Data.GoodsInvoice(p.Goods)));
@@ -98,6 +111,112 @@ namespace Data
                 s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
             }
             Date = DateTime.Now;
+        }
+    }
+    public class GoodsInvoice : ReactiveObject
+    {
+        public GoodsInvoice(GoodsInvoice goodsInvoice)
+        {
+            this.Id= goodsInvoice.Id;
+            this.AllPrice= goodsInvoice.AllPrice;
+            this.Count= goodsInvoice.Count;
+            this.GoodsId = goodsInvoice.Goods.Id;
+            this.ModelId = goodsInvoice.Model.Id;
+            this.Price = goodsInvoice.Price;
+            
+        }
+
+        public GoodsInvoice(){}
+        public GoodsInvoice(Goods goods)
+        {
+            GoodsId = goods.Id;
+            Goods = goods;
+            Model = goods.GoodsModel.FirstOrDefault().Model;
+            ModelId = Model.Id;
+            this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
+            this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice());
+            Count = Goods.CountCell;
+            Price = goods.PriceCell;
+            UpdatePrice();
+        }
+        private int _model_id;
+        public int ModelId
+        {
+            get => _model_id;
+            set => this.RaiseAndSetIfChanged(ref _model_id, value);
+        }
+        private Model model;
+        public Model Model
+        {
+            get => model;
+            set => this.RaiseAndSetIfChanged(ref model, value);
+        }
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set => this.RaiseAndSetIfChanged(ref _id, value);
+        }
+        private int _count;
+        public int Count
+        {
+            get => _count;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _count, value);
+                
+            }
+        }
+        private int _goods_id;
+        public int GoodsId
+        {
+            get => _goods_id;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _goods_id, value);
+            }
+        }
+        private double _price;
+        public double Price
+        {
+            get => _price;
+            set=>this.RaiseAndSetIfChanged(ref this._price, value); 
+        }
+        private double _all_price;
+        public double AllPrice
+        {
+            get => _all_price;
+            private set
+            {
+                this.RaiseAndSetIfChanged(ref _all_price, value);
+            }
+        }
+        private void UpdatePrice()
+        {
+            AllPrice = Goods.PriceCell * Count;
+        }
+        private int _invoice_id;
+        public int InvoiceId
+        {
+            get => _invoice_id;
+            set => this.RaiseAndSetIfChanged(ref _invoice_id, value);
+        }
+        private Invoice _invoice;
+        public Invoice Invoice
+        {
+            get => _invoice;
+            set => this.RaiseAndSetIfChanged(ref _invoice, value);
+        }
+        private Goods _goods;
+        public Goods Goods
+        {
+            get => _goods;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _goods, value);
+                UpdatePrice();
+
+            }
         }
     }
     public class Client:MainClass
@@ -140,7 +259,7 @@ namespace Data
         }
         public Client()
         {
-
+            Mark=new Mark();
         }
         public Client(Client p)
         {
