@@ -65,7 +65,12 @@ namespace Data
             get=> _note;
             set=>this.RaiseAndSetIfChanged(ref _note, value);
         }
-        
+        private bool _is_virtual;
+        public bool IsVirtual
+        {
+            get => _is_virtual;
+            set=>this.RaiseAndSetIfChanged(ref _is_virtual, value);
+        }
         public Warehouse() { }
     }
     public class Goods:ReactiveObject

@@ -73,6 +73,7 @@ namespace Data
             modelBuilder.Entity<Goods>().Ignore(p=>p.CountCell);
             modelBuilder.Entity<Goods>().Ignore(p=>p.PriceCell);
             modelBuilder.Entity<GoodsInvoice>(b => b.ToTable("GoodsInvoice"));
+            modelBuilder.Entity<GoodsInvoice>().Ignore(p=>p.DontHaveGoods);
             modelBuilder.Entity<Invoice>(b => b.ToTable("Invoice"));
             modelBuilder.Entity<Client>(b => b.ToTable("Client"));
             modelBuilder.Entity<Client>().Ignore(p=>p.Mark);

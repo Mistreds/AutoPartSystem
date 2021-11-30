@@ -170,7 +170,8 @@ namespace AutoPartSystem.ViewModel
             MarkModel = markModel;
             Mark = MarkModel.GetMark();
             Warehouse = new WarehouseAdd();
-            WarehouseModel = new WarehouseModel(this);
+            MainViewModel.WarehouseModel = new Model.Warehouse.WarehouseModel(this);
+            WarehouseModel = MainViewModel.WarehouseModel; 
             WarehousesTable = WarehouseModel.GetAllWarehouse();
             WarehouseInvoceModel = new WarehouseInvoceModel();
             MarkModelFind = MarkModel.MarkModelFind("");

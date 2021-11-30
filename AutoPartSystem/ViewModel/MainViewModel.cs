@@ -14,10 +14,12 @@ namespace AutoPartSystem.ViewModel
         public static AdminViewModel? AdminViewModel { get; set; }
         public static WarehouseViewModel? WarehouseViewModel { get; set;}
         public static ClientViewModel? ClientViewModel { get; set; }
+        public static InvoiceViewModel? InvoiceViewModel { get; set; }
         public static Data.Employee? Employee { get;private set; }
-        private Model.MarkModel.MarkModel? _markModel;
+        public static Model.MarkModel.MarkModel? _markModel;
         public static Model.Admin.AdminModel AdminModel;
         public static Model.Client.ClientModel ClientModel;
+        public static Model.Warehouse.WarehouseModel WarehouseModel;
         private UserControl? _main_control;
         public UserControl? MainControl
         {
@@ -37,7 +39,9 @@ namespace AutoPartSystem.ViewModel
             }
             WarehouseViewModel=new WarehouseViewModel(_markModel);
             ClientViewModel = new ClientViewModel(_markModel);
-            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage() };
+            InvoiceViewModel = new InvoiceViewModel();
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage() };
+            
 
         }
         public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
@@ -64,6 +68,10 @@ namespace AutoPartSystem.ViewModel
                 case "OpenClientTable":
                     MainControl = _controls[2];
                     ClientViewModel.OpenPageCommand(page_id);
+                    break;
+                case "OpenInvoiceComm":
+                    MainControl = _controls[3];
+                    InvoiceViewModel.OpenPageCommand(page_id);
                     break;
             }
             

@@ -43,11 +43,15 @@
         <Menu>
             <MenuItem Header="Файл">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар"></MenuItem>
+                <MenuItem Header="Добавить клиента"></MenuItem>
                 <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
             </MenuItem>
             <MenuItem Header="Таблицы">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Виртуальный склад"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Накладные"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoiceComm" Header="Коммерческие предложения"></MenuItem>
             </MenuItem>
             <MenuItem Header="Администратор">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>

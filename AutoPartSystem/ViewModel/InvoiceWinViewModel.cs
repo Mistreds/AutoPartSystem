@@ -47,6 +47,7 @@ namespace AutoPartSystem.ViewModel
             get => main_control;
             set=>this.RaiseAndSetIfChanged(ref main_control, value);
         }
+        public bool IsEdit { get; set; }
         private View.Invoice.CreateInvoice CreateInvoice;
         private View.Invoice.InvoceTable InvoiceTable;
         public InvoiceWinViewModel(Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel, Model.MarkModel.MarkModel MarkModel)
@@ -58,6 +59,10 @@ namespace AutoPartSystem.ViewModel
             InvoiceTable = new View.Invoice.InvoceTable();
             MainControl = CreateInvoice;
             _cities=MainViewModel.AdminModel.GetCities();
+            CreateInvoiceBase = ReactiveCommand.Create(() =>
+             {
+                 WarehouseInvoceModel.AddInvoiceToDataBase(Invoice);
+             });
             Invoice = new Data.Invoice(new ObservableCollection<Data.Warehouse>(WarehouseInvoceModel.GetWarehouse()),MainViewModel.Employee);
             try
             {
@@ -67,6 +72,25 @@ namespace AutoPartSystem.ViewModel
             View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
             invoiceGood.Show();
            
+        }
+        public InvoiceWinViewModel(Data.Invoice invoice)
+        {
+            IsEdit = true;
+            Invoice = invoice;
+            this.WarehouseInvoceModel = new Model.Warehouse.WarehouseInvoceModel();
+            this.MarkModel = MainViewModel._markModel;
+            try
+            {
+                this.WhenAnyValue(vm => vm.Invoice.Client.Model.MarkId).WhereNotNull().Subscribe(x => UpdateModels(x));
+            }
+            catch { }
+            CreateInvoice = new View.Invoice.CreateInvoice();
+            InvoiceTable = new View.Invoice.InvoceTable();
+            MainControl = InvoiceTable;
+            View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
+            invoiceGood.Show();
+            
+
         }
         private void UpdateModels(int mark_id)
         {
@@ -94,7 +118,12 @@ namespace AutoPartSystem.ViewModel
             MainControl=CreateInvoice;
         
         });
-        public  ReactiveCommand<Unit,Unit> CreateInvoiceBase=>ReactiveCommand.Create(() => { WarehouseInvoceModel.AddInvoiceToDataBase(Invoice);});
+        private ReactiveCommand<Unit, Unit> _create_invoice_base;
+        public ReactiveCommand<Unit, Unit> CreateInvoiceBase
+        {
+            get => _create_invoice_base;
+            set => this.RaiseAndSetIfChanged(ref _create_invoice_base, value);
+        }
        
     }
 }

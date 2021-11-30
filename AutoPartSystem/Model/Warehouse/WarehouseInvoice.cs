@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoPartSystem.Model.Warehouse
 {
@@ -19,6 +20,7 @@ namespace AutoPartSystem.Model.Warehouse
         public ObservableCollection<Data.Warehouse> GetWarehouse();
         public void CreateExcelFile(Data.Invoice invoice);
         public void AddInvoiceToDataBase (Data.Invoice invoice);
+        public void UpdateInvoice(Data.Invoice invoice);  
     }
     public class WarehouseInvoceModel : IWarehouseInvoce
     {
@@ -51,8 +53,6 @@ namespace AutoPartSystem.Model.Warehouse
             using (ExcelPackage package = new ExcelPackage(newFile))
             {
                 ExcelWorksheet sheet = package.Workbook.Worksheets.Add("MySheet");
-
-
                 sheet.Cells["A9:M9"].Merge = true;
                 sheet.Cells["A9:M9"].Value = "Менеджер";
                 for (int i = 1; i <= 60; i++)
@@ -226,9 +226,39 @@ namespace AutoPartSystem.Model.Warehouse
         {
             var inv = new Data.Invoice(invoice);
             using var db = new Data.ConDB();
-            db.Invoices.Add(invoice);
-            db.SaveChanges();
-            invoice.Id = inv.Id;
+            var ware = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p=>invoice.GoodsInvoice.Select(s=>s.Goods.WarehouseId).Contains(p.Id)).Select(p=>WarehouseTable.NewTable(p)));
+            bool is_have_good = true;
+            foreach(var invo in invoice.GoodsInvoice)
+            {
+                var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                war.InAlmata -= invo.Count;
+                if(war.InAlmata<0)
+                {
+                    invo.DontHaveGoods = true;
+                    is_have_good=false;
+                }
+            }
+            if(is_have_good)
+            {
+
+            }
+            else
+            {
+                MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
+            }
+           // db.Invoices.Add(inv);
+          // /db.SaveChanges();
+           // invoice.Id = inv.Id;
+           // if(invoice.IsInvoice)
+           // {
+
+            //}
+        }
+
+        public void UpdateInvoice(Invoice invoice)
+        {
+            throw new NotImplementedException();
         }
     }
 }
+

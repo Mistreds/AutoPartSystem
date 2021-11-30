@@ -90,13 +90,16 @@ namespace Data
         {
             this.Id = inv.Id;
             this.IsInvoice = inv.IsInvoice;
-            this.EmployeeId = inv.EmployeeId;
+            this.EmployeeId = inv.Employee.Id;
             this.AllCount = inv.AllCount;
             this.Date=inv.Date;
-            this.ClientId = inv.ClientId;
-            if(ClientId==0)
+            if(inv.Client.Id!=0)
             {
-                Client=inv.Client;
+                this.ClientId = inv.Client.Id;
+            }
+            else
+            {
+                this.Client = inv.Client;
             }
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p=>new Data.GoodsInvoice(p)));
         }
@@ -125,7 +128,6 @@ namespace Data
             this.Price = goodsInvoice.Price;
             
         }
-
         public GoodsInvoice(){}
         public GoodsInvoice(Goods goods)
         {
@@ -138,6 +140,12 @@ namespace Data
             Count = Goods.CountCell;
             Price = goods.PriceCell;
             UpdatePrice();
+        }
+        private bool _dont_have_goods;
+        public bool DontHaveGoods
+        {
+            get => _dont_have_goods;
+            set=>this.RaiseAndSetIfChanged(ref _dont_have_goods, value);
         }
         private int _model_id;
         public int ModelId

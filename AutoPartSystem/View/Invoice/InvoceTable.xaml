@@ -22,7 +22,18 @@
             <RowDefinition Height="60"></RowDefinition>
         </Grid.RowDefinitions>
         <Canvas>
-            <Button Content="Назад" Command="{Binding BackInvoice }" Canvas.Left="10" Canvas.Top="4"></Button>
+            <Button  Command="{Binding BackInvoice }" Canvas.Left="10" Canvas.Top="4">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignRaisedButton }">
+                        <Setter Property="Content" Value="Назад"></Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsEdit}" Value="true">
+                                <Setter Property="Content" Value="Редактировать"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Canvas>
         <Grid Background="White" Margin="5,0,5,0"  Grid.Row="1" x:Name="InvoiceGrid" DataContext="{Binding Invoice}">
             <Grid.RowDefinitions>
@@ -150,6 +161,15 @@
                     <DataGridTextColumn Width="1*"  x:Name="PriceCol" Header="Цена за единиицу" Binding="{Binding Goods.PriceCell}"></DataGridTextColumn>
                     <DataGridTextColumn Width="1*"   x:Name="AllPriceCol" Header="Сумма"  Binding="{Binding AllPrice}"></DataGridTextColumn>
                 </DataGrid.Columns>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DontHaveGoods}" Value="True">
+                                <Setter Property="Background" Value="Red"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
             </DataGrid>
             <Grid Grid.Row="6">
                 <Grid.ColumnDefinitions>
