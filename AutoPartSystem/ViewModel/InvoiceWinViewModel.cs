@@ -48,6 +48,7 @@ namespace AutoPartSystem.ViewModel
             set=>this.RaiseAndSetIfChanged(ref main_control, value);
         }
         public bool IsEdit { get; set; }
+       public bool IsInvoice { get; set; }
         private View.Invoice.CreateInvoice CreateInvoice;
         private View.Invoice.InvoceTable InvoiceTable;
         public InvoiceWinViewModel(Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel, Model.MarkModel.MarkModel MarkModel)
@@ -77,8 +78,13 @@ namespace AutoPartSystem.ViewModel
         {
             IsEdit = true;
             Invoice = invoice;
+            IsInvoice = Invoice.IsInvoice;
             this.WarehouseInvoceModel = new Model.Warehouse.WarehouseInvoceModel();
             this.MarkModel = MainViewModel._markModel;
+            CreateInvoiceBase = ReactiveCommand.Create(() =>
+             {
+                 WarehouseInvoceModel.UpdateInvoice(Invoice);
+             });
             try
             {
                 this.WhenAnyValue(vm => vm.Invoice.Client.Model.MarkId).WhereNotNull().Subscribe(x => UpdateModels(x));

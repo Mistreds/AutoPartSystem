@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
        xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
              d:DataContext="{d:DesignInstance Type=ViewModel:InvoiceWinViewModel}"
-         xmlns:conv="clr-namespace:AutoPartSystem.Model.Warehouse"
+         xmlns:conv="clr-namespace:AutoPartSystem.Converted"
          xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:conv1="clr-namespace:System.ComponentModel;assembly=netstandard"
         mc:Ignorable="d"
-        Title="Окно продажи" Height="450" Width="800">
+        Title="Окно продажи" Height="550" Width="1200">
     <Window.Resources>
         <ResourceDictionary>
             <conv:DateTimeConverter x:Key="DateTimeConverter"></conv:DateTimeConverter>

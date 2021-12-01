@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AutoPartSystem.View.Invoice"
               xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+             xmlns:conv="clr-namespace:AutoPartSystem.Converted"
              d:DataContext="{d:DesignInstance Type=ViewModel:InvoiceWinViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="White">
@@ -13,6 +14,7 @@
             <Setter Property="IsReadOnly" Value="True"></Setter>
             <Setter Property="TextAlignment" Value="Center"></Setter>
         </Style>
+        <conv:IsNull x:Key="IsNull"></conv:IsNull>
     </UserControl.Resources>
     <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
@@ -29,6 +31,9 @@
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsEdit}" Value="true">
                                 <Setter Property="Content" Value="Редактировать"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsInvoice}" Value="true">
+                                <Setter Property="IsEnabled" Value="False"></Setter>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -196,7 +201,43 @@
                 <ColumnDefinition></ColumnDefinition>
                 <ColumnDefinition Width="100"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" MaxWidth="150" Command="{Binding CreateInvoiceBase}" Content="Сохранить"></Button>
+            <Button Grid.Column="1" MaxWidth="150" Command="{Binding CreateInvoiceBase}">
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignRaisedButton }">
+                        <Setter Property="Content" Value="Добавить"></Setter>
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition  Binding="{Binding IsInvoice}" Value="True"></Condition>
+                                    <Condition  Binding="{Binding Invoice.IsInvoice}" Value="True"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Content" Value="Отменить"></Setter>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition  Binding="{Binding IsEdit}" Value="False"></Condition>
+                                    <Condition Binding="{Binding Invoice.Id, Converter={StaticResource IsNull}}" Value="False">
+                                    </Condition>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition  Binding="{Binding IsInvoice}" Value="False"></Condition>
+                                    <Condition  Binding="{Binding IsEdit}" Value="True"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Content" Value="Сохранить"></Setter>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <Button Grid.Column="3" MaxWidth="150" Content="Excel">
             </Button>
             <Button Grid.Column="5" MaxWidth="150" Content="JPEG" Click="Button_Click" RenderTransformOrigin="0.598,0.5"></Button>

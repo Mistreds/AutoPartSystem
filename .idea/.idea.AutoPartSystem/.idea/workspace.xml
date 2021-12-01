@@ -6,15 +6,19 @@
   <component name="ChangeListManager">
     <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/InvoiceModel/InvoiceModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/InvoiceModel/InvoiceModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/Convert.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/Convert.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseInvoice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseInvoice.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvocePage.xaml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvocePage.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/CreateInvoice.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/CreateInvoice.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvoceTable.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvoceTable.xaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvoiceGood.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvoiceGood.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvoiceMainTab.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Invoice/InvoiceMainTab.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/InvoiceViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/InvoiceViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/InvoiceWinViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/InvoiceWinViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/MainViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/MainViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Data/Invoice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Invoice.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Warehouse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Warehouse.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +89,8 @@
       <workItem from="1637844866768" duration="1241000" />
       <workItem from="1637921947580" duration="1383000" />
       <workItem from="1638186917893" duration="1192000" />
-      <workItem from="1638195286556" duration="1161000" />
+      <workItem from="1638195286556" duration="1754000" />
+      <workItem from="1638361663466" duration="3194000" />
     </task>
     <servers />
   </component>

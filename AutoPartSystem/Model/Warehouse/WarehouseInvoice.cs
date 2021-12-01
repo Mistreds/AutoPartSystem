@@ -240,7 +240,19 @@ namespace AutoPartSystem.Model.Warehouse
             }
             if(is_have_good)
             {
-
+                if(inv.IsInvoice)
+                {
+                    var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
+                    foreach (var invo in invoice.GoodsInvoice)
+                    {
+                        var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                        war.InAlmata -= invo.Count;
+                    }
+                    db.Warehouse.UpdateRange(wares);    
+                }
+                db.Invoices.Add(inv);
+                db.SaveChanges();
+                invoice.Id = inv.Id;
             }
             else
             {
@@ -257,7 +269,45 @@ namespace AutoPartSystem.Model.Warehouse
 
         public void UpdateInvoice(Invoice invoice)
         {
-            throw new NotImplementedException();
+            Console.WriteLine("dsadasd");
+            Console.WriteLine(invoice.AllCount);
+            using var db = new Data.ConDB();
+            {
+
+                var ware = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)).Select(p => WarehouseTable.NewTable(p)));
+                bool is_have_good = true;
+                foreach (var invo in invoice.GoodsInvoice)
+                {
+                    var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                    war.InAlmata -= invo.Count;
+                    if (war.InAlmata < 0)
+                    {
+                        invo.DontHaveGoods = true;
+                        is_have_good = false;
+                    }
+                }
+                if (is_have_good)
+                {
+                    if (invoice.IsInvoice)
+                    {
+                        var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
+                        foreach (var invo in invoice.GoodsInvoice)
+                        {
+                            var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                            war.InAlmata -= invo.Count;
+                        }
+                        db.Warehouse.UpdateRange(wares);
+                    }
+                    var inv = new Data.Invoice(invoice);
+                    db.Invoices.Update(inv);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
+                }
+            }
+            Console.WriteLine("dsadasd");
         }
     }
 }

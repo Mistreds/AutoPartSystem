@@ -73,6 +73,10 @@ namespace AutoPartSystem.ViewModel
                     MainControl = _controls[3];
                     InvoiceViewModel.OpenPageCommand(page_id);
                     break;
+                case "OpenInvoice":
+                    MainControl = _controls[3];
+                    InvoiceViewModel.OpenPageCommand(page_id);
+                    break;
             }
             
         }

@@ -5,25 +5,69 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:AutoPartSystem.View.Invoice"
       mc:Ignorable="d" 
+             xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" 
               xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
             d:DataContext="{d:DesignInstance Type=ViewModel:InvoiceViewModel}"
       d:DesignHeight="450" d:DesignWidth="800"
       Background="White">
     <UserControl.Resources>
         <Style TargetType="GroupBox" x:Key="Group"></Style>
+        <Style TargetType="TextBlock" x:Key="TextGrid">
+            <Setter Property="FontSize" Value="13"></Setter>
+            <Setter Property="TextWrapping" Value="Wrap"></Setter>
+            <Setter Property="Margin" Value="5"></Setter>
+        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <ComboBox Margin="30,0,0,0" Height="40" Width="200"></ComboBox>
-            <Button Margin="15,0,0,0" Content="Выбрать"></Button>
+            <ComboBox SelectedValue="{Binding FindInvoices.EmpId}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Сотрудник" wpf:HintAssist.IsFloating="True" Margin="30,0,0,0" Height="40" Width="400" SelectedIndex="0"  ItemsSource="{Binding  EmployersTable}" SelectedValuePath="Id">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}"></TextBlock>
+                            <TextBlock Margin="5,0,0,0" Text="{Binding Position.Name}"></TextBlock>
+                            <TextBlock Margin="5,0,0,0" Text="{Binding City.Name}"></TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
         </StackPanel>
-
-        
-        <GroupBox Header="Коммерческие предложения" Grid.Row="1" >
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="4*" ></ColumnDefinition>
+                <ColumnDefinition Width="1*" ></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+        <Grid  DataContext="{Binding FindInvoices}" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                
+            </Grid.ColumnDefinitions>
+            <TextBox Margin="10,0,0,0"  Grid.Column="0" Text="{Binding Id}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Номер накладной" wpf:HintAssist.IsFloating="True" VerticalAlignment="Center"></TextBox>
+            <TextBox Margin="10,0,0,0"  Grid.Column="1" Text="{Binding Fio}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="ФИО Клиента" wpf:HintAssist.IsFloating="True" VerticalAlignment="Center"></TextBox>
+            <TextBox Margin="10,0,0,0" Grid.Column="2" Text="{Binding Phone}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Номер Клиента" wpf:HintAssist.IsFloating="True" VerticalAlignment="Center"></TextBox>
+            <GroupBox Margin="10,0,0,0" Grid.Column="3" Style="{StaticResource Group}"  Header="Дата">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <DatePicker Margin="5,0,0,0" SelectedDate="{Binding Date1}"></DatePicker>
+                    <DatePicker Margin="5,0,0,0" Grid.Column="1" SelectedDate="{Binding Date2}"></DatePicker>
+                </Grid>
+            </GroupBox>
+            
+        </Grid>
+            <Button VerticalAlignment="Center" Grid.Column="1"  Command="{Binding FindInvoiceCommand}" Content="Найти" Width="150"></Button>
+        </Grid>
+        <GroupBox Margin="0,10,0,0" Header="{Binding InvoiceString}" Grid.Row="2" >
             <ListBox x:Name="PartList" ItemsSource="{Binding InvoiceTable}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -38,7 +82,6 @@
                             </GroupBox.Header>
                             <Grid >
                                 <Grid.RowDefinitions>
-
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition></ColumnDefinition>
@@ -48,13 +91,18 @@
 
                                 <GroupBox Header="Сотрудник" Style="{StaticResource Group}" >
                                     <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
-                                        <TextBlock><Run Text="Сотрудник: "></Run><Run Text="{Binding Employee.Name}"></Run></TextBlock>
-                                        <TextBlock Grid.Row="1"><Run Text="Телефон: "></Run><Run Text="{Binding Employee.PhoneNumber}"></Run></TextBlock>
-
+                                        <TextBlock Style="{StaticResource TextGrid}"><Run Text="ФИО: "></Run><Run Text="{Binding Employee.Name}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Row="1"><Run Text="Телефон: "></Run><Run Text="{Binding Employee.PhoneNumber}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Column="1"><Run Text="Должность: "></Run><Run Text="{Binding Employee.Position.Name}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Row="1" Grid.Column="1"><Run Text="Город: "></Run><Run Text="{Binding  Employee.City.Name}"></Run></TextBlock>
                                     </Grid>
                                 </GroupBox>
                                 <GroupBox Grid.Column="1" Header="Клиент" Style="{StaticResource Group}" >
@@ -67,10 +115,10 @@
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
-                                        <TextBlock><Run Text="Фио: "></Run><Run Text="{Binding Client.Name}"></Run></TextBlock>
-                                        <TextBlock Grid.Row="1"><Run Text="Телефон: "></Run><Run Text="{Binding Client.PhoneName}"></Run></TextBlock>
-                                        <TextBlock Grid.Column="1"><Run Text="Модель: "></Run><Run Text="{Binding Client.Model.Mark.Name}"></Run><Run Text=" "></Run><Run Text="{Binding Client.Model.Name}"></Run></TextBlock>
-                                        <TextBlock Grid.Row="1" Grid.Column="1"><Run Text="Город: "></Run><Run Text="{Binding Client.City.Name}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}"><Run Text="Фио: "></Run><Run Text="{Binding Client.Name}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Row="1"><Run Text="Телефон: "></Run><Run Text="{Binding Client.PhoneName}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Column="1"><Run Text="Модель: "></Run><Run Text="{Binding Client.Model.Mark.Name}"></Run><Run Text=" "></Run><Run Text="{Binding Client.Model.Name}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Row="1" Grid.Column="1"><Run Text="Город: "></Run><Run Text="{Binding Client.City.Name}"></Run></TextBlock>
                                     </Grid>
                                 </GroupBox>
                                 <GroupBox Grid.Column="2" Header="Кол-во и цена" Style="{StaticResource Group}" >
@@ -79,8 +127,8 @@
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
-                                        <TextBlock><Run Text="Кол-во товаров: "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run></TextBlock>
-                                        <TextBlock Grid.Row="1"><Run Text="Итоговая цена: "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}"><Run Text="Кол-во товаров: "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Row="1"><Run Text="Итоговая цена: "></Run><Run Text="{Binding AllPrice, Mode=OneWay}"></Run></TextBlock>
                                     </Grid>
                                 </GroupBox>
                             </Grid>
@@ -107,5 +155,6 @@
                 </ListBox.ItemContainerStyle>
             </ListBox>
         </GroupBox>
+
     </Grid>
 </UserControl>

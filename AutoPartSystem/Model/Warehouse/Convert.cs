@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace AutoPartSystem.Model.Warehouse
+namespace AutoPartSystem.Converted
 {
     public partial class StringNullToEmpty : IValueConverter
     {
@@ -39,4 +39,23 @@ namespace AutoPartSystem.Model.Warehouse
         }
 
     }
+    public partial class IsNull : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+
+            if(System.Convert.ToInt32(value)==0)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new InvalidOperationException("IsNullConverter can only be used OneWay.");
+        }
+    }
+
+
 }

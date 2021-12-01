@@ -103,6 +103,19 @@ namespace Data
             }
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p=>new Data.GoodsInvoice(p)));
         }
+        public Invoice(Invoice inv, string type)
+        {
+            this.Id=inv.Id;
+            this.IsInvoice=inv.IsInvoice;
+            this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p, inv.Id)));
+            this.Employee = inv.Employee;
+            this.EmployeeId=inv.Employee.Id;
+            this.Client=inv.Client;
+            this.ClientId = inv.ClientId;
+            this.Date = inv.Date;
+            this.AllCount=inv.AllCount;
+            this.AllPrice=inv.AllPrice;
+        }
         public Invoice(ObservableCollection<Warehouse> warehouses,Employee employee)
         {
             GoodsInvoice = new ObservableCollection<GoodsInvoice>(warehouses.Select(p => new Data.GoodsInvoice(p.Goods)));
@@ -128,7 +141,24 @@ namespace Data
             this.Price = goodsInvoice.Price;
             
         }
-        public GoodsInvoice(){}
+        public GoodsInvoice()
+        { }
+        public GoodsInvoice(GoodsInvoice goodsInvoice, int invoice_id){
+
+            this.Id = goodsInvoice.Id;
+            this.Count = goodsInvoice.Count;
+            this.GoodsId = goodsInvoice.Goods.Id;
+            this.Goods = goodsInvoice.Goods;
+            this.ModelId = goodsInvoice.Model.Id;
+            this.Price = goodsInvoice.Price;
+            this.Goods.PriceCell = this.Price;
+            this.InvoiceId= invoice_id;
+            this.Model= goodsInvoice.Model;
+            this.AllPrice = goodsInvoice.AllPrice;
+            this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
+            this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice());
+
+        }
         public GoodsInvoice(Goods goods)
         {
             GoodsId = goods.Id;
