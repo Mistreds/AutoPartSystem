@@ -53,7 +53,15 @@ namespace AutoPartSystem.ViewModel
                     MainControl = _controls[0];
                     WarehouseViewModel.AddNewWarehouseWinOpenCommand();
                     break;
+                case "AddNewVirtualGoods":
+                    MainControl = _controls[0];
+                    WarehouseViewModel.AddNewWarehouseVirtualWinOpenCommand();
+                    break;
                 case "ZavSkladTable":
+                    MainControl = _controls[0];
+                    WarehouseViewModel.OpenPageCommand(page_id);
+                    break;
+                case "VirtualSkladTable":
                     MainControl = _controls[0];
                     WarehouseViewModel.OpenPageCommand(page_id);
                     break;

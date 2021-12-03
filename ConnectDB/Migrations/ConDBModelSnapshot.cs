@@ -163,6 +163,9 @@ namespace ConnectDB.Migrations
                     b.Property<int>("GoodsId")
                         .HasColumnType("int");
 
+                    b.Property<double>("InputPrice")
+                        .HasColumnType("double");
+
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
@@ -170,6 +173,9 @@ namespace ConnectDB.Migrations
                         .HasColumnType("int");
 
                     b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<double>("RecomPrice")
                         .HasColumnType("double");
 
                     b.HasKey("Id");

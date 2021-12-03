@@ -188,7 +188,6 @@ namespace AutoPartSystem.Model.Warehouse
                     k++;
                     j++;
                 }
-
                 sheet.Cells[$"AB{j}"].Value = "Итого";
                 sheet.Column(28).Width = 8;
                 getAlign(sheet.Cells[$"AB{j}"]);

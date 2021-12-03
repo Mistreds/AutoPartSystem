@@ -46,12 +46,12 @@ namespace AutoPartSystem.ViewModel
         }
         public static WarehouseTable NewTable(WarehouseTable table)
         {
-            var WarehouseTable = new WarehouseTable(table.Id, new Data.Goods(table.Goods), table.InAlmata, table.InAstana, table.InAktau, table.WarehousePlace, table.TypePay, table.Note);
+            var WarehouseTable = new WarehouseTable(table.Id, new Data.Goods(table.Goods), table.InAlmata, table.InAstana, table.InAktau, table.WarehousePlace, table.TypePay, table.Note, table.IsVirtual);
             return WarehouseTable;
         }
         public WarehouseTable(int id , Data.Goods good, int inAlmata , int inAstana , int inAktau ,
          string warehousePlace ,
-            string typePay , string note )
+            string typePay , string note, bool is_virtual )
         {
             Id = id;
             Goods = good;
@@ -61,6 +61,7 @@ namespace AutoPartSystem.ViewModel
             WarehousePlace = warehousePlace;
             TypePay = typePay;
             Note = note;
+            IsVirtual = is_virtual;
             
         }
 

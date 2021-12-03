@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    [Migration("20211130142946_12")]
-    partial class _12
+    [Migration("20211203065912_13")]
+    partial class _13
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,6 +165,9 @@ namespace ConnectDB.Migrations
                     b.Property<int>("GoodsId")
                         .HasColumnType("int");
 
+                    b.Property<double>("InputPrice")
+                        .HasColumnType("double");
+
                     b.Property<int>("InvoiceId")
                         .HasColumnType("int");
 
@@ -172,6 +175,9 @@ namespace ConnectDB.Migrations
                         .HasColumnType("int");
 
                     b.Property<double>("Price")
+                        .HasColumnType("double");
+
+                    b.Property<double>("RecomPrice")
                         .HasColumnType("double");
 
                     b.HasKey("Id");

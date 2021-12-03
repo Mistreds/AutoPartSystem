@@ -74,6 +74,12 @@ namespace Data
                 this.RaiseAndSetIfChanged(ref all_price, value);
             }
         }
+        private double _all_input_price;
+        public double AllInputPrice
+        {
+            get => _all_input_price;
+            set=>this.RaiseAndSetIfChanged(ref _all_input_price, value);
+        }
         private bool _is_invoice;
         public bool IsInvoice
         {
@@ -169,6 +175,8 @@ namespace Data
             this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice());
             Count = Goods.CountCell;
             Price = goods.PriceCell;
+            InputPrice = goods.InputPrice;
+            RecomPrice = goods.RecomPrice;
             UpdatePrice();
         }
         private bool _dont_have_goods;
@@ -255,6 +263,21 @@ namespace Data
                 UpdatePrice();
 
             }
+        }
+
+        private double _input_price;
+        public double InputPrice
+        {
+            get => _input_price;
+            set => this.RaiseAndSetIfChanged(ref _input_price, value);
+        }
+
+        private double _recom_price;
+
+        public double RecomPrice
+        {
+            get => _recom_price;
+            set => this.RaiseAndSetIfChanged(ref _recom_price, value);
         }
     }
     public class Client:MainClass

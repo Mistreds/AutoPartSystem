@@ -4,13 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
-         xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
-             d:DataContext="{d:DesignInstance Type=ViewModel:WarehouseViewModel}"
+        xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+        d:DataContext="{d:DesignInstance Type=ViewModel:WarehouseViewModel}"
         xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
+        x:Name="MainControl"
         Title="AddToVirtualWarehouse" Height="450" Width="800">
-    <Grid  DataContext="{Binding Warehouse}">
+    <Grid  DataContext="{Binding WarehouseVirtual}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="6*"></RowDefinition>
@@ -41,8 +42,8 @@
                 </DataGrid>
             </StackPanel>
             <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Description}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Товар" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Article}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Магазин" wpf:HintAssist.IsFloating="True"></TextBox>
-            <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding WarehousePlace}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Место" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Note}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Магазин" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.InputPrice}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Закупочная цена" wpf:HintAssist.IsFloating="True"></TextBox>
         </StackPanel>
         <Grid Grid.Row="5">
             <Grid.ColumnDefinitions>
@@ -52,7 +53,7 @@
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Command="{Binding ElementName=MainControl, Path=DataContext.AddWarehous}" Content="Добавить" Grid.Column="1"></Button>
+            <Button Command="{Binding ElementName=MainControl, Path=DataContext.AddWarehous}" CommandParameter="Virtual" Content="Добавить" Grid.Column="1"></Button>
             <Button Content="Сбросить" Grid.Column="3"></Button>
         </Grid>
     </Grid>
