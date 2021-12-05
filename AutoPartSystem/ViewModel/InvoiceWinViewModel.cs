@@ -48,7 +48,7 @@ namespace AutoPartSystem.ViewModel
             set=>this.RaiseAndSetIfChanged(ref main_control, value);
         }
         public bool IsEdit { get; set; }
-       public bool IsInvoice { get; set; }
+        public bool IsInvoice { get; set; }
         private View.Invoice.CreateInvoice CreateInvoice;
         private View.Invoice.InvoceTable InvoiceTable;
         public InvoiceWinViewModel(Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel, Model.MarkModel.MarkModel MarkModel)
@@ -71,8 +71,7 @@ namespace AutoPartSystem.ViewModel
             }
             catch { }
             View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
-            invoiceGood.Show();
-           
+            invoiceGood.Show();      
         }
         public InvoiceWinViewModel(Data.Invoice invoice)
         {
@@ -130,6 +129,18 @@ namespace AutoPartSystem.ViewModel
             get => _create_invoice_base;
             set => this.RaiseAndSetIfChanged(ref _create_invoice_base, value);
         }
-       
+        public ReactiveCommand<Unit, Unit> AddNewGoods=>ReactiveCommand.Create(()=>{
+            var ware_view = new ViewModel.WarehouseViewModel(Invoice,0);
+        
+        });
+        public ReactiveCommand<Unit, Unit> AddVirtualGoods => ReactiveCommand.Create(() => {
+            var ware_view = new ViewModel.WarehouseViewModel(Invoice,1);
+
+        });
+        public ReactiveCommand<Unit, Unit> AddNewVirtualGoods => ReactiveCommand.Create(() => {
+            var ware_view = new ViewModel.WarehouseViewModel(Invoice,2);
+
+        });
+
     }
 }

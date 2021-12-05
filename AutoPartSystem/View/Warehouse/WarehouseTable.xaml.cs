@@ -20,21 +20,31 @@ namespace AutoPartSystem.View.Warehouse
     /// </summary>
     public partial class WarehouseTable : UserControl
     {
+        private Data.Invoice Invoice;
         public WarehouseTable()
         {
             InitializeComponent();
+            
         }
-
+        public WarehouseTable(Data.Invoice invoice)
+        {
+            InitializeComponent();
+            Prihod.Visibility = Visibility.Collapsed;
+            Prodash.Visibility = Visibility.Collapsed;
+            Invoice=invoice;
+    }
         private void ModelText_TextInput(object sender, TextCompositionEventArgs e)
         {
-            Console.WriteLine(e.Text);
+            
         }
-
-
-
         private void model_sort_a_Checked(object sender, RoutedEventArgs e)
         {
             
+        }
+
+        private void AddToInvoice(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }

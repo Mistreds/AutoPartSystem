@@ -267,12 +267,20 @@
                     <MenuItem Header="Переместить на другой склад"></MenuItem>
 
                 </ContextMenu>
+                <ContextMenu x:Key="Menu2">
+                    <MenuItem Header="Добавить в продажу" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.AddToInvoice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  ></MenuItem>
+                </ContextMenu>
             </DataGrid.Resources>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
                     <Setter Property="ContextMenu" Value="{StaticResource Menu1 }"></Setter>
-
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=DataContext.IsSelectForInvoice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="True">
+                            <Setter Property="ContextMenu" Value="{StaticResource Menu2 }"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
                 </Style>
+                
             </DataGrid.RowStyle>
         </DataGrid>
     </Grid>

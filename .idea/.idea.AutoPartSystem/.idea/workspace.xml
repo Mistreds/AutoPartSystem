@@ -4,23 +4,7 @@
     <projectFile>AutoPartSystem/AutoPartSystem.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseInvoice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseInvoice.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseTable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseTable.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToVirtualWarehouse.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToVirtualWarehouse.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToVirtualWarehouse.xaml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToVirtualWarehouse.xaml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehousePage.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/AddToWarehousePage.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/VirtualWarehouse.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/VirtualWarehouse.xaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/MainViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/MainViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/20211130142946_12.Designer.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/20211130142946_12.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Data/Invoice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Invoice.cs" afterDir="false" />
-    </list>
+    <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,9 +20,6 @@
       <filtered-out-file-type name="TAG" />
       <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
     </file-type-list>
-  </component>
-  <component name="HighlightingSettingsPerFile">
-    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/eb5dc1d3d15f4495bfbbf3bce7a5ec631bfb88/6B/DbContext.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectId" id="216h9JqgTCTeCfjFxPt7JRz33lG" />
   <component name="ProjectViewState">
@@ -93,6 +74,7 @@
       <workItem from="1638195286556" duration="1754000" />
       <workItem from="1638361663466" duration="3324000" />
       <workItem from="1638511346871" duration="9307000" />
+      <workItem from="1638713607850" duration="1174000" />
     </task>
     <servers />
   </component>

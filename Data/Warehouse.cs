@@ -33,20 +33,7 @@ namespace Data
             get => _in_almata;
             set=>this.RaiseAndSetIfChanged(ref _in_almata, value); 
         }
-        private double _input_astana;
-        public double InputAstana
-
-        {
-            get => _input_astana;
-            set=>this.RaiseAndSetIfChanged(ref _input_astana, value);
-        }
-        private double _input_aktau;
-        public double Input_aktau
-
-        {
-            get => _input_aktau;
-            set => this.RaiseAndSetIfChanged(ref _input_aktau, value);
-        }
+        
         private int _in_astana;
         public int InAstana
         {
@@ -137,6 +124,20 @@ namespace Data
         {
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
+        }
+        private double _input_astana;
+        public double InputAstana
+
+        {
+            get => _input_astana;
+            set => this.RaiseAndSetIfChanged(ref _input_astana, value);
+        }
+        private double _input_aktau;
+        public double InputAktau
+
+        {
+            get => _input_aktau;
+            set => this.RaiseAndSetIfChanged(ref _input_aktau, value);
         }
         private int _count_cell;
         public int CountCell

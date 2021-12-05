@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211205151310_115")]
+    partial class _115
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,13 +133,13 @@ namespace ConnectDB.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
-                    b.Property<double>("InputAktau")
-                        .HasColumnType("double");
-
                     b.Property<double>("InputAstana")
                         .HasColumnType("double");
 
                     b.Property<double>("InputPrice")
+                        .HasColumnType("double");
+
+                    b.Property<double>("Input_aktau")
                         .HasColumnType("double");
 
                     b.Property<double>("RecomPrice")

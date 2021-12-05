@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
         mc:Ignorable="d"
+        xmlns:ViewModel="clr-namespace:AutoPartSystem.View.Warehouse"
+        d:DataContext="{d:DesignInstance Type=ViewModel:SetWarePrice}"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
          xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        Title="SetWarePrice" Height="200" Width="600">
+        Title="SetWarePrice" Height="200" Width="750">
     <Grid>
         <Grid DataContext="{Binding table}">
             <Grid.RowDefinitions>
@@ -15,15 +18,22 @@
                 <RowDefinition ></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
                 <ColumnDefinition Width="4*"></ColumnDefinition>
-                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
+                <ColumnDefinition Width="4*"></ColumnDefinition>
+                <ColumnDefinition Width="1*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <TextBlock FontSize="16"  TextWrapping="Wrap" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Установить цену для товара "></Run><Run Text="{Binding Goods.Description}"></Run><Run Text=" артикул "></Run> <Run Text="{Binding Goods.Article}"></Run></TextBlock>
+            <TextBlock FontSize="16"  TextWrapping="Wrap" FontWeight="Bold" Grid.Row="0" Grid.ColumnSpan="7" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center"><Run Text="Установить цену для товара "></Run><Run Text="{Binding Goods.Description}"></Run><Run Text=" артикул "></Run> <Run Text="{Binding Goods.Article}"></Run></TextBlock>
             <TextBox Grid.Column="1" Text="{Binding Goods.InputPrice}" x:Name="Almata" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Приходная цена" wpf:HintAssist.IsFloating="True"  Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
-            <TextBox x:Name="Actau" Text="{Binding Goods.RecomPrice}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Рекомендуемая цена" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
-            <Button Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" MaxWidth="150" Click="Button_Click">Сохранить</Button>
+            <TextBox Grid.Column="3" Text="{Binding Goods.InputAstana}" x:Name="Astana" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Доставка в Астану" wpf:HintAssist.IsFloating="True"  Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
+            <TextBox Grid.Column="5" Text="{Binding Goods.InputAktau}" x:Name="Actau" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Доставка в Актау" wpf:HintAssist.IsFloating="True"  Grid.Row="1" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
+            <TextBox x:Name="Rec" Text="{Binding Goods.RecomPrice}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Рекомендуемая цена" wpf:HintAssist.IsFloating="True" Grid.Row="1" Grid.Column="7" VerticalAlignment="Center" Margin="10,0,10,0"></TextBox>
+            <Button Grid.Column="1" Grid.ColumnSpan="7" Grid.Row="2" MaxWidth="150" Click="Button_Click">Сохранить</Button>
         </Grid>
     </Grid>
 </Window>

@@ -14,79 +14,9 @@ using Data;
 using ReactiveUI;
 namespace AutoPartSystem.ViewModel
 {
-
-    public class WarehouseAdd : Data.Warehouse
-    {
-        private string model_name;
-        public string ModelName
-        {
-            get => model_name;
-            set => this.RaiseAndSetIfChanged(ref model_name, value);
-        }
-        private Data.Mark _mark;
-        public Data.Mark Mark
-        {
-            get => _mark;
-            set => this.RaiseAndSetIfChanged(ref _mark, value);
-        }
-        private string mark_name;
-        public string MarkName
-        {
-            get => mark_name;
-            set => this.RaiseAndSetIfChanged(ref mark_name, value);
-        }
-        public WarehouseAdd()
-        {
-            this.Goods = new Data.Goods();
-            this.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel>();
-        }
-
-        public WarehouseAdd(bool virt)
-        {
-            if (virt)
-            {
-                this.Goods = new Data.Goods();
-                this.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel>();
-                IsVirtual = true;
-            }
-        }
-    }
-    public class ModelAdd:Data.Model
-    {
-        private string mark_name;
-        public string MarkName
-        {
-            get => mark_name;
-            set => this.RaiseAndSetIfChanged(ref mark_name, value);
-        }
-
-        private Data.Model _model;
-        public Data.Model Model
-        {
-            get => _model;
-            set=>this.RaiseAndSetIfChanged(ref _model, value);
-        }
-    }  
-    public class MarkModelFind : ReactiveObject
-    {
-        public int model_id { get; set; }
-        public string model_name { get; set; }
-        private bool _is_selected;
-        public bool IsSelected
-        {
-            get => _is_selected;
-            set => this.RaiseAndSetIfChanged(ref _is_selected, value);
-        }
-        public MarkModelFind() { }
-        public MarkModelFind(int id, string name)
-        {
-            model_id = id;
-            model_name = name;
-            IsSelected = true;
-        }
-    }
     public class WarehouseViewModel : ReactiveObject
     {
+        #region Init
         #region UserControls
         private UserControl? _main_control;
         public UserControl? MainControl
@@ -118,7 +48,7 @@ namespace AutoPartSystem.ViewModel
         private WarehouseAdd? _warehouse_virtual;
         public WarehouseAdd? WarehouseVirtual
         {
-            get => _warehouse;
+            get => _warehouse_virtual;
             set => this.RaiseAndSetIfChanged(ref _warehouse_virtual, value);
         }
         private ModelAdd _model;
@@ -144,8 +74,15 @@ namespace AutoPartSystem.ViewModel
         #endregion
         #region Models
         public Model.MarkModel.MarkModel? MarkModel;
-        private Model.Warehouse.WarehouseModel WarehouseModel;
+        public static Model.Warehouse.WarehouseModel? WarehouseModel;
         private Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel;
+        private Data.Invoice _invoce;
+        private bool _is_select_for_invoice;
+        public bool IsSelectForInvoice
+        {
+            get => _is_select_for_invoice;
+            set => this.RaiseAndSetIfChanged(ref _is_select_for_invoice, value);
+        }
         #endregion
         #region WarehouseSortAndFind
         private bool _is_model_find;
@@ -187,8 +124,15 @@ namespace AutoPartSystem.ViewModel
             set => this.RaiseAndSetIfChanged(ref _article_find, value);
         }
         #endregion
+        #endregion
+        #region WarehouseViewModelInit
         public WarehouseViewModel(Model.MarkModel.MarkModel markModel)
         {
+            AddSale = ReactiveCommand.Create(() => {
+                WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true).Select(p => ViewModel.WarehouseTable.NewTable(p)).ToList()));
+
+                InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel, MarkModel);
+            });
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable(),new View.Warehouse.VirtualWarehouse() };
             MainControl = _controls[0];
             MarkModel = markModel;
@@ -199,14 +143,54 @@ namespace AutoPartSystem.ViewModel
             WarehouseModel = MainViewModel.WarehouseModel; 
             WarehousesTable = WarehouseModel.GetAllWarehouse();
             WarehousesVirtualTable = WarehouseModel.GetWarehouseVirtualTables();
-            WarehouseInvoceModel = new WarehouseInvoceModel();
-           
+            WarehouseInvoceModel = new WarehouseInvoceModel();        
             Model = new ModelAdd();
             this.WhenAnyValue(s => s.MarkModel.Model).Subscribe(_ => TestModel());
         }
-
+        private View.Warehouse.WarehouseWindows WarehouseWindows;
+        public WarehouseViewModel(Data.Invoice Invoice, int type)
+        {
+            this._invoce= Invoice;
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable(_invoce), new View.Warehouse.VirtualWarehouse(), new View.Warehouse.AddVirtualGoodToInvoice() };
+            MainControl = _controls[type];
+            MarkModel = new Model.MarkModel.MarkModel(); ;
+            WarehouseModel = new Model.Warehouse.WarehouseModel(this);
+            if(type==0)
+            {
+                SetFilter = ReactiveCommand.Create(() =>
+                {
+                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind));
+                });
+                MarkModelFind = MarkModel.MarkModelFind("");
+                DescriptionFind = WarehouseModel.GetAllDesctiption("");
+                ArticleFind = WarehouseModel.GetAllArticle("");
+                WarehousesTable = WarehouseModel.GetAllWarehouseForSale();
+            }
+            if(type==1)
+            {
+                SetFilter = ReactiveCommand.Create(() =>
+                {
+                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind));
+                });
+                MarkModelFind = MarkModel.MarkModelFind("");
+                DescriptionFind = WarehouseModel.GetAllVirtualDesctiption("");
+                ArticleFind = WarehouseModel.GetAllVirtualArticle("");
+                WarehousesVirtualTable = WarehouseModel.GetWarehouseVirtualForSale();
+            }
+            if(type==2)
+            {
+                Mark = MarkModel.GetMark();
+                Model = new ModelAdd();
+                WarehouseVirtual = new WarehouseAdd(true);
+            }
+            IsSelectForInvoice = true;
+            this._invoce = Invoice;
+            WarehouseWindows = new View.Warehouse.WarehouseWindows();
+            WarehouseWindows.DataContext = this;
+            WarehouseWindows.Show();
+        }
+        #endregion
         private ReactiveCommand<Unit, Unit> _add_model_to_ware_table;
-
         public ReactiveCommand<Unit, Unit> AddModelToWareTable
         {
             get => _add_model_to_ware_table;
@@ -233,7 +217,6 @@ namespace AutoPartSystem.ViewModel
                     ArticleFind = WarehouseModel.GetAllVirtualArticle("");
                     SetFilter = ReactiveCommand.Create(() => {
                             WarehousesVirtualTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesVirtualFilter(MarkModelFind, DescriptionFind, ArticleFind));
-
                     });
                     break;
             }
@@ -254,7 +237,12 @@ namespace AutoPartSystem.ViewModel
                 case "Virtual":
                     WarehouseVirtual.IsVirtual = true;
                     NewWarehouse(WarehouseVirtual);
-                    break;;
+                    break;
+                case "VirtualInvoice":
+                    WarehouseVirtual.IsVirtual = true;
+                    AddModelToWareCom(WarehouseVirtual);
+                    NewWarehouseVirt(WarehouseVirtual);
+                    break;
             }
         }
         private void NewWarehouse(WarehouseAdd war)
@@ -278,11 +266,21 @@ namespace AutoPartSystem.ViewModel
             WarehouseModel.AddWarehouse(war);
             war = new WarehouseAdd();
         }
-        public ReactiveCommand<Unit, Unit> AddSale => ReactiveCommand.Create(() => {
-            WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true).Select(p=> ViewModel.WarehouseTable.NewTable(p)).ToList()));
+        private void NewWarehouseVirt(WarehouseAdd war)
+        {
+            
+         var ware= WarehouseModel.AddWarehouse1(war);
+           
+            _invoce.GoodsInvoice.Add(new GoodsInvoice(ware.Goods));
+            war = new WarehouseAdd();
+        }
 
-            InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel, MarkModel);
-        });
+        private ReactiveCommand<Unit, Unit> _add_sale;
+        public ReactiveCommand<Unit, Unit> AddSale
+        {
+            get => _add_sale;
+            set=>this.RaiseAndSetIfChanged(ref _add_sale, value);
+        }
         #region WarehouseSortFilterCommand
         
             public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
@@ -440,6 +438,11 @@ namespace AutoPartSystem.ViewModel
             var ArrGoods= new View.Warehouse.ArrivelGoods(table,WarehouseModel);
             ArrGoods.Show();
         }
+        public ReactiveCommand<WarehouseTable, Unit> AddToInvoice => ReactiveCommand.Create<WarehouseTable>(AddToInvoiceCommand);
+        private void AddToInvoiceCommand(WarehouseTable table)
+        {
+            _invoce.GoodsInvoice.Add(new Data.GoodsInvoice(table.Goods));
+        }
         public ReactiveCommand<Unit, Unit> AddNewWarehouseWinOpen => ReactiveCommand.Create(AddNewWarehouseWinOpenCommand);
         public void AddNewWarehouseWinOpenCommand()
         {
@@ -465,7 +468,7 @@ namespace AutoPartSystem.ViewModel
                     if (Model.Model != null)
                     {
                         Model.Model.Mark = Model.Mark;
-                        Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model= Model.Model,ModelId=Model.Id });
+                    war.Goods.GoodsModel.Add(new Data.GoodsModel { Model= Model.Model,ModelId=Model.Id });
                     }
                     else
                     {
@@ -473,11 +476,11 @@ namespace AutoPartSystem.ViewModel
                         if (Model.Model != null)
                         {
                             Model.Model.Mark = Model.Mark;
-                            Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = Model.Model, ModelId = Model.Id });
+                        war.Goods.GoodsModel.Add(new Data.GoodsModel { Model = Model.Model, ModelId = Model.Id });
                         }
                         else
                         {
-                            Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, Model.Mark.Id, Model.Mark) });
+                        war.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, Model.Mark.Id, Model.Mark) });
                         }
                     }
                 }
@@ -490,16 +493,16 @@ namespace AutoPartSystem.ViewModel
                         if (Model.Model != null)
                         {
                             Model.Model.Mark = Model.Mark;
-                            Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = Model.Model, ModelId = Model.Id });
+                        war.Goods.GoodsModel.Add(new Data.GoodsModel { Model = Model.Model, ModelId = Model.Id });
                         }
                         else
                         {
-                            Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, Model.Mark.Id,Model.Mark) });
+                        war.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, Model.Mark.Id,Model.Mark) });
                         }
                     }
                     else
                     {
-                        Warehouse.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, new Data.Mark(Model.MarkName)) });
+                    war.Goods.GoodsModel.Add(new Data.GoodsModel { Model = new Data.Model(Model.Name, new Data.Mark(Model.MarkName)) });
                     }
                 }
 

@@ -109,11 +109,24 @@ namespace Data
             }
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p=>new Data.GoodsInvoice(p)));
         }
+        private void test()
+        {
+            foreach (var s in GoodsInvoice)
+            {
+                s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
+            }
+            if(GoodsInvoice.Count==0)
+            {
+                AllPrice = 0;
+                AllCount = 0;
+            }
+        }
         public Invoice(Invoice inv, string type)
         {
             this.Id=inv.Id;
             this.IsInvoice=inv.IsInvoice;
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p, inv.Id)));
+
             this.Employee = inv.Employee;
             this.EmployeeId=inv.Employee.Id;
             this.Client=inv.Client;
@@ -132,6 +145,7 @@ namespace Data
             {
                 s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
             }
+            this.WhenAnyValue(s => s.GoodsInvoice.Count).Subscribe(_ => test());
             Date = DateTime.Now;
         }
     }
@@ -311,6 +325,12 @@ namespace Data
         {
             get => _city_id;
             set => this.RaiseAndSetIfChanged(ref _city_id, value);
+        }
+        private string _city_name;
+        public string CityName
+        {
+            get => _city_name;
+            set=>this.RaiseAndSetIfChanged(ref _city_name,value);
         }
         private City _city;
         public City City

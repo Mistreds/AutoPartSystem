@@ -3,12 +3,82 @@
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace AutoPartSystem.ViewModel
 {
+    public class WarehouseAdd : Data.Warehouse
+    {
+        private string model_name;
+        public string ModelName
+        {
+            get => model_name;
+            set => this.RaiseAndSetIfChanged(ref model_name, value);
+        }
+        private Data.Mark _mark;
+        public Data.Mark Mark
+        {
+            get => _mark;
+            set => this.RaiseAndSetIfChanged(ref _mark, value);
+        }
+        private string mark_name;
+        public string MarkName
+        {
+            get => mark_name;
+            set => this.RaiseAndSetIfChanged(ref mark_name, value);
+        }
+        public WarehouseAdd()
+        {
+            this.Goods = new Data.Goods();
+            this.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel>();
+        }
+        public WarehouseAdd(bool virt)
+        {
+            if (virt)
+            {
+                this.Goods = new Data.Goods();
+                this.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel>();
+                IsVirtual = true;
+            }
+        }
+    }
+    public class ModelAdd : Data.Model
+    {
+        private string mark_name;
+        public string MarkName
+        {
+            get => mark_name;
+            set => this.RaiseAndSetIfChanged(ref mark_name, value);
+        }
+
+        private Data.Model _model;
+        public Data.Model Model
+        {
+            get => _model;
+            set => this.RaiseAndSetIfChanged(ref _model, value);
+        }
+    }
+    public class MarkModelFind : ReactiveObject
+    {
+        public int model_id { get; set; }
+        public string model_name { get; set; }
+        private bool _is_selected;
+        public bool IsSelected
+        {
+            get => _is_selected;
+            set => this.RaiseAndSetIfChanged(ref _is_selected, value);
+        }
+        public MarkModelFind() { }
+        public MarkModelFind(int id, string name)
+        {
+            model_id = id;
+            model_name = name;
+            IsSelected = true;
+        }
+    }
     public class WarehouseTable : Data.Warehouse
     {
         private bool _is_selected;
