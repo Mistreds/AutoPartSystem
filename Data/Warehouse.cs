@@ -168,6 +168,8 @@ namespace Data
             this.RecomPrice = goods.RecomPrice;
             this.PriceCell = goods.PriceCell;
             this.CountCell = goods.CountCell;
+            this.InputAstana = goods.InputAstana;
+            this.InputAktau = goods.InputAktau;
 
         }
     }

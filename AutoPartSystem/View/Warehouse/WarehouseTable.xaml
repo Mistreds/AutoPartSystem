@@ -262,8 +262,10 @@
                 <DataGridTextColumn  IsReadOnly="True" Header="SCO" Binding="{Binding InAktau}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Место" Binding="{Binding WarehousePlace}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена прих" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Доставка" Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Доставка" Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding InAktau}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
                 <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell}"></DataGridTextColumn>
                 <DataGridTextColumn   Header="Цена продажи" Binding="{Binding Goods.PriceCell}"></DataGridTextColumn>
                 <DataGridTemplateColumn Header="Продажа" x:Name="Prodash">

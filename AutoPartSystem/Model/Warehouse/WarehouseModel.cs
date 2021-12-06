@@ -50,8 +50,8 @@ namespace AutoPartSystem.Model.Warehouse
         {
             _view_model = ViewModel;
             using var db = new Data.ConDB();
-            Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p=>p.Goods).Include(p => p.Goods.GoodsModel).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>p.IsVirtual==false).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note, p.IsVirtual)).ToList());
-            WarehouseVirtual=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).Include(p => p.Goods.GoodsModel).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>p.IsVirtual==true).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note, p.IsVirtual)).ToList());
+            Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p=>p.Goods).ThenInclude(p=>p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>p.IsVirtual==false).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note, p.IsVirtual)).ToList());
+            WarehouseVirtual=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>p.IsVirtual==true).Select(p=>new WarehouseTable(p.Id,p.Goods ,  p.InAlmata, p.InAstana, p.InAktau,p.WarehousePlace,  p.TypePay, p.Note, p.IsVirtual)).ToList());
         }
         public void AddWarehouse(Data.Warehouse warehouse)
         {
@@ -107,7 +107,7 @@ namespace AutoPartSystem.Model.Warehouse
         public void UpdateWarehouseMainPrice(double input_price, double rec_price, double ast_price, double akt_price, int war_id)
         {
             var Warehouse = Warehouses.Where(p => p.Id == war_id).FirstOrDefault();
-            Warehouse.SetPrice(input_price, rec_price);
+            Warehouse.SetPrice(input_price, rec_price, ast_price, akt_price);
             UpdateWarehouse(Warehouse);
         }
         public void UpdateWarehouse(WarehouseTable warehouse)

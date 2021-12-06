@@ -229,7 +229,9 @@ namespace AutoPartSystem.Model.Warehouse
             bool is_have_good = true;
             foreach(var invo in invoice.GoodsInvoice)
             {
+                if (invo.Goods.Warehouse.IsVirtual == true) continue;
                 var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                
                 war.InAlmata -= invo.Count;
                 if(war.InAlmata<0)
                 {
@@ -244,6 +246,7 @@ namespace AutoPartSystem.Model.Warehouse
                     var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
                     foreach (var invo in invoice.GoodsInvoice)
                     {
+                        if (invo.Goods.Warehouse.IsVirtual == true) continue;
                         var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
                         war.InAlmata -= invo.Count;
                     }

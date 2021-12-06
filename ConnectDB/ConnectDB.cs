@@ -79,6 +79,7 @@ namespace Data
             modelBuilder.Entity<Client>().Ignore(p=>p.Mark);
             modelBuilder.Entity<GoodsModel>(b => b.ToTable("GoodModel"));
             modelBuilder.Entity<Client>().Ignore(p => p.CityName);
+            modelBuilder.Entity<Client>().Ignore(p => p.MarkId);
             #endregion
         }
     }

@@ -94,10 +94,13 @@ namespace AutoPartSystem.ViewModel
             this.InAktau += actau;
             this.InAstana += astana;
         }
-        public void SetPrice(double input, double recoum)
+        public void SetPrice(double input, double recoum, double astana, double aktau)
         {
             this.Goods.RecomPrice = recoum;
             this.Goods.InputPrice = input;
+            this.Goods.InputAstana = astana;
+            this.Goods.InputAktau = aktau;
+
         }
         public WarehouseTable()
         {
@@ -125,6 +128,8 @@ namespace AutoPartSystem.ViewModel
         {
             Id = id;
             Goods = good;
+            Goods.PriceCell = Goods.RecomPrice;
+            Console.WriteLine(good.InputAstana);
             InAlmata = inAlmata;
             InAstana = inAstana;
             InAktau = inAktau;

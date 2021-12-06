@@ -41,7 +41,8 @@ namespace AutoPartSystem.View.Client
             Data.Client? client = clientTable.SelectedItem as Data.Client;
             if(client!=null)
             {
-                clientWindow.Invoice.Client = new Data.Client(client);
+                clientWindow.Invoice.Client = new Data.Client { Id = client.Id, Name = client.Name, Mark = client.Model.Mark, City = client.City, Model = client.Model, MarkId=client.Model.MarkId, CityId=client.CityId, ModelId=client.ModelId, PhoneName=client.PhoneName, CityName=client.City.Name  };
+                Console.WriteLine(clientWindow.Invoice.Client.MarkId);
                 clientWindow.Close();
             }
         }
