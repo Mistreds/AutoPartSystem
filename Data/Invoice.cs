@@ -189,6 +189,8 @@ namespace Data
             this.Price = goodsInvoice.Price;
             this.RecomPrice = goodsInvoice.RecomPrice;
             this.InputPrice = goodsInvoice.InputPrice;
+            this.AllTrans = goodsInvoice.AllTrans;
+            this.Marz=goodsInvoice.Marz;
 
         }
         public GoodsInvoice()
@@ -213,10 +215,16 @@ namespace Data
             this.InvoiceId = invoice_id;
             this.Model = goodsInvoice.Model;
             this.AllPrice = goodsInvoice.AllPrice;
+            this.InputPrice = goodsInvoice.InputPrice;
+            this.AllTrans = goodsInvoice.AllTrans;
+            this.Marz = goodsInvoice.Marz;
             this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
-            this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice() );
+            this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice());
+            this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdateTrans());
             this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdateInput());
-            //this.WhenAnyValue(vm => vm.trans).Subscribe(_ => UpdateInput());
+            this.WhenAnyValue(vm => vm.AllTrans).Subscribe(_ => UpdateInput());
+            this.WhenAnyValue(vm => vm.InputPrice).Subscribe(_ => UpdateMarz());
+            this.WhenAnyValue(vm => vm.AllPrice).Subscribe(_ => UpdateMarz());
 
         }
         public GoodsInvoice(Goods goods)

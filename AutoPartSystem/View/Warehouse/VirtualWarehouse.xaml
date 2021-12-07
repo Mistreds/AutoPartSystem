@@ -256,6 +256,7 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
+                <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Артикул" Binding="{Binding Goods.Article}"></DataGridTextColumn>
                 <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Цена" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>
