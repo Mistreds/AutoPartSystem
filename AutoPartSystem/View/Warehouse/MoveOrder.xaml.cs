@@ -22,6 +22,7 @@ namespace AutoPartSystem.View.Warehouse
         public MoveOrder()
         {
             InitializeComponent();
+
         }
     }
 }

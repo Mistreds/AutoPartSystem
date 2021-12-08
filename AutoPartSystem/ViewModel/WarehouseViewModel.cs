@@ -190,6 +190,7 @@ namespace AutoPartSystem.ViewModel
             WarehouseWindows.Show();
         }
         #endregion
+        #region Command
         private ReactiveCommand<Unit, Unit> _add_model_to_ware_table;
         public ReactiveCommand<Unit, Unit> AddModelToWareTable
         {
@@ -514,10 +515,16 @@ namespace AutoPartSystem.ViewModel
         }
         public ReactiveCommand<Unit, Unit> UpdateTable => ReactiveCommand.Create(() => { WarehousesTable = WarehouseModel.GetAllWarehouse(); });
         public ReactiveCommand<WarehouseTable, Unit> SetWarePrice => ReactiveCommand.Create<WarehouseTable>(SetWarePriceCommand);
+        public ReactiveCommand<Unit, Unit> OpenMovePage => ReactiveCommand.Create(() => {
+            var MoveGoodsViewModel = new MoveGoodsViewModel(WarehouseModel,new ObservableCollection<WarehouseTable>(WarehousesTable.Select(p => ViewModel.WarehouseTable.NewTable(p)).ToList()));
+
+
+        });
         private void SetWarePriceCommand(WarehouseTable table)
         {
             var SetWare = new View.Warehouse.SetWarePrice(table, WarehouseModel);
             SetWare.Show();
         }
+        #endregion
     }
 }

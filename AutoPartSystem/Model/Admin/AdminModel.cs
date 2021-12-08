@@ -19,6 +19,7 @@ namespace AutoPartSystem.Model.Admin
         public ObservableCollection<Data.City> GetCitiesFromText(string text);
         public Data.City GetCityFromName(string name);
         public void UpdateCity();
+        public List<City> GetEmpCity();
     }
     public class AdminModel :ReactiveObject, IAdminModelation
     {
@@ -89,6 +90,11 @@ namespace AutoPartSystem.Model.Admin
         {
             using var db = new ConDB();
             Cities = new ObservableCollection<City>(db.City.ToList());
+        }
+
+        public List<City> GetEmpCity()
+        {
+            return _citys.Where(p => p.Id >= 1 && p.Id <= 3).ToList();
         }
     }
 }

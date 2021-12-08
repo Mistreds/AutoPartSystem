@@ -53,7 +53,6 @@ namespace AutoPartSystem.ViewModel
             get => mark_name;
             set => this.RaiseAndSetIfChanged(ref mark_name, value);
         }
-
         private Data.Model _model;
         public Data.Model Model
         {
