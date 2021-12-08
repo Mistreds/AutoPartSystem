@@ -27,6 +27,7 @@ namespace AutoPartSystem.Model.Warehouse
         public ObservableCollection<ViewModel.MarkModelFind> GetAllVirtualArticle(string name);
         public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
         public ObservableCollection<WarehouseTable> GetWarehousesVirtualFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
+        public ObservableCollection<WarehouseTable> GetWarehousesFilterZav(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
         public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id);
         public void UpdateWarehouseMainPrice(double input_price, double rec_price,double ast_price, double akt_price, int id);
         public void UpdateWarehouse(WarehouseTable warehouse);
@@ -97,6 +98,12 @@ namespace AutoPartSystem.Model.Warehouse
                 }
             }
             return b;
+        }
+        public ObservableCollection<WarehouseTable> GetWarehousesFilterZav(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
+        {
+            var a = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false));
+            
+            return a;
         }
         public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id)
         {

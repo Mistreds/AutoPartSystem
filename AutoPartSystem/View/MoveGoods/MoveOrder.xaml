@@ -1,4 +1,4 @@
-﻿<Window x:Class="AutoPartSystem.View.Warehouse.MoveOrder"
+﻿<UserControl x:Class="AutoPartSystem.View.Warehouse.MoveOrder"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,8 +10,9 @@ xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
           xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=ViewModel:MoveGoodsViewModel}"
         x:Name="warehousetable"
-        Title="MoveOrder" Height="450" Width="800">
-    <Window.Resources>
+              d:DesignHeight="450" d:DesignWidth="800"
+        Background="White">
+    <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Light.xaml" />
@@ -45,17 +46,9 @@ xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                 </Setter>
             </Style>
         </ResourceDictionary>
-    </Window.Resources>
+    </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="80"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <ComboBox ItemsSource="{Binding Cities}" DisplayMemberPath="Name" SelectedValuePath="Id" Height="40" Width="150" Margin="20"></ComboBox>
-            <ComboBox ItemsSource="{Binding Cities}" DisplayMemberPath="Name" SelectedValuePath="Id" Height="40" Width="150" Margin="20"></ComboBox>
-            <Button Content="Переместить"></Button>
-        </StackPanel>
+        
         <DataGrid Grid.Row="1"  BorderBrush="Black"  BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
                 <DataGrid.Columns>
                     <DataGridTemplateColumn>
@@ -275,6 +268,13 @@ xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                     <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
                 <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Продажа" x:Name="Prodash">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <CheckBox IsChecked="{Binding IsSelected,UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>
             </DataGrid.Resources>
@@ -286,4 +286,4 @@ xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
             </DataGrid>
         </Grid>
    
-</Window>
+</UserControl>

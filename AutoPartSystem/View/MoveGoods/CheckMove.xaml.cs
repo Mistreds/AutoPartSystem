@@ -15,14 +15,13 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Warehouse
 {
     /// <summary>
-    /// Логика взаимодействия для MoveOrder.xaml
+    /// Логика взаимодействия для CheckMove.xaml
     /// </summary>
-    public partial class MoveOrder : Window
+    public partial class CheckMove : UserControl
     {
-        public MoveOrder()
+        public CheckMove()
         {
             InitializeComponent();
-
         }
     }
 }
