@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="AutoPartSystem.View.MoveGoods.GetMoveGoods"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AutoPartSystem.View.MoveGoods"
+              xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
+        d:DataContext="{d:DesignInstance Type=ViewModel:GetMoveGoodsViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Background="White">
+    <Grid>
+        <GroupBox Header="Заявки на перемещаемые товары">
+            <ListBox  x:Name="MainList" ItemsSource="{Binding MainMove}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                        <Grid Width="{Binding ElementName=MainList, Path=ActualWidth}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                                <ColumnDefinition></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="40"></RowDefinition>
+                                <RowDefinition ></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <TextBlock  ><Run Text="Сотрудник: "></Run><Run Text="{Binding  Employee.Name}"></Run></TextBlock>
+                            <TextBlock Grid.Column="1"><Run Text="Город из: "></Run><Run Text="{Binding CityFrom.Name}"></Run></TextBlock>
+                            <TextBlock Grid.Column="2"><Run Text="Город в: "></Run><Run Text="{Binding CityTo.Name}"></Run></TextBlock>
+                            <TextBlock Grid.Column="3"><Run Text="Общее кол-во: "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run></TextBlock>
+                            <DataGrid ItemsSource="{Binding MoveGoods}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False"  Grid.Row="1" Grid.ColumnSpan="4" >
+                                <DataGrid.Columns>
+                                    <DataGridTemplateColumn Width="1*"  Header="Модель">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <ListBox ItemsSource="{Binding Warehouse.Goods.GoodsModel}">
+                                                        <ListBox.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Text="{Binding Model.Mark.Name}"></TextBlock>
+                                                                    <TextBlock Margin="10,0,0,0" Text="{Binding Model.Name}" ></TextBlock>
+                                                                </StackPanel>
+                                                            </DataTemplate>
+                                                        </ListBox.ItemTemplate>
+                                                    </ListBox>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" CanUserSort="False" Header="Описание"   Binding="{Binding Warehouse.Goods.Description}">
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Артикуль"  CanUserSort="False"  Binding="{Binding Warehouse.Goods.Article}">
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="ALA" Binding="{Binding Warehouse.InAlmata}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="NQZ" Binding="{Binding Warehouse.InAstana}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="SCO" Binding="{Binding Warehouse.InAktau}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Место" Binding="{Binding Warehouse.WarehousePlace}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Цена прих" Binding="{Binding Warehouse.Goods.InputPrice}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Доставка NQZ" Binding="{Binding Warehouse.Goods.InputAstana}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Доставка SCO" Binding="{Binding Warehouse.Goods.InputAktau}"></DataGridTextColumn>
+                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Кол-во" Binding="{Binding Count}"></DataGridTextColumn>
+                                </DataGrid.Columns>
+                                <DataGrid.Style>
+                                    <Style TargetType="DataGrid" BasedOn="{StaticResource MaterialDesignDataGrid}">
+                                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=IsSelected ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBoxItem}}}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.Style>
+                            </DataGrid>
+                        </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+                <ListBox.Resources>
+                    <ContextMenu x:Key="ArriveGoods">
+                        <MenuItem Header="Принять данный товар" Command="{Binding Path=DataContext.ArriveGoods ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Path=SelectedItem ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"></MenuItem>
+                    </ContextMenu>
+                </ListBox.Resources>
+                <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="ContextMenu" Value="{StaticResource ArriveGoods}"></Setter>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="White"></Setter>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </GroupBox>
+    </Grid>
+</UserControl>

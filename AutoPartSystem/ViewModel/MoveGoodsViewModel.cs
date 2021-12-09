@@ -10,7 +10,7 @@ using System.Windows.Controls;
 using ReactiveUI;
 namespace AutoPartSystem.ViewModel
 {
-    public class MoveGoodsViewModel:ReactiveObject
+    public class MoveGoodsViewModel : ReactiveObject
     {
         private UserControl? _main_control;
         public UserControl? MainControl
@@ -46,7 +46,7 @@ namespace AutoPartSystem.ViewModel
         public List<Data.City> Cities
         {
             get => _cities;
-            set=>this.RaiseAndSetIfChanged(ref _cities, value);
+            set => this.RaiseAndSetIfChanged(ref _cities, value);
         }
         private ObservableCollection<MarkModelFind>? _mark_model_find;
         public ObservableCollection<MarkModelFind> MarkModelFind
@@ -65,7 +65,7 @@ namespace AutoPartSystem.ViewModel
         public int CityId1
         {
             get => city_id_1;
-            set=>this.RaiseAndSetIfChanged(ref city_id_1, value);
+            set => this.RaiseAndSetIfChanged(ref city_id_1, value);
         }
         private int city_id_2;
         public int CityId2
@@ -89,6 +89,12 @@ namespace AutoPartSystem.ViewModel
             set => this.RaiseAndSetIfChanged(ref _move_goods, value);
         }
         private ObservableCollection<UserControl> _controls;
+        private bool _is_ready;
+        public bool IsReady
+        {
+            get => _is_ready;
+            set=>this.RaiseAndSetIfChanged(ref _is_ready, value);
+        }
         public MoveGoodsViewModel(Model.Warehouse.WarehouseModel WarehouseModel, ObservableCollection<WarehouseTable> WarehousesTable)
         {
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.MoveOrder(), new View.Warehouse.CheckMove() };
@@ -107,6 +113,7 @@ namespace AutoPartSystem.ViewModel
             DescriptionFind = WarehouseModel.GetAllDesctiption("");
             ArticleFind = WarehouseModel.GetAllArticle("");
             MainControl = _controls[0];
+            IsReady = false;
         }
         #region WarehouseSortFilterCommand
         public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
@@ -256,24 +263,80 @@ namespace AutoPartSystem.ViewModel
             get => _set_filter;
             set => this.RaiseAndSetIfChanged(ref _set_filter, value);
         }
+        #endregion
         public ReactiveCommand<Unit, Unit> CreateMove => ReactiveCommand.Create(() => {
             if (CityId1 == 0 || CityId2 == 0)
             {
-                MessageBox.Show("Город, откуда перемещают товар или город куда перемещают товар не выбран","Ошибка");
+                MessageBox.Show("Город, откуда перемещают товар или город куда перемещают товар не выбран", "Ошибка");
                 return;
             }
-            if(CityId1==CityId2)
+            if (CityId1 == CityId2)
             {
                 MessageBox.Show("Нельзя переместить в этот же город ", "Ошибка");
                 return;
             }
             MoveGoods = new ObservableCollection<Data.MoveGoods>();
-                foreach (var ware in WarehousesTable.Where(p=>p.IsSelected).ToList())
+            foreach (var ware in WarehousesTable.Where(p => p.IsSelected).ToList())
             {
+                bool add = true;
+                if(ware.Goods.CountCell==0)
+                {
+                    MessageBox.Show($"Не выбрано кол-во товара {ware.Goods.Description} артикуль {ware.Goods.Article} ", "Ошибка");
+                    add = false;
+                }
+                switch (CityId1)
+                {
+                    case 1:
+                        if(ware.InAlmata<ware.Goods.CountCell)
+                        {
+                            add = false;
+                            MessageBox.Show($"Товара {ware.Goods.Description} артикуль {ware.Goods.Article} нехватает на складе города Алмата ", "Ошибка") ;
+                        }    
+                        break;
+                    case 2:
+                        if (ware.InAstana < ware.Goods.CountCell)
+                        {
+                            add = false;
+                            MessageBox.Show($"Товара {ware.Goods.Description} артикуль {ware.Goods.Article} нехватает на складе Астана ", "Ошибка");
+                        }
+                        break;
+                    case 3:
+                        if (ware.InAktau < ware.Goods.CountCell)
+                        {
+                            add = false;
+                            MessageBox.Show($"Товара {ware.Goods.Description} артикуль {ware.Goods.Article} нехватает на складе Актау ", "Ошибка");
+                        }
+                        break;
+                }
+                if(add)
                 MoveGoods.Add(new Data.MoveGoods { Count = ware.Goods.CountCell, WarehouseId = ware.Id, Warehouse = ware });
             }
+            if(MoveGoods.Count==0)
+            {
+                
+                MessageBox.Show("Отсутсвуют товары для передачи на другой склад", "Ошибка");
+                return;
+            }
+            IsReady = true;
             MainControl = _controls[1];
         });
-        #endregion
+        public ReactiveCommand<Unit, Unit> BackMove => ReactiveCommand.Create(() => {
+
+            IsReady = false;
+            MainControl = _controls[0];
+        });
+        public ReactiveCommand<Unit, Unit> ForwardMove => ReactiveCommand.Create(() => {
+
+            foreach(var mm in MoveGoods)
+            {
+                mm.WarehouseId = mm.Warehouse.Id;
+                mm.Warehouse = null;
+            }
+            var MainMove = new Data.MainMove(ViewModel.MainViewModel.Employee.Id, CityId1, CityId2, MoveGoods);
+            ViewModel.MainViewModel.WarehouseModel.MoveOrderToWarehouse(MainMove);
+            ViewModel.MainViewModel.MoveGoodsModel.AddMainMove(MainMove);
+            mainMove.Close();
+        });
+        
     }
 }

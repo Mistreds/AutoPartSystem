@@ -15,11 +15,13 @@ namespace AutoPartSystem.ViewModel
         public static WarehouseViewModel? WarehouseViewModel { get; set;}
         public static ClientViewModel? ClientViewModel { get; set; }
         public static InvoiceViewModel? InvoiceViewModel { get; set; }
+        public static GetMoveGoodsViewModel? GetMoveGoodsViewModel { get; set; }
         public static Data.Employee? Employee { get;private set; }
         public static Model.MarkModel.MarkModel? _markModel;
         public static Model.Admin.AdminModel AdminModel;
         public static Model.Client.ClientModel ClientModel;
         public static Model.Warehouse.WarehouseModel WarehouseModel;
+        public static Model.Warehouse.MoveGoodsModel MoveGoodsModel;
         private UserControl? _main_control;
         public UserControl? MainControl
         {
@@ -40,7 +42,9 @@ namespace AutoPartSystem.ViewModel
             WarehouseViewModel=new WarehouseViewModel(_markModel);
             ClientViewModel = new ClientViewModel(_markModel);
             InvoiceViewModel = new InvoiceViewModel();
-            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage() };
+            MoveGoodsModel=new Model.Warehouse.MoveGoodsModel();
+            GetMoveGoodsViewModel=new GetMoveGoodsViewModel();
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage(), new View.MoveGoods.GetMoveGoods()};
             
 
         }
@@ -83,6 +87,10 @@ namespace AutoPartSystem.ViewModel
                     break;
                 case "OpenInvoice":
                     MainControl = _controls[3];
+                    InvoiceViewModel.OpenPageCommand(page_id);
+                    break;
+                case "OpenMoveGoods":
+                    MainControl = _controls[4];
                     InvoiceViewModel.OpenPageCommand(page_id);
                     break;
             }

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +65,30 @@ namespace Data
             get => _city_to;
             set => this.RaiseAndSetIfChanged(ref _city_to, value);
         }
+        [NotMapped]
+        public int AllCount { get;private set; }
+        public MainMove() { }
+        public MainMove(int EmployeeId, int CityFromId, int CityToId, ObservableCollection<MoveGoods> MoveGoods)
+        {
+            Date = DateTime.Now;
+            this.EmployeeId= EmployeeId;
+            this.CityFromId= CityFromId;
+            this.CityToId= CityToId;
+            this.MoveGoods = MoveGoods;
+
+        }
+        public MainMove(int Id,Employee Employee, City CityFrom, City CityTo, ObservableCollection<MoveGoods> MoveGoods)
+        {
+            this.Employee = Employee;
+            this.EmployeeId=Employee.Id;
+            this.Id= Id;
+            this.CityFrom= CityFrom;
+            this.CityFromId= CityFromId;
+            this.CityTo= CityTo;
+            this.CityToId = CityTo.Id;
+            this.MoveGoods= MoveGoods;
+            this.AllCount=MoveGoods.Sum(x => x.Count);
+        }
     }
     public class MoveGoods : ReactiveObject
     {
@@ -91,13 +116,18 @@ namespace Data
             get => _count;
             set => this.RaiseAndSetIfChanged(ref _count, value);
         }
-        private int _main_move;
-        public int MainMove
+        private int _main_move_id;
+        public int MainMoveId
+        {
+            get => _main_move_id;
+            set=>this.RaiseAndSetIfChanged(ref _main_move_id,value);
+        }
+        private MainMove _main_move;
+        public MainMove MainMove
         {
             get => _main_move;
             set=>this.RaiseAndSetIfChanged(ref _main_move,value);
         }
-        
        
     }
 }

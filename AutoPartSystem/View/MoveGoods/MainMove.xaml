@@ -15,8 +15,8 @@
             <ComboBox ItemsSource="{Binding Cities}" SelectedValue="{Binding CityId1}" DisplayMemberPath="Name" SelectedValuePath="Id" Height="40" Width="150" Margin="20,0,0,0"></ComboBox>
             <ComboBox ItemsSource="{Binding Cities}" SelectedValue="{Binding CityId2}" DisplayMemberPath="Name" SelectedValuePath="Id" Height="40" Width="150" Margin="20,0,0,0"></ComboBox>
             <Button Command="{Binding CreateMove}" Margin="20,0,0,0" Content="Переместить"></Button>
-            <Button Margin="20,0,0,0" Content="Сохранить"></Button>
-            <Button Margin="20,0,0,0" Content="Отмена"></Button>
+            <Button IsEnabled="{Binding IsReady}" Margin="20,0,0,0" Command="{Binding ForwardMove}" Content="Сохранить"></Button>
+            <Button IsEnabled="{Binding IsReady}" Margin="20,0,0,0" Command="{Binding BackMove}" Content="Отмена"></Button>
         </StackPanel>
         <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
     </Grid>

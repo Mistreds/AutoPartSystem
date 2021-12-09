@@ -53,6 +53,7 @@
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoice" Header="Накладные"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoiceComm" Header="Коммерческие предложения"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenMoveGoods" Header="Заявки на перемещение товара"></MenuItem>
             </MenuItem>
             <MenuItem Header="Администратор">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
