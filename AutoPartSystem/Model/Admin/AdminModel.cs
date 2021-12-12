@@ -18,6 +18,7 @@ namespace AutoPartSystem.Model.Admin
         public List<Data.City> GetCities();
         public ObservableCollection<Data.City> GetCitiesFromText(string text);
         public Data.City GetCityFromName(string name);
+        public ObservableCollection<Data.City> GetCityClient();
         public void UpdateCity();
         public List<City> GetEmpCity();
     }
@@ -95,6 +96,11 @@ namespace AutoPartSystem.Model.Admin
         public List<City> GetEmpCity()
         {
             return _citys.Where(p => p.Id >= 1 && p.Id <= 3).ToList();
+        }
+
+        public ObservableCollection<City> GetCityClient()
+        {
+            return new ObservableCollection<City>(_citys.Where(p => p.Id > 3).ToList());
         }
     }
 }

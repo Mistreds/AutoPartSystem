@@ -14,7 +14,7 @@
         <StackPanel Orientation="Horizontal">
             <ComboBox ItemsSource="{Binding Cities}" SelectedValue="{Binding CityId1}" DisplayMemberPath="Name" SelectedValuePath="Id" Height="40" Width="150" Margin="20,0,0,0"></ComboBox>
             <ComboBox ItemsSource="{Binding Cities}" SelectedValue="{Binding CityId2}" DisplayMemberPath="Name" SelectedValuePath="Id" Height="40" Width="150" Margin="20,0,0,0"></ComboBox>
-            <Button Command="{Binding CreateMove}" Margin="20,0,0,0" Content="Переместить"></Button>
+            <Button Command="{Binding CreateMove}" IsEnabled="{Binding IsReady, Converter={StaticResource InvertBooleanConverter}}"  Margin="20,0,0,0" Content="Переместить"></Button>
             <Button IsEnabled="{Binding IsReady}" Margin="20,0,0,0" Command="{Binding ForwardMove}" Content="Сохранить"></Button>
             <Button IsEnabled="{Binding IsReady}" Margin="20,0,0,0" Command="{Binding BackMove}" Content="Отмена"></Button>
         </StackPanel>

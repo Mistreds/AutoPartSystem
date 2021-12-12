@@ -268,7 +268,7 @@ xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                     <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
                 <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell}"></DataGridTextColumn>
-                <DataGridTemplateColumn Header="Продажа" x:Name="Prodash">
+                <DataGridTemplateColumn Header="Переместить" x:Name="Prodash">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <CheckBox IsChecked="{Binding IsSelected,UpdateSourceTrigger=PropertyChanged}"></CheckBox>

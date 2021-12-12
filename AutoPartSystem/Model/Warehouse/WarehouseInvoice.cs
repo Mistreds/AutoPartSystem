@@ -260,19 +260,10 @@ namespace AutoPartSystem.Model.Warehouse
             {
                 MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
             }
-           // db.Invoices.Add(inv);
-          // /db.SaveChanges();
-           // invoice.Id = inv.Id;
-           // if(invoice.IsInvoice)
-           // {
-
-            //}
         }
 
         public void UpdateInvoice(Invoice invoice)
         {
-            Console.WriteLine("dsadasd");
-            Console.WriteLine(invoice.AllCount);
             using var db = new Data.ConDB();
             {
 

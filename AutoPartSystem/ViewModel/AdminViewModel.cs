@@ -47,6 +47,12 @@ namespace AutoPartSystem.ViewModel
         {
             get => _cities;
         }
+        private ObservableCollection<Data.City> _client_cities;
+        public ObservableCollection<Data.City> ClientCities
+        {
+            get => _client_cities;
+            set => this.RaiseAndSetIfChanged(ref _client_cities,value);
+        }
         private ObservableCollection<Data.Employee>? _employers_table;
         public ObservableCollection<Data.Employee>? EmployersTable
         {
@@ -86,12 +92,13 @@ namespace AutoPartSystem.ViewModel
             AdminModel = MainViewModel.AdminModel;
             MarkModel = markModel;
             _positions = AdminModel.GetPositions();
-            _cities = AdminModel.GetCities();
+            _cities = AdminModel.GetEmpCity();
+            ClientCities = AdminModel.GetCityClient();
             EmployersTable = AdminModel.GetEmployees();
             MarkTable = MarkModel.GetMark();
             ModelTable = MarkModel.GetModels();
             _controls_emp = new ObservableCollection<UserControl> { new View.Admin.AdminTable(), new View.Admin.AddUser() };
-            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit() };
+            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(), new View.Admin.AdminSetting() };
             MainControl = _controls[0];
             EmpControl = _controls_emp[0];
             AddEmployee = new Data.Employee();
