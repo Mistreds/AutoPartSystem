@@ -45,6 +45,8 @@
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад"></MenuItem>
                 <MenuItem Header="Добавить клиента"></MenuItem>
+                <MenuItem Header="Добавить кассу" Command="{Binding OpenPage}" CommandParameter="InsertCash"></MenuItem>
+                <MenuItem Header="Снять кассу" Command="{Binding OpenPage}"  CommandParameter="OutCash"></MenuItem>
                 <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
             </MenuItem>
             <MenuItem Header="Таблицы">
@@ -58,13 +60,16 @@
             <MenuItem Header="Администратор">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
-            </MenuItem>                                 
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>
+            </MenuItem>
         </Menu>
-        <!--<StackPanel Style="{StaticResource NavStackPanel}" Orientation="Horizontal">
-            <Button Style="{StaticResource MenuButton}" Command="{Binding OpenPage}" CommandParameter="0" Height="48" Content="Окно завсклада" ></Button>
-            <Button Style="{StaticResource MenuButton}" Command="{Binding OpenPage}" CommandParameter="1" Height="48" Content="Администратор" ></Button>
-        </StackPanel>-->
         <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
-        <StatusBar Grid.Row="2"></StatusBar>
+        <StatusBar Grid.Row="2">
+            <TextBlock Margin="10,0,0,0">
+                <Run Text="Касса: "></Run>
+                <Run Text="{Binding Employee2.Cash}"></Run>
+                <Run Text=" тенге "></Run>
+            </TextBlock>
+        </StatusBar>
     </Grid>
 </Window>

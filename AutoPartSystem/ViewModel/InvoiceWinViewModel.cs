@@ -36,6 +36,7 @@ namespace AutoPartSystem.ViewModel
             get => _mark;
             set => this.RaiseAndSetIfChanged(ref _mark, value);
         }
+        public List<Data.TypePay> TypePay { get; private set; }
         private ObservableCollection<Data.City> _cities;
         public ObservableCollection<Data.City> Cities
         {
@@ -52,6 +53,7 @@ namespace AutoPartSystem.ViewModel
         public bool IsInvoice { get; set; }
         private View.Invoice.CreateInvoice CreateInvoice;
         private View.Invoice.InvoceTable InvoiceTable;
+        public List<Data.Employee> Employees { get; private set; }
         private bool _is_new_client;
         public bool IsNewClient
         {
@@ -74,9 +76,22 @@ namespace AutoPartSystem.ViewModel
             get => _client;
             set=>this.RaiseAndSetIfChanged(ref _client, value);
         }
+        private bool _is_marzh;
+        public bool IsMarzh
+        {
+            get => _is_marzh;
+            set=>this.RaiseAndSetIfChanged(ref _is_marzh, value);  
+        }
+        private int _emp_id;
+        public int EmpId
+        {
+            get => _emp_id;
+            set=>this.RaiseAndSetIfChanged(ref _emp_id , value);
+        }
         public InvoiceWinViewModel(Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel, Model.MarkModel.MarkModel MarkModel)
         {
             this.WarehouseInvoceModel = WarehouseInvoceModel;
+            Employees = MainViewModel.AdminModel.GetEmployeeMeneger(MainViewModel.Employee.Id);
             this.MarkModel = MarkModel;
             Mark = MarkModel.GetMark();
             Client = new Data.Client();
@@ -91,7 +106,10 @@ namespace AutoPartSystem.ViewModel
                  {
                      MainViewModel.ClientModel.AddClient(Client);
                  }
-                 WarehouseInvoceModel.AddInvoiceToDataBase(Invoice);
+                 if(Invoice.IsDelMarzh)
+                     WarehouseInvoceModel.AddInvoiceToDataBase(Invoice, EmpId);
+                 else
+                    WarehouseInvoceModel.AddInvoiceToDataBase(Invoice);
              });
             Invoice = new Data.Invoice(new ObservableCollection<Data.Warehouse>(WarehouseInvoceModel.GetWarehouse()),MainViewModel.Employee);
             try
@@ -101,7 +119,7 @@ namespace AutoPartSystem.ViewModel
             }
             catch { }
             View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
-            
+            TypePay = MainViewModel.WarehouseModel.GetTypePay();
             invoiceGood.Show();      
         }
         public InvoiceWinViewModel(Data.Invoice invoice)

@@ -17,6 +17,12 @@ namespace AutoPartSystem.ViewModel
         public static InvoiceViewModel? InvoiceViewModel { get; set; }
         public static GetMoveGoodsViewModel? GetMoveGoodsViewModel { get; set; }
         public static Data.Employee? Employee { get;private set; }
+        private Data.Employee _employee;
+        public Data.Employee Employee2
+        {
+            get=>this._employee;
+            set=>this.RaiseAndSetIfChanged(ref _employee, value);
+        }
         public static Model.MarkModel.MarkModel? _markModel;
         public static Model.Admin.AdminModel AdminModel;
         public static Model.Client.ClientModel ClientModel;
@@ -29,11 +35,19 @@ namespace AutoPartSystem.ViewModel
             set=>this.RaiseAndSetIfChanged(ref _main_control, value);
         }
         private ObservableCollection<UserControl> _controls;
+        private static MainViewModel main { get; set; }
+        public static MainViewModel SelMain()
+        {
+            return main;
+        }
         public MainViewModel(Data.Employee employee)
         {
+            main = this;
             Employee = employee;
+            Employee2 = employee;
             _markModel=new Model.MarkModel.MarkModel();
             AdminModel= new Model.Admin.AdminModel();
+            AdminModel.GetNowCash(Employee.Cash);
             ClientModel=new Model.Client.ClientModel();
             if (Employee.PositionId==1)
             {
@@ -92,6 +106,18 @@ namespace AutoPartSystem.ViewModel
                 case "OpenMoveGoods":
                     MainControl = _controls[4];
                     InvoiceViewModel.OpenPageCommand(page_id);
+                    break;
+                case "AdminCity":
+                    MainControl = _controls[1];
+                    AdminViewModel.OpenPageCommand(page_id);
+                    break;
+                case "InsertCash":
+                    View.Cash.InsertOutCash insertCash = new View.Cash.InsertOutCash(Employee2, "Добавить", AdminModel);
+                    insertCash.Show();
+                    break;
+                case "OutCash":
+                    View.Cash.InsertOutCash outCash = new View.Cash.InsertOutCash(Employee2, "Вывод", AdminModel);
+                    outCash.Show();
                     break;
             }
             

@@ -77,6 +77,12 @@ namespace Data
             this.City = City;
             this.PhoneNumber= phone;
         }
+        private double cash;
+        public double Cash
+        {
+            get => cash;
+            set=>this.RaiseAndSetIfChanged(ref cash, value);
+        }
         public void HashPassword()
         {
             this.Password = Hash.SHA512(Password);
@@ -152,11 +158,22 @@ namespace Data
         }
         private string _name;
         public string Name { get => _name; set => this.RaiseAndSetIfChanged(ref _name, value); }
+        private string _address;
+        public string Address
+        {
+            get => _address;
+            set=>this.RaiseAndSetIfChanged(ref _address, value);
+        }
         public City() { }
         public City(int Id, string Name)
         {
             this.Id=Id;
             this.Name=Name;
+        }
+        public City(string Name)
+        {
+            
+            this.Name = Name;
         }
     }
 }

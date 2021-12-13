@@ -30,8 +30,8 @@
             <RowDefinition ></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
-
-        </Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+            </Grid.RowDefinitions>
         <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
             <TextBlock VerticalAlignment="Center" Text="Выбрать клиента"></TextBlock>
                 <ToggleButton x:Name="NewOldClient" IsChecked="{Binding Path=DataContext.IsNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></ToggleButton>
@@ -141,32 +141,41 @@
         <DataGrid Margin="0,15,0,0" GridLinesVisibility="All" AutoGenerateColumns="False" CanUserAddRows="False"  Grid.Column="1" Grid.Row="2" ItemsSource="{Binding GoodsInvoice}" BorderBrush="#83000000" >
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Модель">
-                    <DataGridTemplateColumn.CellTemplate>
-
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Model.Mark.Name}"></TextBlock>
-                                <TextBlock Margin="10,0,0,0" Text="{Binding Model.Name}" ></TextBlock>
-                            </StackPanel>
-
-                        </DataTemplate>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Model.Mark.Name}"></TextBlock>
+                                    <TextBlock Margin="10,0,0,0" Text="{Binding Model.Name}" ></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Описание" IsReadOnly="True" Binding="{Binding Goods.Description}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Артикуль" IsReadOnly="True"  Binding="{Binding Goods.Article}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Цена прих" IsReadOnly="True"  Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Доставка" x:Name="Astana" IsReadOnly="True"  Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Доставка" x:Name="Aktau" IsReadOnly="True"  Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Доставка NQZ" x:Name="Astana" IsReadOnly="True"  Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Доставка SCO" x:Name="Aktau" IsReadOnly="True"  Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Рек цена"  IsReadOnly="True"  Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Кол-во"  Binding="{Binding Count, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Цена продажи"   Binding="{Binding Goods.PriceCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Общая доставка" x:Name="alldost"   Binding="{Binding AllTrans, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                    <DataGridTemplateColumn Header="Тип оплаты">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedIndex="0" SelectedValue="{Binding Goods.TypePayId}"></ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Header="Общие расходы" IsReadOnly="True"  Binding="{Binding  InputPrice, Mode=OneWay}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Общая сумма" IsReadOnly="True"  Binding="{Binding AllPrice, Mode=OneWay}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Маржа" IsReadOnly="True"  Binding="{Binding Marz, Mode=OneWay}"></DataGridTextColumn>
                 </DataGrid.Columns>
         </DataGrid>
-        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
+            <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                <CheckBox Content="Разделить маржу" x:Name="RazdMarz"  IsChecked="{Binding IsDelMarzh}"></CheckBox>
+                <ComboBox Height="40" Margin="20,0,0,0" MinWidth="150" IsEnabled="{Binding  ElementName=RazdMarz, Path=IsChecked}" ItemsSource="{Binding Path=DataContext.Employees,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" SelectedValue="{Binding Path=DataContext.EmpId,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" DisplayMemberPath="Name" SelectedValuePath="Id"></ComboBox>
+            </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="4">
             <TextBlock Margin="50,0,0,0"  > <Run Text="Всего отпущено "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run> <Run Text=" наименования"></Run></TextBlock>
             <TextBlock   Margin="10,0,0,0"> <Run Text="на сумму "></Run><Run Text="{Binding AllPrice, Mode=OneWay}"></Run> <Run Text=" тенге"></Run></TextBlock>
                 <TextBlock   Margin="10,0,0,0"> <Run Text="общие расходы "></Run><Run Text="{Binding AllInputPrice, Mode=OneWay}"></Run> <Run Text=" тенге"></Run></TextBlock>

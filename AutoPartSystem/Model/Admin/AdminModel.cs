@@ -21,6 +21,13 @@ namespace AutoPartSystem.Model.Admin
         public ObservableCollection<Data.City> GetCityClient();
         public void UpdateCity();
         public List<City> GetEmpCity();
+        public List<Employee> GetEmployeeMeneger(int EmpId);
+        public void GetAddres(out string Almata, out string Astana, out  string Aktau);
+        public void SaveAddress( string Almata, string Astana,  string Aktau);
+        public void AddCity(string city);
+        public void GetNowCash(double Cash);
+        public void UpdateCash(double Cash,string name, Employee employee, string type);
+        public void UpdateCash(double Cash, Employee employee);
     }
     public class AdminModel :ReactiveObject, IAdminModelation
     {
@@ -98,9 +105,98 @@ namespace AutoPartSystem.Model.Admin
             return _citys.Where(p => p.Id >= 1 && p.Id <= 3).ToList();
         }
 
+        public void GetAddres(out string Almata, out string Astana, out string Aktau)
+        {
+            Almata = Cities.Where(p => p.Id == 1).Select(p => p.Address).FirstOrDefault();
+            Astana = Cities.Where(p => p.Id == 2).Select(p => p.Address).FirstOrDefault();
+            Aktau = Cities.Where(p => p.Id == 3).Select(p => p.Address).FirstOrDefault();
+        }
+
+        public void SaveAddress(string Almata, string Astana, string Aktau)
+        {
+            using var db = new Data.ConDB();
+            var al=Cities.FirstOrDefault(p => p.Id == 1);
+            var ast = Cities.FirstOrDefault(p => p.Id == 2);
+            var ak = Cities.FirstOrDefault(p => p.Id == 3);
+            al.Address = Almata;
+            ast.Address = Astana;
+            ak.Address = Aktau;
+            db.Update(al);
+            db.Update(ast);
+            db.Update(ak);
+            db.SaveChanges();
+        }
+
         public ObservableCollection<City> GetCityClient()
         {
             return new ObservableCollection<City>(_citys.Where(p => p.Id > 3).ToList());
+        }
+
+        public void AddCity(string city)
+        {
+           using var db=new Data.ConDB();
+            var citys = new Data.City(city);
+            db.Add(citys);
+            db.SaveChanges();
+        }
+
+        public List<Employee> GetEmployeeMeneger(int EmpId)
+        {
+            return Employees.Where(p => p.Id != EmpId && (p.PositionId == 3 || p.PositionId == 4)).ToList();
+        }
+
+        public void GetNowCash(double Cash)
+        {
+            using var db = new Data.ConDB();
+            var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            var cash = db.CashDay.Where(p => p.Date ==  date && p.EmployeeId== ViewModel.MainViewModel.Employee.Id).FirstOrDefault();
+            if (cash == null)
+            {
+                Data.CashDay cash_day = new CashDay(Cash, ViewModel.MainViewModel.Employee.Id);
+                db.Add(cash_day);
+                db.SaveChanges();
+            }
+        }
+
+        public void UpdateCash(double Cash, string name, Employee employee, string type)
+        {
+            double cash = 0;
+            if(type== "Добавить")
+            {
+                cash += Cash;
+            }
+            else
+            {
+                cash-=Cash;
+            }
+            var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,0,0,0);
+            var day_start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23,59,59 );
+            var day_end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+            var inv = new Model.InvoiceModel();
+            using var db = new Data.ConDB();
+            db.InsertOutCash.Add(new Data.InsertOutCash(name, employee.Cash, cash, employee.Cash + cash, type, employee.Id));
+            db.SaveChanges();
+            if (!inv.IsHaveInvoice(day_start, day_end, employee.Id))
+            {
+                var cash_db = db.CashDay.Where(p => p.Date == date && p.EmployeeId == ViewModel.MainViewModel.Employee.Id).FirstOrDefault();
+                cash_db.Cash= employee.Cash + cash;
+                db.Update(cash_db);
+                db.SaveChanges();
+
+            }
+            employee.Cash=employee.Cash + cash;
+            ViewModel.MainViewModel.Employee.Cash = employee.Cash;
+            db.Update(employee);
+            db.SaveChanges();
+        }
+
+        public void UpdateCash(double Cash, Employee employee)
+        {
+            using var db = new Data.ConDB();
+            employee.Cash = employee.Cash + Cash;
+            ViewModel.MainViewModel.Employee.Cash = employee.Cash;
+            db.Update(employee);
+            db.SaveChanges();
         }
     }
 }

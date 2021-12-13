@@ -127,8 +127,8 @@ namespace AutoPartSystem.ViewModel
         {
             Id = id;
             Goods = good;
+            Goods.TypePayId = 1;
             Goods.PriceCell = Goods.RecomPrice;
-            Console.WriteLine(good.InputAstana);
             InAlmata = inAlmata;
             InAstana = inAstana;
             InAktau = inAktau;

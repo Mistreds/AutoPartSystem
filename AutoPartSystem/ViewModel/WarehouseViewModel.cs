@@ -71,6 +71,7 @@ namespace AutoPartSystem.ViewModel
             get => _warehouses_virtual_table;
             set => this.RaiseAndSetIfChanged(ref _warehouses_virtual_table, value);
         }
+        public List<Data.TypePay> TypePay { get;private set; }
         #endregion
         #region Models
         public Model.MarkModel.MarkModel? MarkModel;
@@ -145,6 +146,7 @@ namespace AutoPartSystem.ViewModel
             WarehousesVirtualTable = WarehouseModel.GetWarehouseVirtualTables();
             WarehouseInvoceModel = new WarehouseInvoceModel();        
             Model = new ModelAdd();
+            TypePay=WarehouseModel.GetTypePay();
             this.WhenAnyValue(s => s.MarkModel.Model).Subscribe(_ => TestModel());
         }
         private View.Warehouse.WarehouseWindows WarehouseWindows;

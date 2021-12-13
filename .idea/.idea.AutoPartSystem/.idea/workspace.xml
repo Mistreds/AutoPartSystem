@@ -4,7 +4,24 @@
     <projectFile>AutoPartSystem/AutoPartSystem.csproj</projectFile>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="" />
+    <list default="true" id="b375c423-4d6a-4fab-8c7a-7dac614c9cb1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AutoPartSystem/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/MainWindow.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Admin/AdminModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/Model/Warehouse/WarehouseModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AdminSetting.xaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/AdminSetting.xaml.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Admin/MainAdmin.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Admin/MainAdmin.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/View/Warehouse/WarehouseTable.xaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/AdminViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/AdminViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/MainViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/MainViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/AutoPartSystem/ViewModel/WarehouseViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ConnectDB/ConnectDB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/ConnectDB.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/ConnectDB/Migrations/ConDBModelSnapshot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Invoice.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Invoice.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/UserData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/UserData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Warehouse.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Warehouse.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -75,6 +92,7 @@
       <workItem from="1638361663466" duration="3324000" />
       <workItem from="1638511346871" duration="9307000" />
       <workItem from="1638713607850" duration="1174000" />
+      <workItem from="1639316428300" duration="3481000" />
     </task>
     <servers />
   </component>

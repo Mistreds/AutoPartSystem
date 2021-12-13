@@ -18,9 +18,9 @@ namespace AutoPartSystem.View.Admin
     /// <summary>
     /// Логика взаимодействия для AdminSetting.xaml
     /// </summary>
-    public partial class AdminSetting : UserControl
+    public partial class CitySetting : UserControl
     {
-        public AdminSetting()
+        public CitySetting()
         {
             InitializeComponent();
         }

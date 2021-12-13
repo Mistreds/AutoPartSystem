@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211213173058_118")]
+    partial class _118
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -254,40 +256,6 @@ namespace ConnectDB.Migrations
                     b.HasIndex("ModelId");
 
                     b.ToTable("GoodModel");
-                });
-
-            modelBuilder.Entity("Data.InsertOutCash", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<double>("Cash")
-                        .HasColumnType("double");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<double>("NewCash")
-                        .HasColumnType("double");
-
-                    b.Property<double>("OldCash")
-                        .HasColumnType("double");
-
-                    b.Property<string>("Type")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.ToTable("InsertOutCash");
                 });
 
             modelBuilder.Entity("Data.Invoice", b =>
@@ -654,17 +622,6 @@ namespace ConnectDB.Migrations
                     b.Navigation("Goods");
 
                     b.Navigation("Model");
-                });
-
-            modelBuilder.Entity("Data.InsertOutCash", b =>
-                {
-                    b.HasOne("Data.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Data.Invoice", b =>

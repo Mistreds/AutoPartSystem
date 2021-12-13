@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -34,12 +35,14 @@ namespace AutoPartSystem.Model.Warehouse
         public void UpdateWarehouse(WarehouseTable warehouse);
         public void MoveOrderToWarehouse(Data.MainMove mainMove);
         public void ArriveGoods(Data.MainMove mainMove);
+        public List<Data.TypePay> GetTypePay();
     }
 
     public class WarehouseModel : IWarehouseModel
     {
         private ObservableCollection<WarehouseTable> Warehouses;
         private ObservableCollection<WarehouseTable> WarehouseVirtual;
+        private List<Data.TypePay> TypePay;
         private async Task _get_warehouse_from_db()
         {
             await Task.Run(() =>
@@ -55,6 +58,7 @@ namespace AutoPartSystem.Model.Warehouse
             _view_model = ViewModel;
             using var db = new Data.ConDB();
             GetWarehouseFromDb();
+            TypePay = db.TypePay.ToList();
             WarehouseVirtual = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
         }
         private void GetWarehouseFromDb()
@@ -288,6 +292,11 @@ namespace AutoPartSystem.Model.Warehouse
                 ViewModel.MainViewModel.MoveGoodsModel.RemoveMove(mainMove);            
 
             }
+        }
+
+        public List<Data.TypePay> GetTypePay()
+        {
+            return TypePay;
         }
     }
 

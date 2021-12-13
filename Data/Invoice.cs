@@ -38,10 +38,7 @@ namespace Data
             set
             {
                 this.RaiseAndSetIfChanged(ref _good_invoice, value);
-                foreach (var s in GoodsInvoice)
-                {
-                    s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
-                }
+               
             }
         }
         private int _client_id;
@@ -98,8 +95,27 @@ namespace Data
             AllCount = GoodsInvoice.Sum(p => p.Count);
             AllInputPrice = GoodsInvoice.Sum(p => p.InputPrice);
             AllMarz = AllPrice - AllInputPrice;
+            if (IsDelMarzh)
+            {
+                AllMarz = AllMarz / 2;
+            }
         }
-        
+        private bool _is_del_marzh;
+        public bool IsDelMarzh
+        {
+            get => _is_del_marzh;
+            set
+            {
+                this.RaiseAndSetIfChanged(ref _is_del_marzh, value);
+               
+            }
+        }
+        private bool _is_end;
+        public bool IsEnd
+        {
+            get => _is_end;
+            set=>this.RaiseAndSetIfChanged(ref _is_end, value);
+        }
         public Invoice() { }
         public Invoice(Invoice inv)
         {
@@ -147,13 +163,12 @@ namespace Data
                 AllInputPrice = 0;
                 AllMarz = 0;
             }
+            
         }
         public Invoice(Invoice inv, string type)
         {
             this.Id = inv.Id;
             this.IsInvoice = inv.IsInvoice;
-            this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p, inv.Id)));
-
             this.Employee = inv.Employee;
             this.EmployeeId = inv.Employee.Id;
             this.Client = inv.Client;
@@ -161,6 +176,9 @@ namespace Data
             this.Date = inv.Date;
             this.AllCount = inv.AllCount;
             this.AllPrice = inv.AllPrice;
+            this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p, inv.Id)));
+
+         
         }
         public Invoice(ObservableCollection<Warehouse> warehouses, Employee employee)
         {
@@ -174,6 +192,7 @@ namespace Data
                 s.WhenAnyValue(s => s.Count).Subscribe(_ => SetAllCountAndAllPrice());
             }
             this.WhenAnyValue(s => s.GoodsInvoice.Count).Subscribe(_ => test());
+            this.WhenAnyValue(s => s.IsDelMarzh).Subscribe(_ => SetAllCountAndAllPrice());
             Date = DateTime.Now;
         }
     }
@@ -191,6 +210,8 @@ namespace Data
             this.InputPrice = goodsInvoice.InputPrice;
             this.AllTrans = goodsInvoice.AllTrans;
             this.Marz=goodsInvoice.Marz;
+            this.TypePayId = goodsInvoice.TypePayId;
+            
 
         }
         public GoodsInvoice()
@@ -231,7 +252,7 @@ namespace Data
         {
             GoodsId = goods.Id;
             Goods = goods;
-            
+            TypePayId = goods.TypePayId;
             Model = goods.GoodsModel.FirstOrDefault().Model;
             ModelId = Model.Id;
             this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
@@ -247,12 +268,17 @@ namespace Data
             Console.WriteLine(Goods.InputAstana);
             RecomPrice = goods.RecomPrice;
             UpdatePrice();
+            UpdateTrans();
+            UpdateInput();
+            UpdateMarz();
         }
         public void UpdateTrans(double trans)
         {
             this.trans = trans;
+            UpdateTrans();
            // Console.WriteLine(trans);
         }
+       
         private void UpdateTrans()
         {
             AllTrans = trans * Count;
@@ -373,6 +399,18 @@ namespace Data
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
         }
+        private int _type_pay_id;
+        public int TypePayId
+        {
+            get => _type_pay_id;
+            set=>this.RaiseAndSetIfChanged(ref _type_pay_id, value);
+        }
+        private TypePay _type_pay;
+        public TypePay TypePay
+        {
+            get=> _type_pay;
+            set=>this.RaiseAndSetIfChanged(ref _type_pay, value);
+        }
     }
     public class Client : MainClass
     {
@@ -445,5 +483,62 @@ namespace Data
             Mark = new Mark();
         }
     }
-   
+    public class TypePay:MainClass
+    {
+        public TypePay()
+        { 
+        }
+        public TypePay(int id, string name)
+        {
+            this.Id=id;
+            this.Name=name;
+        }
+    }
+    public class MarzhEmployee:ReactiveObject
+    {
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set=>this.RaiseAndSetIfChanged(ref _id, value);
+        }
+        private double _marz;
+        public double Marz
+        {
+            get => _marz;
+            set=>this.RaiseAndSetIfChanged(ref _marz, value);
+        }
+        private int _employee_id;
+        public int EmployeeId
+        {
+            get => this._employee_id;
+            set => this.RaiseAndSetIfChanged(ref _employee_id, value);
+        }
+        private Employee _employee;
+        public Employee Employee
+        {
+            get => _employee;
+            set => this.RaiseAndSetIfChanged(ref _employee, value);
+
+        }
+        private Invoice _invoice;
+        public Invoice Invoice
+        {
+            get => _invoice;
+            set => this.RaiseAndSetIfChanged(ref _invoice, value);
+        }
+        private int _invoice_id;
+        public int InvoiceId
+        {
+            get => this._invoice_id;
+            set => this.RaiseAndSetIfChanged(ref _invoice_id, value);
+        }
+        public MarzhEmployee() { }
+        public MarzhEmployee(double Marzh, int InvioceId, int EmployeeId)
+        {
+            this.Marz = Marzh;
+            this.InvoiceId = InvioceId;
+            this.EmployeeId = EmployeeId;
+        }
+    }
 }

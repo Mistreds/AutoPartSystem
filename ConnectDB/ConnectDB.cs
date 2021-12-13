@@ -23,6 +23,10 @@ namespace Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<GoodsModel> GoodModel { get; set; }
         public DbSet<MainMove> MainMove { get; set; }
+        public DbSet<TypePay> TypePay { get; set; }
+        public DbSet<MarzhEmployee> MarzhEmployee { get; set; }
+        public DbSet<CashDay> CashDay { get; set; }
+        public DbSet<InsertOutCash> InsertOutCash { get; set; }
         private string path_connect;
         private string query_connect;
         public ConDB()
@@ -59,7 +63,7 @@ namespace Data
             modelBuilder.Entity<Employee>(b => b.ToTable("Employee"));
             modelBuilder.Entity<Position>(b => b.ToTable("Position"));
             modelBuilder.Entity<City>().HasData(new City[] { new City(1, "Алмата"), new City(2, "Астане"), new City(3, "Актау") });
-            modelBuilder.Entity<Position>().HasData(new Position[] { new Position(1, "Администратор"), new Position(2, "Завсклад"), new Position(3, "Продажник"), new Position(4, "Продажник регионал") });
+            modelBuilder.Entity<Position>().HasData(new Position[] { new Position(1, "Администратор"), new Position(2, "Завсклад"), new Position(3, "Менеджер"), new Position(4, "Региональный менеджер") });
             modelBuilder.Entity<Employee>().HasData(new Employee[] { new Employee(1, "Администратор", "Admin", "Admin", 1, 1) });
 
             #endregion
@@ -83,6 +87,13 @@ namespace Data
             modelBuilder.Entity<Client>().Ignore(p => p.MarkId);
             modelBuilder.Entity<MoveGoods>(b => b.ToTable("MoveGoods"));
             modelBuilder.Entity<MainMove>(b => b.ToTable("MainMove"));
+            modelBuilder.Entity<TypePay>(b => b.ToTable("TypePay"));
+            modelBuilder.Entity<TypePay>().HasData(new TypePay[] { new TypePay(1, "Наличная оплата"), new TypePay(2, "Карта")  });
+            modelBuilder.Entity<MarzhEmployee>(b => b.ToTable("MarzhEmployee"));
+            #endregion
+            #region Cash
+            modelBuilder.Entity<InsertOutCash>(b => b.ToTable("InsertOutCash"));
+            modelBuilder.Entity<CashDay>(b => b.ToTable("CashDay"));
             #endregion
         }
     }

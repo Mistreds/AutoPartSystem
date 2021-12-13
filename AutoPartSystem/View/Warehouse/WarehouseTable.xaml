@@ -262,12 +262,19 @@
                 <DataGridTextColumn  IsReadOnly="True" Header="SCO" Binding="{Binding InAktau}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Место" Binding="{Binding WarehousePlace}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена прих" Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Доставка" Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Доставка" Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Доставка NQZ" Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Доставка SCO" Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
                 <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell}"></DataGridTextColumn>
                 <DataGridTextColumn   Header="Цена продажи" Binding="{Binding Goods.PriceCell}"></DataGridTextColumn>
+                <DataGridTemplateColumn Header="Тип оплаты">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedIndex="0" SelectedValue="{Binding Goods.TypePayId}"></ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Продажа" x:Name="Prodash">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>

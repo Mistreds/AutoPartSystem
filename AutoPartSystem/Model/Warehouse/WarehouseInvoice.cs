@@ -20,6 +20,7 @@ namespace AutoPartSystem.Model.Warehouse
         public ObservableCollection<Data.Warehouse> GetWarehouse();
         public void CreateExcelFile(Data.Invoice invoice);
         public void AddInvoiceToDataBase (Data.Invoice invoice);
+        public void AddInvoiceToDataBase(Data.Invoice invoice, int EmpId);
         public void UpdateInvoice(Data.Invoice invoice);  
     }
     public class WarehouseInvoceModel : IWarehouseInvoce
@@ -221,6 +222,82 @@ namespace AutoPartSystem.Model.Warehouse
             cell.Style.WrapText = true;
             return cell;
         }
+        public void AddInvoiceToDataBase(Invoice invoice, int EmpId)
+        {
+            var inv = new Data.Invoice(invoice);
+            using var db = new Data.ConDB();
+            var ware = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)).Select(p => WarehouseTable.NewTable(p)));
+            bool is_have_good = true;
+            foreach (var invo in invoice.GoodsInvoice)
+            {
+                if (invo.Goods.Warehouse.IsVirtual == true) continue;
+                var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                switch(MainViewModel.Employee.CityId)
+                {
+                    case 1:
+                        if (war.InAlmata < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        break;
+                    case 2:
+                        if (war.InAstana < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        break;
+                    case 3:
+                        if (war.InAktau < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        break;
+                }
+               
+            }
+            if (is_have_good)
+            {
+                if (inv.IsInvoice)
+                {
+                    var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
+                    foreach (var invo in invoice.GoodsInvoice)
+                    {
+                        if (invo.Goods.Warehouse.IsVirtual == true) continue;
+                        var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                        switch (MainViewModel.Employee.CityId)
+                        {
+                            case 1:
+                                war.InAlmata -= invo.Count;
+                                break;
+                            case 2:
+                                war.InAstana -= invo.Count;
+                                break;
+                            case 3:
+                                war.InAktau -= invo.Count;
+                                break;
+                        }
+                        
+                    }
+                    db.Warehouse.UpdateRange(wares);    
+                }
+                db.Invoices.Add(inv);
+                db.SaveChanges();
+                if(inv.IsInvoice)
+                {
+                    MarzhEmployee marzhEmployee = new MarzhEmployee(inv.AllMarz, inv.Id, EmpId );
+                    db.Add(marzhEmployee);
+                    db.SaveChanges();
+                }
+                invoice.Id = inv.Id;
+            }
+            else
+            {
+                MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
+            }
+        }
         public void AddInvoiceToDataBase(Invoice invoice)
         {
             var inv = new Data.Invoice(invoice);
@@ -231,12 +308,30 @@ namespace AutoPartSystem.Model.Warehouse
             {
                 if (invo.Goods.Warehouse.IsVirtual == true) continue;
                 var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
-                
-                war.InAlmata -= invo.Count;
-                if(war.InAlmata<0)
+
+                switch (MainViewModel.Employee.CityId)
                 {
-                    invo.DontHaveGoods = true;
-                    is_have_good=false;
+                    case 1:
+                        if (war.InAlmata < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        break;
+                    case 2:
+                        if (war.InAstana < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        break;
+                    case 3:
+                        if (war.InAktau < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        break;
                 }
             }
             if(is_have_good)
@@ -246,9 +341,24 @@ namespace AutoPartSystem.Model.Warehouse
                     var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
                     foreach (var invo in invoice.GoodsInvoice)
                     {
+                        if(invo.Goods.TypePayId==1)
+                        {
+                            MainViewModel.AdminModel.UpdateCash(invo.AllPrice, MainViewModel.SelMain().Employee2);
+                        }
                         if (invo.Goods.Warehouse.IsVirtual == true) continue;
                         var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
-                        war.InAlmata -= invo.Count;
+                        switch (MainViewModel.Employee.CityId)
+                        {
+                            case 1:
+                                war.InAlmata -= invo.Count;
+                                break;
+                            case 2:
+                                war.InAstana -= invo.Count;
+                                break;
+                            case 3:
+                                war.InAktau -= invo.Count;
+                                break;
+                        }
                     }
                     db.Warehouse.UpdateRange(wares);    
                 }
@@ -261,7 +371,6 @@ namespace AutoPartSystem.Model.Warehouse
                 MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
             }
         }
-
         public void UpdateInvoice(Invoice invoice)
         {
             using var db = new Data.ConDB();
@@ -302,6 +411,8 @@ namespace AutoPartSystem.Model.Warehouse
             }
             Console.WriteLine("dsadasd");
         }
+
+       
     }
 }
 

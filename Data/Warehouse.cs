@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -155,6 +156,21 @@ namespace Data
                 this.RaisePropertyChanging();
             }
         }
+        
+        private int _type_pay_id;
+        [NotMapped]
+        public int TypePayId
+        {
+            get => _type_pay_id;
+            set => this.RaiseAndSetIfChanged(ref _type_pay_id, value);
+        }
+        private TypePay _type_pay;
+        [NotMapped]
+        public TypePay TypePay
+        {
+            get => _type_pay;
+            set => this.RaiseAndSetIfChanged(ref _type_pay, value);
+        }
         public Goods() { }
         public Goods(Goods goods)
         {
@@ -170,6 +186,8 @@ namespace Data
             this.CountCell = goods.CountCell;
             this.InputAstana = goods.InputAstana;
             this.InputAktau = goods.InputAktau;
+           
+            
 
         }
     }

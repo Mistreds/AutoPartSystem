@@ -87,6 +87,27 @@ namespace AutoPartSystem.ViewModel
             get => add_mark;
             set=>this.RaiseAndSetIfChanged(ref add_mark, value);
         }
+
+        private string _almata_addres;
+
+        public string AlmataAddres
+        {
+            get => _almata_addres;
+            set => this.RaiseAndSetIfChanged(ref _almata_addres, value);
+        }
+
+        private string _astana_addres;
+        public string AstanaAddres
+        {
+            get => _astana_addres;
+            set => this.RaiseAndSetIfChanged(ref _astana_addres, value);
+        }
+        private string _aktau_addres;
+        public string AktauAddres
+        {
+            get => _aktau_addres;
+            set => this.RaiseAndSetIfChanged(ref _aktau_addres, value);
+        }
         public AdminViewModel(Model.MarkModel.MarkModel markModel)
         {
             AdminModel = MainViewModel.AdminModel;
@@ -98,10 +119,11 @@ namespace AutoPartSystem.ViewModel
             MarkTable = MarkModel.GetMark();
             ModelTable = MarkModel.GetModels();
             _controls_emp = new ObservableCollection<UserControl> { new View.Admin.AdminTable(), new View.Admin.AddUser() };
-            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(), new View.Admin.AdminSetting() };
+            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(), new View.Admin.CitySetting() };
             MainControl = _controls[0];
             EmpControl = _controls_emp[0];
             AddEmployee = new Data.Employee();
+            AdminModel.GetAddres(out _almata_addres, out _almata_addres, out _aktau_addres);
             AddModel=new Data.Model();
         }
         public ReactiveCommand<Unit, Unit> AddEmmployeeCommand => ReactiveCommand.Create(() => {
@@ -119,6 +141,9 @@ namespace AutoPartSystem.ViewModel
                 case "AdminModel":
                     MainControl = _controls[1];
                     break;
+                case "AdminCity":
+                    MainControl = _controls[2];
+                    break;
             }
         }
         public ReactiveCommand<Unit,Unit> AddOrTable => ReactiveCommand.Create(() => { IsAdd = !IsAdd; });
@@ -130,6 +155,15 @@ namespace AutoPartSystem.ViewModel
             var a = _controls[1] as View.Admin.MarkEdit;
             a.MarkText.Clear();
         }
+        public ReactiveCommand<string, Unit> AddCityCommand => ReactiveCommand.Create<string>(AddCity);
+        private void AddCity(string name)
+        {
+            AdminModel.AddCity(name);
+            var a = _controls[1] as View.Admin.CitySetting;
+            a.CityText.Clear();
+
+        }
+        public ReactiveCommand<Unit, Unit> SaveCityAddres => ReactiveCommand.Create(() => { AdminModel.SaveAddress(AlmataAddres, AstanaAddres,AktauAddres);});
         public ReactiveCommand<Unit, Unit> AddModelCommand => ReactiveCommand.Create(() => {
         
             MarkModel.AddModel(AddModel);
