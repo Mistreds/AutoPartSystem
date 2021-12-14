@@ -22,6 +22,7 @@ namespace AutoPartSystem.Model.Admin
         public void UpdateCity();
         public List<City> GetEmpCity();
         public List<Employee> GetEmployeeMeneger(int EmpId);
+        public ObservableCollection<Employee> GetManagerEmp();
         public void GetAddres(out string Almata, out string Astana, out  string Aktau);
         public void SaveAddress( string Almata, string Astana,  string Aktau);
         public void AddCity(string city);
@@ -161,7 +162,7 @@ namespace AutoPartSystem.Model.Admin
         public void UpdateCash(double Cash, string name, Employee employee, string type)
         {
             double cash = 0;
-            if(type== "Добавить")
+            if(type== "Добавить" || type== "Оплата товара")
             {
                 cash += Cash;
             }
@@ -176,14 +177,6 @@ namespace AutoPartSystem.Model.Admin
             using var db = new Data.ConDB();
             db.InsertOutCash.Add(new Data.InsertOutCash(name, employee.Cash, cash, employee.Cash + cash, type, employee.Id));
             db.SaveChanges();
-            if (!inv.IsHaveInvoice(day_start, day_end, employee.Id))
-            {
-                var cash_db = db.CashDay.Where(p => p.Date == date && p.EmployeeId == ViewModel.MainViewModel.Employee.Id).FirstOrDefault();
-                cash_db.Cash= employee.Cash + cash;
-                db.Update(cash_db);
-                db.SaveChanges();
-
-            }
             employee.Cash=employee.Cash + cash;
             ViewModel.MainViewModel.Employee.Cash = employee.Cash;
             db.Update(employee);
@@ -197,6 +190,11 @@ namespace AutoPartSystem.Model.Admin
             ViewModel.MainViewModel.Employee.Cash = employee.Cash;
             db.Update(employee);
             db.SaveChanges();
+        }
+
+        public ObservableCollection<Employee> GetManagerEmp()
+        {
+            return new ObservableCollection<Employee>(Employees.Where(p => p.Id ==1 || (p.PositionId == 3 || p.PositionId == 4)).ToList());
         }
     }
 }

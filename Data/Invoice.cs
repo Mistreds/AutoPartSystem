@@ -123,7 +123,11 @@ namespace Data
             this.IsInvoice = inv.IsInvoice;
             this.EmployeeId = inv.Employee.Id;
             this.AllCount = inv.AllCount;
+            this.AllPrice = inv.AllPrice;
+            this.AllInputPrice = inv.AllInputPrice;
+            this.AllMarz = inv.AllMarz;
             this.Date = inv.Date;
+            IsDelMarzh = inv.IsDelMarzh;
             if (inv.Client.Id != 0)
             {
                 this.ClientId = inv.Client.Id;
@@ -176,6 +180,8 @@ namespace Data
             this.Date = inv.Date;
             this.AllCount = inv.AllCount;
             this.AllPrice = inv.AllPrice;
+            this.AllInputPrice= inv.AllInputPrice;
+            this.AllMarz = inv.AllMarz;
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p, inv.Id)));
 
          
@@ -194,6 +200,7 @@ namespace Data
             this.WhenAnyValue(s => s.GoodsInvoice.Count).Subscribe(_ => test());
             this.WhenAnyValue(s => s.IsDelMarzh).Subscribe(_ => SetAllCountAndAllPrice());
             Date = DateTime.Now;
+            test();
         }
     }
     public class GoodsInvoice : ReactiveObject

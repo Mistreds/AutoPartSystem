@@ -127,8 +127,14 @@
                                             <RowDefinition></RowDefinition>
                                             <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition></ColumnDefinition>
+                                            <ColumnDefinition></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
                                         <TextBlock Style="{StaticResource TextGrid}"><Run Text="Кол-во товаров: "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run></TextBlock>
                                         <TextBlock Style="{StaticResource TextGrid}" Grid.Row="1"><Run Text="Итоговая цена: "></Run><Run Text="{Binding AllPrice, Mode=OneWay}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Column="1"><Run Text="Расходы: "></Run><Run Text="{Binding AllInputPrice, Mode=OneWay}"></Run></TextBlock>
+                                        <TextBlock Style="{StaticResource TextGrid}" Grid.Column="1" Grid.Row="1"><Run Text="Маржа: "></Run><Run Text="{Binding AllMarz, Mode=OneWay}"></Run></TextBlock>
                                     </Grid>
                                 </GroupBox>
                             </Grid>

@@ -119,6 +119,12 @@ namespace AutoPartSystem.ViewModel
                     View.Cash.InsertOutCash outCash = new View.Cash.InsertOutCash(Employee2, "Вывод", AdminModel);
                     outCash.Show();
                     break;
+                case "Report":
+                   View.Admin.Report report=new View.Admin.Report();
+                   ReportViewModel reportViewModel = new ReportViewModel();
+                    report.DataContext= reportViewModel;
+                    report.Show();
+                    break;
             }
             
         }

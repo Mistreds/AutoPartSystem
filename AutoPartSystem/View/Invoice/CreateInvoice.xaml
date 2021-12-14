@@ -162,7 +162,7 @@
                     <DataGridTemplateColumn Header="Тип оплаты">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedIndex="0" SelectedValue="{Binding Goods.TypePayId}"></ComboBox>
+                                <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id"  SelectedValue="{Binding TypePayId}"></ComboBox>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

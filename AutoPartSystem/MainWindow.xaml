@@ -61,6 +61,7 @@
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="Report" Header="Отчет"></MenuItem>
             </MenuItem>
         </Menu>
         <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
