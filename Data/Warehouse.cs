@@ -186,7 +186,7 @@ namespace Data
             this.CountCell = goods.CountCell;
             this.InputAstana = goods.InputAstana;
             this.InputAktau = goods.InputAktau;
-           
+            this.TypePayId = goods.TypePayId;
             
 
         }

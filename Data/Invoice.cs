@@ -260,8 +260,12 @@ namespace Data
             GoodsId = goods.Id;
             Goods = goods;
             TypePayId = goods.TypePayId;
+            Console.WriteLine("dasd " + goods.TypePayId);
             Model = goods.GoodsModel.FirstOrDefault().Model;
             ModelId = Model.Id;
+            Count = Goods.CountCell;
+            Price = goods.PriceCell;
+            RecomPrice = goods.RecomPrice;
             this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
             this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice());
             this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdateTrans());
@@ -269,11 +273,7 @@ namespace Data
             this.WhenAnyValue(vm => vm.AllTrans).Subscribe(_ => UpdateInput());
             this.WhenAnyValue(vm => vm.InputPrice).Subscribe(_ => UpdateMarz());
             this.WhenAnyValue(vm => vm.AllPrice).Subscribe(_ => UpdateMarz());
-            Count = Goods.CountCell;
-            Price = goods.PriceCell;
-
-            Console.WriteLine(Goods.InputAstana);
-            RecomPrice = goods.RecomPrice;
+            
             UpdatePrice();
             UpdateTrans();
             UpdateInput();
@@ -294,7 +294,7 @@ namespace Data
         {
           
            InputPrice = Goods.InputPrice  * Count +AllTrans;
-            Console.WriteLine(InputPrice);
+         
         }
         private void UpdateMarz()
         {

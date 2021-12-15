@@ -107,4 +107,62 @@ namespace Data
     {
 
     }
+    public class OpenCloseCash : ReactiveObject
+    {
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set=>this.RaiseAndSetIfChanged(ref _id, value);
+        }
+        private DateTime _open_date;
+        public DateTime OpenDate
+        {
+            get => _open_date;
+            set => this.RaiseAndSetIfChanged(ref _open_date, value);
+        }
+        private Employee _employee;
+        public Employee Employee
+        {
+            get => _employee;
+            set=>this.RaiseAndSetIfChanged(ref _employee,value);
+        }
+        private int _employee_id;
+        public int EmployeeId
+        {
+            get => _employee_id;
+            set => this.RaiseAndSetIfChanged(ref _employee_id, value);
+        }
+        private DateTime _close_date;
+        public DateTime CloseData
+        {
+            get => _close_date;
+            set => this.RaiseAndSetIfChanged(ref _close_date, value);
+        }
+        private int _status;
+        public int Status
+        {
+            get => _status;
+            set => this.RaiseAndSetIfChanged(ref _status, value);
+        }
+        private double _open_cash;
+        public double OpenCash
+        {
+            get => _open_cash;
+            set=>this.RaiseAndSetIfChanged(ref _open_cash, value);
+        }
+        private double _close_cash;
+        public double CloseCash
+        {
+            get => _close_cash;
+            set => this.RaiseAndSetIfChanged(ref _close_cash, value);
+        }
+        public OpenCloseCash() { }
+        public OpenCloseCash(int emp_id, double Cash)
+        {
+            this.EmployeeId = emp_id;
+            this.OpenDate = DateTime.Now;
+            this.OpenCash = Cash;
+        }
+    }
 }

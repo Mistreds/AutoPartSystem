@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using ReactiveUI;
 namespace AutoPartSystem.ViewModel
@@ -40,6 +41,24 @@ namespace AutoPartSystem.ViewModel
         {
             return main;
         }
+        private bool is_close_cash;
+        public bool IsCloseCash
+        {
+            get => is_close_cash;
+            set => this.RaiseAndSetIfChanged(ref is_close_cash, value);
+        }
+        private bool is_not_close_cash;
+        public bool IsNotCloseCash
+        {
+            get => is_not_close_cash;
+            set => this.RaiseAndSetIfChanged(ref is_not_close_cash, value);
+        }
+        private Data.OpenCloseCash _open_cash;
+        public Data.OpenCloseCash OpenCloseCash
+        {
+            get => _open_cash;
+            set=>this.RaiseAndSetIfChanged(ref _open_cash, value);
+        }
         public MainViewModel(Data.Employee employee)
         {
             main = this;
@@ -48,11 +67,31 @@ namespace AutoPartSystem.ViewModel
             _markModel=new Model.MarkModel.MarkModel();
             AdminModel= new Model.Admin.AdminModel();
             AdminModel.GetNowCash(Employee.Cash);
-            ClientModel=new Model.Client.ClientModel();
-            if (Employee.PositionId==1)
+            var open_cash = AdminModel.GetOpenCash(Employee.Id);
+
+            if(open_cash==null)
             {
-                AdminViewModel = new AdminViewModel(_markModel);
+                IsCloseCash = true;
+                var not_close_cash=AdminModel.GetNotCloseCashs(Employee.Id);
+                if (not_close_cash.Count != 0)
+                {
+                    foreach (var not in not_close_cash)
+                    {
+                        MessageBox.Show($"Необходимо закрыть кассу за {not.OpenDate.ToString("dd-MM-yyyy")}", "Внимание");
+                        var Close_cash = new View.Admin.CloseCash(not);
+                        Close_cash.Show();
+                        IsNotCloseCash = true;
+                    }
+                }
+                
+                
             }
+            else
+            {
+                IsCloseCash = false;
+            }
+            ClientModel=new Model.Client.ClientModel();
+            AdminViewModel = new AdminViewModel(_markModel);
             WarehouseViewModel=new WarehouseViewModel(_markModel);
             ClientViewModel = new ClientViewModel(_markModel);
             InvoiceViewModel = new InvoiceViewModel();
@@ -127,6 +166,17 @@ namespace AutoPartSystem.ViewModel
                     break;
             }
             
+        }
+        public ReactiveCommand<string, Unit> OpenCloseCashCom => ReactiveCommand.Create<string>(OpenCloseCashCommand);
+        private void OpenCloseCashCommand(string name)
+        {
+            switch (name)
+            {
+                case "Open":
+                    break;
+                case "Close":
+                    break;
+            }
         }
     }
 }

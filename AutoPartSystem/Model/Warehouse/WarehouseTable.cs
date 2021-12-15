@@ -118,7 +118,16 @@ namespace AutoPartSystem.ViewModel
         }
         public static WarehouseTable NewTable(WarehouseTable table)
         {
+           
             var WarehouseTable = new WarehouseTable(table.Id, new Data.Goods(table.Goods), table.InAlmata, table.InAstana, table.InAktau, table.WarehousePlace, table.TypePay, table.Note, table.IsVirtual);
+            Console.WriteLine("iuqwueqw " + WarehouseTable.Goods.TypePayId);
+            return WarehouseTable;
+        }
+        public static WarehouseTable NewTable(WarehouseTable table,bool type)
+        {
+
+            var WarehouseTable = new WarehouseTable(table.Id, new Data.Goods(table.Goods), table.InAlmata, table.InAstana, table.InAktau, table.WarehousePlace, table.TypePay, table.Note, table.IsVirtual,true);
+            Console.WriteLine("iuqwueqw " + WarehouseTable.Goods.TypePayId);
             return WarehouseTable;
         }
         public WarehouseTable(int id , Data.Goods good, int inAlmata , int inAstana , int inAktau ,
@@ -138,7 +147,21 @@ namespace AutoPartSystem.ViewModel
             IsVirtual = is_virtual;
             
         }
+        public WarehouseTable(int id, Data.Goods good, int inAlmata, int inAstana, int inAktau,
+         string warehousePlace,
+            string typePay, string note, bool is_virtual, bool type)
+        {
+            Id = id;
+            Goods = good;
+            InAlmata = inAlmata;
+            InAstana = inAstana;
+            InAktau = inAktau;
+            WarehousePlace = warehousePlace;
+            TypePay = typePay;
+            Note = note;
+            IsVirtual = is_virtual;
 
+        }
     }
 
 }

@@ -22,6 +22,7 @@ namespace AutoPartSystem.Model.Warehouse
         public void AddInvoiceToDataBase (Data.Invoice invoice);
         public void AddInvoiceToDataBase(Data.Invoice invoice, int EmpId);
         public void UpdateInvoice(Data.Invoice invoice);  
+       
     }
     public class WarehouseInvoceModel : IWarehouseInvoce
     {
@@ -43,7 +44,7 @@ namespace AutoPartSystem.Model.Warehouse
             this.warehouses = warehouses;
             foreach (var warehouse in warehouses)
             {
-
+                Console.WriteLine("bfbfb "+warehouse.Goods.TypePayId);
             }
         }
         public void CreateExcelFile(Invoice Invoice)

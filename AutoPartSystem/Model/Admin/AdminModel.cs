@@ -29,6 +29,8 @@ namespace AutoPartSystem.Model.Admin
         public void GetNowCash(double Cash);
         public void UpdateCash(double Cash,string name, Employee employee, string type);
         public void UpdateCash(double Cash, Employee employee);
+        public Data.OpenCloseCash GetOpenCash(int emp_id);
+        public ObservableCollection<Data.OpenCloseCash> GetNotCloseCashs(int emp_id);
     }
     public class AdminModel :ReactiveObject, IAdminModelation
     {
@@ -195,6 +197,22 @@ namespace AutoPartSystem.Model.Admin
         public ObservableCollection<Employee> GetManagerEmp()
         {
             return new ObservableCollection<Employee>(Employees.Where(p => p.Id ==1 || (p.PositionId == 3 || p.PositionId == 4)).ToList());
+        }
+
+
+
+       public OpenCloseCash GetOpenCash(int emp_id)
+        {
+            var day_start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,0,0,0);
+            var day_end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
+            using var db=new Data.ConDB();
+            return db.OpenCloseCash.Where(p => p.EmployeeId == emp_id && p.OpenDate >= day_start && p.OpenDate <= day_end).FirstOrDefault();
+        }
+
+        public ObservableCollection<OpenCloseCash> GetNotCloseCashs(int emp_id)
+        {
+            using var db = new Data.ConDB();
+            return new ObservableCollection<OpenCloseCash>(db.OpenCloseCash.Where(p => p.EmployeeId == emp_id && p.Status == 1).ToList());
         }
     }
 }

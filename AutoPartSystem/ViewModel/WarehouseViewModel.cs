@@ -130,7 +130,12 @@ namespace AutoPartSystem.ViewModel
         public WarehouseViewModel(Model.MarkModel.MarkModel markModel)
         {
             AddSale = ReactiveCommand.Create(() => {
-                WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true).Select(p => ViewModel.WarehouseTable.NewTable(p)).ToList()));
+                foreach (var ss in WarehousesTable.Where(p => p.IsSelected == true))
+                {
+                    Console.WriteLine("qweasd "+ss.Goods.TypePayId);
+                
+                }
+                WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true).Select(p => ViewModel.WarehouseTable.NewTable(p,true)).ToList()));
 
                 InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel, MarkModel);
             });

@@ -28,7 +28,7 @@ namespace AutoPartSystem
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             using var db = new Data.ConDB();
-         //   var employee = db.Employees.Where(x => x.Login == this.Login.Text && x.Password == Data.Hash.SHA512(this.Password.Password)).FirstOrDefault();
+           // var employee = db.Employees.Where(x => x.Login == this.Login.Text && x.Password == Data.Hash.SHA512(this.Password.Password)).FirstOrDefault();
             var employee = db.Employees.Where(x => x.Login == "Admin").FirstOrDefault();
             if (employee != null)
             {

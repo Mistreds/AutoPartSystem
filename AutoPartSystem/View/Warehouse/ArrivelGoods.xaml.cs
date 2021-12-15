@@ -40,6 +40,7 @@ namespace AutoPartSystem.View.Warehouse
         {
             if (MessageBox.Show("Приход возможно отменить только через администратора, продолжить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
+                
                 model.UpdateWarehouseCount(Convert.ToInt32(Almata.Text), Convert.ToInt32(Astana.Text), Convert.ToInt32(Actau.Text), table.Id);
                 Close();
             }            

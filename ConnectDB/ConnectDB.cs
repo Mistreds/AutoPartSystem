@@ -27,6 +27,7 @@ namespace Data
         public DbSet<MarzhEmployee> MarzhEmployee { get; set; }
         public DbSet<CashDay> CashDay { get; set; }
         public DbSet<InsertOutCash> InsertOutCash { get; set; }
+        public DbSet<OpenCloseCash> OpenCloseCash { get; set; }
         private string path_connect;
         private string query_connect;
         public ConDB()
@@ -94,6 +95,7 @@ namespace Data
             #region Cash
             modelBuilder.Entity<InsertOutCash>(b => b.ToTable("InsertOutCash"));
             modelBuilder.Entity<CashDay>(b => b.ToTable("CashDay"));
+            modelBuilder.Entity<OpenCloseCash>(b => b.ToTable("OpenCloseCash"));
             #endregion
         }
     }

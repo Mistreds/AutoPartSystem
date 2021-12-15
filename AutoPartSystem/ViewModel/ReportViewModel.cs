@@ -35,6 +35,7 @@ namespace AutoPartSystem.ViewModel
         public ReportViewModel()
         {
             EmployersTable = MainViewModel.AdminModel.GetManagerEmp();
+            DateDay = DateTime.Now;
         }
         public ReactiveCommand<Unit, Unit> CreateDayReport => ReactiveCommand.Create(() => {
 
@@ -48,6 +49,7 @@ namespace AutoPartSystem.ViewModel
                 ExcelWorksheet sheet = package.Workbook.Worksheets.Add(emp.Name);
                 double input = 0;
                 double all_marz = 0;
+                double account_cashe = 0;
                 var date = new DateTime(DateDay.Year, DateDay.Month, DateDay.Day);
                 var cash = db.CashDay.Where(p => p.Date == date && p.EmployeeId == EmpDay).FirstOrDefault();
                 if (cash == null)
@@ -89,10 +91,12 @@ namespace AutoPartSystem.ViewModel
                         {
                             sheet.Cells[$"F{i}"].Value = good.AllPrice;
                             input += good.AllPrice;
+
                         }
                         else
                         {
                             sheet.Cells[$"F{i}"].Value = "Счет";
+                            account_cashe += good.AllPrice;
                         }
 
                         if (inv.IsDelMarzh)
@@ -106,7 +110,7 @@ namespace AutoPartSystem.ViewModel
                         {
                             sheet.Cells[$"G{i}"].Value = good.Marz;
                             all_marz += good.Marz;
-
+                            
                         }
                         i++;
                         i1++;
@@ -151,7 +155,8 @@ namespace AutoPartSystem.ViewModel
                 sheet.Cells[$"F{i}"].Value = input;
                 sheet.Cells[$"G{i}"].Value = all_marz;
                 i++;
-                sheet.Cells[$"B{i}"].Value ="Изменение в кассе";
+                sheet.Cells[$"B{i}:D{i}"].Merge = true;
+                sheet.Cells[$"B{i}:D{i}"].Value ="Изменение в кассе";
                 i++;
                 sheet.Cells[$"B{i}"].Value = $"{cash.Cash}+{input}={cash.Cash+input}";
                 input += cash.Cash;
@@ -160,8 +165,47 @@ namespace AutoPartSystem.ViewModel
                 foreach(var cash_in_out in in_out_cash)
                 {
                     input+=cash_in_out.Cash;
-                    sheet.Cells[$"B{i}"].Value = $"{cash_in_out.Type} причина {cash_in_out.Name} сумма {cash_in_out.Cash} касса {input} ";
+                    sheet.Cells[$"B{i}:D{i}"].Merge = true;
+                    sheet.Cells[$"B{i}:D{i}"].Value = $"{cash_in_out.Type} причина {cash_in_out.Name} сумма {cash_in_out.Cash} касса {input} дата и время {cash_in_out.Date.ToString("dd.MM.yyyy HH:mm:ss")}";
                     i++;
+                }
+                
+        
+                if(input-all_marz>=cash.Cash)
+                {
+                    sheet.Cells[$"B{i}:D{i}"].Merge = true;
+                    sheet.Cells[$"B{i}:D{i}"].Value = $"{input} - {all_marz} = {input-all_marz}";
+                    input -= all_marz;
+                }
+                else
+                {
+                    var marz1=input-all_marz;
+                    var cash1 = cash.Cash - marz1;
+                    
+                    sheet.Cells[$"B{i}:D{i}"].Merge = true;
+                    sheet.Cells[$"B{i}:D{i}"].Value = $"{input} - {all_marz} = {input - (all_marz - cash1)}, избыток {cash1}";
+                    input = input - (all_marz - cash1);
+                }
+                i++;
+                i++;
+                sheet.Cells[$"B{i}:D{i}"].Merge = true;
+                sheet.Cells[$"B{i}:D{i}"].Value = $"Счета {date.ToString("dd.MM.yyyy")} - {account_cashe}";
+                i++;
+                foreach (var inv in invoices)
+                {
+                    foreach (var good in inv.GoodsInvoice)
+                    {
+
+                        
+                        if (good.TypePayId == 2)
+                        {
+                            Console.WriteLine(good.Goods.Description);
+                            sheet.Cells[$"A{i}"].Value = good.AllPrice;
+                            sheet.Cells[$"B{i}"].Value = good.Goods.Description;
+                        }
+                        i++; ;
+                    }
+
                 }
                 package.Save();
             }

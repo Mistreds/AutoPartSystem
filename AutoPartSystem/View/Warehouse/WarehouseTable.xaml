@@ -266,12 +266,12 @@
                 <DataGridTextColumn  IsReadOnly="True" Header="Доставка SCO" Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
-                <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell}"></DataGridTextColumn>
-                <DataGridTextColumn   Header="Цена продажи" Binding="{Binding Goods.PriceCell}"></DataGridTextColumn>
+                <DataGridTextColumn   Header="Кол-во" Binding="{Binding Goods.CountCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn   Header="Цена продажи" Binding="{Binding Goods.PriceCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                 <DataGridTemplateColumn Header="Тип оплаты">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedIndex="0" SelectedValue="{Binding Goods.TypePayId}"></ComboBox>
+                            <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedValue="{Binding Goods.TypePayId, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" ></ComboBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

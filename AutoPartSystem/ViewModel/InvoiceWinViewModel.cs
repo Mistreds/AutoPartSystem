@@ -111,6 +111,10 @@ namespace AutoPartSystem.ViewModel
                  else
                     WarehouseInvoceModel.AddInvoiceToDataBase(Invoice);
              });
+            foreach(var ss in WarehouseInvoceModel.GetWarehouse())
+            {
+                Console.WriteLine("asdata "+ss.Goods.TypePayId);
+            }
             Invoice = new Data.Invoice(new ObservableCollection<Data.Warehouse>(WarehouseInvoceModel.GetWarehouse()),MainViewModel.Employee);
             try
             {
