@@ -13,25 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace AutoPartSystem.View.Admin
+namespace AutoPartSystem.View.Warehouse
 {
     /// <summary>
-    /// Логика взаимодействия для MarkEdit.xaml
+    /// Логика взаимодействия для CardGood.xaml
     /// </summary>
-    public partial class MarkEdit : UserControl
+    public partial class CardGood : UserControl
     {
-        Model.MarkModel.MarkModel markModel;
-        public MarkEdit(Model.MarkModel.MarkModel markModel)
+        public CardGood()
         {
-            this.markModel = markModel;
             InitializeComponent();
-        }
-
-        private void AddBrand_Click(object sender, RoutedEventArgs e)
-        {
-            markModel.AddBrand(Brand.Text);
-            Brand.Text =String.Empty;
-
         }
     }
 }

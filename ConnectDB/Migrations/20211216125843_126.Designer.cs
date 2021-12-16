@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    [Migration("20211213154734_117")]
-    partial class _117
+    [Migration("20211216125843_126")]
+    partial class _126
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -18,6 +18,39 @@ namespace ConnectDB.Migrations
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.12");
+
+            modelBuilder.Entity("Data.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brand");
+                });
+
+            modelBuilder.Entity("Data.CashDay", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<double>("Cash")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("CashDay");
+                });
 
             modelBuilder.Entity("Data.City", b =>
                 {
@@ -236,6 +269,40 @@ namespace ConnectDB.Migrations
                     b.ToTable("GoodModel");
                 });
 
+            modelBuilder.Entity("Data.InsertOutCash", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<double>("Cash")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.Property<double>("NewCash")
+                        .HasColumnType("double");
+
+                    b.Property<double>("OldCash")
+                        .HasColumnType("double");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("InsertOutCash");
+                });
+
             modelBuilder.Entity("Data.Invoice", b =>
                 {
                     b.Property<int>("Id")
@@ -264,6 +331,9 @@ namespace ConnectDB.Migrations
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDelMarzh")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsEnd")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsInvoice")
@@ -388,6 +458,37 @@ namespace ConnectDB.Migrations
                     b.ToTable("MoveGoods");
                 });
 
+            modelBuilder.Entity("Data.OpenCloseCash", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<double>("CloseCash")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("CloseData")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.Property<double>("OpenCash")
+                        .HasColumnType("double");
+
+                    b.Property<DateTime>("OpenDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("OpenCloseCash");
+                });
+
             modelBuilder.Entity("Data.Position", b =>
                 {
                     b.Property<int>("Id")
@@ -483,6 +584,17 @@ namespace ConnectDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Warehouse");
+                });
+
+            modelBuilder.Entity("Data.CashDay", b =>
+                {
+                    b.HasOne("Data.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Data.Client", b =>
@@ -588,6 +700,17 @@ namespace ConnectDB.Migrations
                     b.Navigation("Model");
                 });
 
+            modelBuilder.Entity("Data.InsertOutCash", b =>
+                {
+                    b.HasOne("Data.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Data.Invoice", b =>
                 {
                     b.HasOne("Data.Client", "Client")
@@ -681,6 +804,17 @@ namespace ConnectDB.Migrations
                     b.Navigation("MainMove");
 
                     b.Navigation("Warehouse");
+                });
+
+            modelBuilder.Entity("Data.OpenCloseCash", b =>
+                {
+                    b.HasOne("Data.Employee", "Employee")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Data.Goods", b =>

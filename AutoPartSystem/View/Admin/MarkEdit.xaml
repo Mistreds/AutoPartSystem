@@ -65,6 +65,26 @@
                 </GroupBox>
             </Grid>
         </TabItem>
-  
+        <TabItem Header="Бренды" Height="20" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <DataGrid ItemsSource="{Binding BrandTable}"  AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" Grid.Column="0" Margin="5">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="1*" Binding="{Binding Name}" Header="Наименование"></DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <GroupBox Grid.Column="1" Header="Добавить модель" Margin="5">
+                    <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBox x:Name="Brand"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Бренд" wpf:HintAssist.IsFloating="True" Margin="15" MinWidth="250">
+
+                        </TextBox>
+                        <Button Margin="15" Width="150" x:Name="AddBrand" Content="Добавить" Style="{StaticResource MaterialDesignFlatDarkBgButton }" Click="AddBrand_Click"></Button>
+                    </StackPanel>
+                </GroupBox>
+            </Grid>
+        </TabItem>
     </TabControl>
 </UserControl>

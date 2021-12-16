@@ -28,6 +28,7 @@ namespace Data
         public DbSet<CashDay> CashDay { get; set; }
         public DbSet<InsertOutCash> InsertOutCash { get; set; }
         public DbSet<OpenCloseCash> OpenCloseCash { get; set; }
+        public DbSet<Brand> Brands { get; set; }
         private string path_connect;
         private string query_connect;
         public ConDB()
@@ -71,6 +72,8 @@ namespace Data
             #region MarkModel
             modelBuilder.Entity<Mark>(b => b.ToTable("Mark"));
             modelBuilder.Entity<Model>(b => b.ToTable("Model"));
+            modelBuilder.Entity<Brand>(b => b.ToTable("Brand"));
+            modelBuilder.Entity<Brand>().HasData(new Brand[] { new Brand(1,"") });
             #endregion
             #region Warehouse
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
@@ -78,6 +81,7 @@ namespace Data
             modelBuilder.Entity<Goods>(b=>b.ToTable("Goods"));
             modelBuilder.Entity<Goods>().Ignore(p=>p.CountCell);
             modelBuilder.Entity<Goods>().Ignore(p=>p.PriceCell);
+            modelBuilder.Entity<Goods>().Property(p => p.BrandId).HasDefaultValue(1);
             modelBuilder.Entity<GoodsInvoice>(b => b.ToTable("GoodsInvoice"));
             modelBuilder.Entity<GoodsInvoice>().Ignore(p=>p.DontHaveGoods);
             modelBuilder.Entity<Invoice>(b => b.ToTable("Invoice"));

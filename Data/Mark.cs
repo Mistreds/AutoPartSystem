@@ -50,4 +50,18 @@ namespace Data
             this.Mark = Mark;
         }
     }
+    public class Brand : MainClass
+    {
+        
+        public Brand() { }
+        public Brand(string Name)
+        {
+            this.Name = Name;
+        }
+        public Brand(int Id,string Name)
+        {
+            this.Id = Id;
+            this.Name = Name;
+        }
+    }
 }

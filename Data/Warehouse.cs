@@ -28,6 +28,7 @@ namespace Data
             get => _goods;
             set=>this.RaiseAndSetIfChanged(ref _goods, value);
         }
+
         private int _in_almata;
         public int InAlmata
         {
@@ -82,6 +83,18 @@ namespace Data
         {
             get => _id;
             set => this.RaiseAndSetIfChanged(ref _id, value);
+        }
+        private Brand _brand;
+        public Brand Brand
+        {
+            get => _brand;
+            set=>this.RaiseAndSetIfChanged(ref _brand, value);
+        }
+        private int _brand_id;
+        public int BrandId
+        {
+            get => _brand_id;
+            set=>this.RaiseAndSetIfChanged(ref _brand_id, value);
         }
         private int _warehouse_id;
         public int WarehouseId

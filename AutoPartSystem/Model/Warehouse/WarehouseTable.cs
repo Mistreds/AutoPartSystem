@@ -30,6 +30,12 @@ namespace AutoPartSystem.ViewModel
             get => mark_name;
             set => this.RaiseAndSetIfChanged(ref mark_name, value);
         }
+        private string _brand_name;
+        public string BrandName
+        {
+            get => _brand_name;
+            set => this.RaiseAndSetIfChanged(ref _brand_name,value);
+        }
         public WarehouseAdd()
         {
             this.Goods = new Data.Goods();

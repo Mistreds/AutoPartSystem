@@ -48,7 +48,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <DataGrid  BorderBrush="Black"  BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
+        <DataGrid  BorderBrush="Black"  LoadingRow="warehouse_LoadingRow" BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
             <DataGrid.Columns>
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.HeaderTemplate>
@@ -296,7 +296,7 @@
                     <MenuItem Header="Добавить товар" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
                     <MenuItem Header="Сделать приход" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.CreatePrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
                     <MenuItem Header="Сделать продажу" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
-                    <MenuItem Header="Установить цену" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.SetWarePrice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
+                    <MenuItem Header="Установить цену"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.SetWarePrice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
                     <MenuItem Header="Переместить на другой склад"></MenuItem>
                 </ContextMenu>
                 <ContextMenu x:Key="Menu2">

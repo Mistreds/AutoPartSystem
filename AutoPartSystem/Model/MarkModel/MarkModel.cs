@@ -25,6 +25,10 @@ namespace AutoPartSystem.Model.MarkModel
         public Data.Model GetModelFromNameFind(string name, int id);
         public ObservableCollection<ViewModel.MarkModelFind> MarkModelFind(string name);
         public int GetMarkIdFromName(string name);
+        public ObservableCollection<Brand> GetBrand();
+        public void AddBrand(string brand);
+        public void UpdateBrand(Brand brand);
+        public ObservableCollection<Brand> GetBrandFromName(string name);
     }
     public class MarkModel :ReactiveObject, IMarkModel
     {
@@ -37,6 +41,12 @@ namespace AutoPartSystem.Model.MarkModel
                 this.RaiseAndSetIfChanged(ref _model, value);
             }
         }
+        private ObservableCollection<Data.Brand> _brand;
+        public ObservableCollection<Data.Brand> Brand
+        {
+            get=> _brand;
+            set=>this.RaiseAndSetIfChanged(ref _brand, value);
+        }
         private ObservableCollection<Data.Mark>? Mark;
         private ObservableCollection<ViewModel.MarkModelFind> _markModel;
         public ObservableCollection<MarkModelFind> MarkModelFinds
@@ -44,12 +54,19 @@ namespace AutoPartSystem.Model.MarkModel
             get=> _markModel;
             set=>this.RaiseAndSetIfChanged(ref _markModel, value);
         }
+        private void GetBrandFromDb()
+        {
+            using var db = new Data.ConDB();
+
+            Brand = new ObservableCollection<Brand>(db.Brands.Where(p=>p.Id!=1).ToList());
+        }
         public MarkModel()
         {
             Console.WriteLine("Тип создалась модель");
             Model = GetModels();
             
             Mark = GetMark();
+            GetBrandFromDb();
             MarkModelFinds = new ObservableCollection<MarkModelFind>(Model.Select(p => new ViewModel.MarkModelFind(p.Id, $"{p.Mark.Name} {p.Name}")).OrderBy(p => p.model_name));
         }
         public void AddMark(Mark mark)
@@ -111,6 +128,29 @@ namespace AutoPartSystem.Model.MarkModel
             var a= new ObservableCollection<MarkModelFind>(MarkModelFinds.Where(p => p.model_name.ToLower().Contains(name.ToLower())).OrderBy(p=>p.model_name));
             a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
             return a;
+        }
+        public ObservableCollection<Brand> GetBrand()
+        {
+            return Brand;
+        }
+        public void AddBrand(string brand_name)
+        {
+            var brand=new Brand(brand_name);
+            using var db = new Data.ConDB();
+            db.Add(brand);
+            db.SaveChanges();
+            Brand.Add(brand);
+        }
+        public void UpdateBrand(Brand brand)
+        {
+            using var db = new Data.ConDB();
+            db.Update(brand);
+            db.SaveChanges();
+        }
+
+        public ObservableCollection<Brand> GetBrandFromName(string name)
+        {
+            return new ObservableCollection<Brand>(Brand.Where(p => p.Name.ToLower().Contains(name.ToLower())));
         }
     }
 }

@@ -2,27 +2,27 @@
 
 namespace ConnectDB.Migrations
 {
-    public partial class _5 : Migration
+    public partial class _2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "ModelId",
-                table: "GoodsInvoice",
+                name: "BrandId",
+                table: "Goods",
                 type: "int",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 1);
 
             migrationBuilder.CreateIndex(
-                name: "IX_GoodsInvoice_ModelId",
-                table: "GoodsInvoice",
-                column: "ModelId");
+                name: "IX_Goods_BrandId",
+                table: "Goods",
+                column: "BrandId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_GoodsInvoice_Model_ModelId",
-                table: "GoodsInvoice",
-                column: "ModelId",
-                principalTable: "Model",
+                name: "FK_Goods_Brand_BrandId",
+                table: "Goods",
+                column: "BrandId",
+                principalTable: "Brand",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -30,16 +30,16 @@ namespace ConnectDB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_GoodsInvoice_Model_ModelId",
-                table: "GoodsInvoice");
+                name: "FK_Goods_Brand_BrandId",
+                table: "Goods");
 
             migrationBuilder.DropIndex(
-                name: "IX_GoodsInvoice_ModelId",
-                table: "GoodsInvoice");
+                name: "IX_Goods_BrandId",
+                table: "Goods");
 
             migrationBuilder.DropColumn(
-                name: "ModelId",
-                table: "GoodsInvoice");
+                name: "BrandId",
+                table: "Goods");
         }
     }
 }

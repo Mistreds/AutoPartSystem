@@ -17,6 +17,27 @@ namespace ConnectDB.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.12");
 
+            modelBuilder.Entity("Data.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brand");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = ""
+                        });
+                });
+
             modelBuilder.Entity("Data.CashDay", b =>
                 {
                     b.Property<int>("Id")
@@ -157,6 +178,11 @@ namespace ConnectDB.Migrations
                     b.Property<string>("Article")
                         .HasColumnType("longtext");
 
+                    b.Property<int>("BrandId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
+
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
@@ -176,6 +202,8 @@ namespace ConnectDB.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
 
                     b.HasIndex("WarehouseId")
                         .IsUnique();
@@ -624,11 +652,19 @@ namespace ConnectDB.Migrations
 
             modelBuilder.Entity("Data.Goods", b =>
                 {
+                    b.HasOne("Data.Brand", "Brand")
+                        .WithMany()
+                        .HasForeignKey("BrandId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Data.Warehouse", "Warehouse")
                         .WithOne("Goods")
                         .HasForeignKey("Data.Goods", "WarehouseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Brand");
 
                     b.Navigation("Warehouse");
                 });

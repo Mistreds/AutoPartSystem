@@ -41,7 +41,7 @@
             <RowDefinition Height="30"></RowDefinition>
         </Grid.RowDefinitions>
         <Menu>
-            <MenuItem Header="Файл" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
+            <MenuItem Header="Файл">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад"></MenuItem>
                 <MenuItem Header="Добавить клиента"></MenuItem>
@@ -50,7 +50,8 @@
                 <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
             </MenuItem>
             <MenuItem Header="Касса">
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
+                <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Open" Header="Открыть кассу"></MenuItem>
+                <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Close" Header="Закрыть кассу"></MenuItem>
             </MenuItem>
             <MenuItem Header="Таблицы" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
@@ -66,6 +67,7 @@
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="Report" Header="Отчет"></MenuItem>
             </MenuItem>
+            <MenuItem Header="Проверить наличие обновлений" Command="{Binding CheckUpdate}"></MenuItem>
         </Menu>
         <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
         <StatusBar Grid.Row="2">

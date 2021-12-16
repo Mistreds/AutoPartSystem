@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reactive;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using ReactiveUI;
+using AutoPartSystem.Model;
 namespace AutoPartSystem.ViewModel
 {
    public class MainViewModel:ReactiveObject
@@ -62,6 +67,7 @@ namespace AutoPartSystem.ViewModel
         public MainViewModel(Data.Employee employee)
         {
             main = this;
+            
             Employee = employee;
             Employee2 = employee;
             _markModel=new Model.MarkModel.MarkModel();
@@ -98,8 +104,9 @@ namespace AutoPartSystem.ViewModel
             MoveGoodsModel=new Model.Warehouse.MoveGoodsModel();
             GetMoveGoodsViewModel=new GetMoveGoodsViewModel();
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage(), new View.MoveGoods.GetMoveGoods()};
-            
-
+            IsCloseCash = false;
+            if (!IsCloseCash)
+            OpenPageCommand("ZavSkladTable");
         }
         public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
         private void OpenPageCommand(string page_id)
@@ -178,5 +185,6 @@ namespace AutoPartSystem.ViewModel
                     break;
             }
         }
+        public ReactiveCommand<Unit, Unit> CheckUpdate => ReactiveCommand.Create(CheckUpdates.CheckUpdate);
     }
 }

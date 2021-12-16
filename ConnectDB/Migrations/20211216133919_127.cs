@@ -2,13 +2,13 @@
 
 namespace ConnectDB.Migrations
 {
-    public partial class _113 : Migration
+    public partial class _127 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "Address",
-                table: "City",
+                name: "Name",
+                table: "Brand",
                 type: "longtext",
                 nullable: true)
                 .Annotation("MySql:CharSet", "utf8mb4");
@@ -17,8 +17,8 @@ namespace ConnectDB.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Address",
-                table: "City");
+                name: "Name",
+                table: "Brand");
         }
     }
 }

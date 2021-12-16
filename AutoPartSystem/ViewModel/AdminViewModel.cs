@@ -71,6 +71,12 @@ namespace AutoPartSystem.ViewModel
             get => _model_table;
             set => this.RaiseAndSetIfChanged(ref _model_table, value);
         }
+        private ObservableCollection<Data.Brand> _brand_table;
+        public ObservableCollection<Data.Brand> BrandTable
+        {
+            get => _brand_table;
+            set => this.RaiseAndSetIfChanged(ref _brand_table, value);
+        }
         private readonly ObservableCollection<UserControl> _controls_emp;
         private readonly ObservableCollection<UserControl> _controls;
         private Model.Admin.AdminModel AdminModel;
@@ -108,6 +114,7 @@ namespace AutoPartSystem.ViewModel
             get => _aktau_addres;
             set => this.RaiseAndSetIfChanged(ref _aktau_addres, value);
         }
+        
         public AdminViewModel(Model.MarkModel.MarkModel markModel)
         {
             AdminModel = MainViewModel.AdminModel;
@@ -118,8 +125,9 @@ namespace AutoPartSystem.ViewModel
             EmployersTable = AdminModel.GetEmployees();
             MarkTable = MarkModel.GetMark();
             ModelTable = MarkModel.GetModels();
+            BrandTable = MarkModel.GetBrand();
             _controls_emp = new ObservableCollection<UserControl> { new View.Admin.AdminTable(), new View.Admin.AddUser() };
-            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(), new View.Admin.CitySetting() };
+            _controls = new ObservableCollection<UserControl> { new View.Admin.MainAdmin(), new View.Admin.MarkEdit(MarkModel), new View.Admin.CitySetting() };
             MainControl = _controls[0];
             EmpControl = _controls_emp[0];
             AddEmployee = new Data.Employee();

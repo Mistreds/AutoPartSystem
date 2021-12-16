@@ -143,5 +143,38 @@ namespace AutoPartSystem.View.Warehouse
             var text = tb.Text;
             tb.CaretIndex = tb.Text.Length;
         }
+
+        private void ComboBoxMark_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+            var tb = (TextBox)e.OriginalSource;
+            var text = tb.Text;
+
+            tb.CaretIndex = tb.Text.Length;
+            Console.WriteLine(text.Length);
+            ComboBoxBrand.SelectedItem = null;
+            if (text.Length==0)
+            {
+                ComboBoxBrand.ItemsSource = ViewModel.MainViewModel.WarehouseViewModel.MarkModel.GetBrand();
+            }
+            if (tb.SelectionStart != 0)
+            {
+
+                //ComboBoxMark.SelectedItem = null; // Если набирается текст сбросить выбраный элемент
+            }
+            if (tb.SelectionStart == 0 && ComboBoxMark.SelectedItem == null)
+            {
+                //ComboBoxMark.IsDropDownOpen = false; // Если сбросили текст и элемент не выбран, сбросить фокус выпадающего списка
+            }
+            // tb.Select(0, 0);
+            ComboBoxBrand.IsDropDownOpen = true;
+            if (ComboBoxBrand.SelectedItem == null)
+            {
+                ComboBoxBrand.ItemsSource = new ObservableCollection<Data.Brand>();
+                if (ViewModel.MainViewModel.WarehouseViewModel != null)
+                    if (ViewModel.MainViewModel.WarehouseViewModel.MarkModel != null)
+                        ComboBoxBrand.ItemsSource =
+                            ViewModel.MainViewModel.WarehouseViewModel.MarkModel.GetBrandFromName(text);
+            }
+        }
     }
 }

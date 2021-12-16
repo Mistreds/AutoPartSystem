@@ -31,17 +31,25 @@
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
-            <ComboBox  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown" Height="40" Width="120" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}" ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"     wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True"></ComboBox>
+            <ComboBox  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown" Height="40" Width="120" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}" ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Goods.Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"     wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True"></ComboBox>
                     <Button Command="{Binding ElementName=MainControl,Path=DataContext.AddModelToWareTable}">+</Button>
                    
                 </StackPanel>
-                <DataGrid Width="320" VerticalScrollBarVisibility="Visible" MinHeight="150"  ItemsSource="{Binding Goods.GoodsModel}" IsReadOnly="True" CanUserAddRows="False" AutoGenerateColumns="False">
+                <DataGrid Width="320" VerticalScrollBarVisibility="Visible" MinHeight="150"  ItemsSource="{Binding Goods.GoodsModel}"  CanUserAddRows="False" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Width="1*" Header="Марка" Binding="{Binding Model.Mark.Name}"></DataGridTextColumn>
-                        <DataGridTextColumn Width="1*" Header="Модель"  Binding="{Binding Model.Name}"></DataGridTextColumn>
+                        <DataGridTextColumn IsReadOnly="True" Width="1*" Header="Марка" Binding="{Binding Model.Mark.Name}"></DataGridTextColumn>
+                        <DataGridTextColumn IsReadOnly="True" Width="1*" Header="Модель"  Binding="{Binding Model.Name}"></DataGridTextColumn>
+                        <DataGridTemplateColumn Width="0.3*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Padding="0" Margin="0" MinWidth="25" FontSize="17" >-</Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
+            <ComboBox x:Name="ComboBoxBrand"   GotFocus="ComboBoxMark_GotFocus"  IsTextSearchEnabled="False" IsEditable="True"   KeyDown="ComboBoxMark_KeyDown" TextBoxBase.TextChanged="ComboBoxMark_TextChanged_1"  SelectedItem="{Binding Goods.Brand}" ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Brands}" Width="150"  Height="40" wpf:HintAssist.HintOpacity="1" Margin="10" DisplayMemberPath="Name" SelectedValuePath="Id"  wpf:HintAssist.Hint="Бренд" wpf:HintAssist.IsFloating="True" ></ComboBox>
             <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Description}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Описание товара" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Article}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Артикул" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding WarehousePlace}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Место" wpf:HintAssist.IsFloating="True"></TextBox>

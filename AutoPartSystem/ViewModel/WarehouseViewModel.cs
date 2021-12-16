@@ -39,6 +39,12 @@ namespace AutoPartSystem.ViewModel
             get => _mark;
             set => this.RaiseAndSetIfChanged(ref _mark, value);
         }
+        private ObservableCollection<Data.Brand> _brands;
+        public ObservableCollection<Data.Brand> Brands
+        {
+            get => _brands;
+            set => this.RaiseAndSetIfChanged(ref _brands, value);
+        }
         private WarehouseAdd? _warehouse;
         public WarehouseAdd? Warehouse
         {
@@ -140,9 +146,10 @@ namespace AutoPartSystem.ViewModel
                 InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(WarehouseInvoceModel, MarkModel);
             });
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable(),new View.Warehouse.VirtualWarehouse() };
-            MainControl = _controls[0];
+            MainControl = _controls[0]; 
             MarkModel = markModel;
             Mark = MarkModel.GetMark();
+            Brands = MarkModel.GetBrand();
             Warehouse = new WarehouseAdd();
             WarehouseVirtual = new WarehouseAdd(true);
             MainViewModel.WarehouseModel = new Model.Warehouse.WarehouseModel(this);
