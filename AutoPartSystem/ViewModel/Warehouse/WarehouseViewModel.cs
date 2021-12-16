@@ -278,6 +278,25 @@ namespace AutoPartSystem.ViewModel
                     }
                 }
             }
+            if(war.Goods.Brand==null)
+            {
+                var brand = MarkModel.GetBrandFind(war.BrandName);
+                if(brand!=null)
+                {
+                    war.Goods.BrandId=brand.Id;
+                    war.Goods.Brand = null;
+                }
+                else
+                {
+                    war.Goods.Brand = new Brand(war.BrandName);
+                }
+            }
+            else
+            {
+                war.Goods.BrandId = war.Goods.Brand.Id;
+                war.Goods.Brand = null;
+
+            }
             WarehouseModel.AddWarehouse(war);
             war = new WarehouseAdd();
         }
@@ -539,6 +558,12 @@ namespace AutoPartSystem.ViewModel
             var SetWare = new View.Warehouse.SetWarePrice(table, WarehouseModel);
             SetWare.Show();
         }
-        #endregion
-    }
+        public ReactiveCommand<Unit, Unit> OpenAddExcel => ReactiveCommand.Create(() => {
+            var addExcel = new View.Warehouse.AddWarehousefromExcel();
+            var ExcelViewModel =new  ViewModel.Warehouse.AddFromExcelViewModel(WarehouseModel, MarkModel);
+            addExcel.DataContext = ExcelViewModel;
+            addExcel.Show();
+        });
+            #endregion
+        }
 }

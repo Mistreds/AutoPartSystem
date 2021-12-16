@@ -29,6 +29,7 @@ namespace AutoPartSystem.Model.MarkModel
         public void AddBrand(string brand);
         public void UpdateBrand(Brand brand);
         public ObservableCollection<Brand> GetBrandFromName(string name);
+        public Brand GetBrandFind(string name);
     }
     public class MarkModel :ReactiveObject, IMarkModel
     {
@@ -151,6 +152,11 @@ namespace AutoPartSystem.Model.MarkModel
         public ObservableCollection<Brand> GetBrandFromName(string name)
         {
             return new ObservableCollection<Brand>(Brand.Where(p => p.Name.ToLower().Contains(name.ToLower())));
+        }
+
+        public Brand GetBrandFind(string name)
+        {
+            return Brand.Where(p => p.Name.ToLower()==name.ToLower()).FirstOrDefault();
         }
     }
 }
