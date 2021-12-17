@@ -33,9 +33,11 @@ namespace AutoPartSystem.Model.Warehouse
         public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id);
         public void UpdateWarehouseMainPrice(double input_price, double rec_price, double ast_price, double akt_price, int id);
         public void UpdateWarehouse(WarehouseTable warehouse);
+        public void UpdateWarehouse(Data.Warehouse warehouse);
         public void MoveOrderToWarehouse(Data.MainMove mainMove);
         public void ArriveGoods(Data.MainMove mainMove);
         public List<Data.TypePay> GetTypePay();
+        public Data.Warehouse GetWarehouseFromArticleAndDes(string article, string description);
     }
 
     public class WarehouseModel : IWarehouseModel
@@ -64,7 +66,7 @@ namespace AutoPartSystem.Model.Warehouse
         private void GetWarehouseFromDb()
         {
             using var db = new Data.ConDB();
-            Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+            Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p=>p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
         }
         public void AddWarehouse(Data.Warehouse warehouse)
         {
@@ -297,6 +299,18 @@ namespace AutoPartSystem.Model.Warehouse
         public List<Data.TypePay> GetTypePay()
         {
             return TypePay;
+        }
+
+        public Data.Warehouse GetWarehouseFromArticleAndDes(string article, string description)
+        {
+            return Warehouses.Where(p => p.Goods.Article.ToLower() == article.ToLower() && p.Goods.Description.ToLower() == description.ToLower()).FirstOrDefault();
+        }
+
+        public void UpdateWarehouse(Data.Warehouse warehouse)
+        {
+            using var db = new Data.ConDB();
+            db.Warehouse.Update(warehouse);
+            db.SaveChanges();
         }
     }
 

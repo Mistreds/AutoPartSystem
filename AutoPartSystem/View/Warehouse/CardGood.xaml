@@ -4,9 +4,76 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
+               xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel.Warehouse"
+             d:DataContext="{d:DesignInstance Type=ViewModel:GoodCardViewModel}"
+        xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
+         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Background="White"    >
+             d:DesignHeight="750" d:DesignWidth="800" Background="White"    >
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15"></ColumnDefinition>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition  Width="10"></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+            <ColumnDefinition  Width="10"></ColumnDefinition>
+            <ColumnDefinition ></ColumnDefinition>
+
+        </Grid.ColumnDefinitions>
+        <TextBlock VerticalAlignment="Center" Grid.ColumnSpan="8" HorizontalAlignment="Center" Text="Карточка товара" FontSize="35"></TextBlock>
+        <TextBlock Text="Кросс" Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" FontSize="15"  HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="Фото" Grid.Row="1" Grid.Column="7" VerticalAlignment="Center" FontSize="15"  HorizontalAlignment="Center"></TextBlock>
+        <TextBlock Text="Марка" Grid.Row="2" Grid.Column="1"></TextBlock>
+        <ComboBox ItemsSource="{Binding MarkList}"  Grid.Row="2"  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"   SelectedItem="{Binding Mark}"  SelectedValue="{Binding Mark.Id}"   Text="{Binding MarkName, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"   Grid.Column="3"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"    ></ComboBox>
+        <TextBlock Text="Модель" Grid.Row="3" Grid.Column="1"></TextBlock>
+         <ComboBox  GotFocus="ComboBoxMark_GotFocus" Grid.Row="3"  Grid.Column="3" SelectedValue="{Binding Model.Id}"  KeyDown="ComboBoxMark_KeyDown" Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}" ItemsSource="{Binding Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"      >
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding ElementName=MainControl, Path=DataContext.SelectModelFromMark}" CommandParameter="{Binding ElementName=ComboBoxMark, Path=SelectedValue}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </ComboBox>
+        <TextBlock Text="Описание" Grid.Row="4" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="4" Grid.Column="3" Text="{Binding Warehouse.Goods.Description,UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <TextBlock Text="Артикуль" Grid.Row="5" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="5" Grid.Column="3" Text="{Binding Warehouse.Goods.Article}"></TextBox>
+        <TextBlock Text="Кол-во Алмата" Grid.Row="6" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="6" Grid.Column="3" Text="{Binding Warehouse.InAlmata}"></TextBox>
+        <TextBlock Text="Кол-во Астана" Grid.Row="7" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="7" Grid.Column="3" Text="{Binding Warehouse.InAktau}"></TextBox>
+        <TextBlock Text="Кол-во Актау" Grid.Row="8" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="8" Grid.Column="3" Text="{Binding Warehouse.InAstana}"></TextBox>
+        <TextBlock Text="Цена приходная" Grid.Row="9" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="9" Grid.Column="3" Text="{Binding Warehouse.Goods.InputPrice}"></TextBox>
+        <TextBlock Text="Цена РЕК" Grid.Row="10" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="10" Grid.Column="3" Text="{Binding Warehouse.Goods.RecomPrice}"> </TextBox>
+        <TextBlock Text="Астана +" Grid.Row="11" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="11" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAstana}"></TextBox>
+        <TextBlock Text="Актау +" Grid.Row="12" Grid.Column="1"></TextBlock>
+        <TextBox   Grid.Row="12" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAktau}"></TextBox>
+        <TextBlock Text="Бренд" Grid.Row="13" Grid.Column="1"></TextBlock>
+        <ComboBox x:Name="ComboBoxBrand" IsDropDownOpen="False" GotFocus="ComboBoxMark_GotFocus"  IsTextSearchEnabled="False" IsEditable="True"   KeyDown="ComboBoxMark_KeyDown" TextBoxBase.TextChanged="ComboBoxMark_TextChanged_1"  Grid.Row="13" Grid.Column="3" ItemsSource="{Binding Brands}" Text="{Binding BrandName}" DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedItem="{Binding Warehouse.Goods.Brand}"></ComboBox>
+        <DataGrid Grid.Row="2"  Grid.Column="5" Grid.RowSpan="10"></DataGrid>
+        <Button Command="{Binding SaveWarehouse}"  Grid.Column="1" Grid.Row="14" Grid.ColumnSpan="7" Width="150" Content="Сохранить"></Button>
     </Grid>
 </UserControl>

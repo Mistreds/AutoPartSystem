@@ -30,6 +30,7 @@ namespace AutoPartSystem.Model.MarkModel
         public void UpdateBrand(Brand brand);
         public ObservableCollection<Brand> GetBrandFromName(string name);
         public Brand GetBrandFind(string name);
+        public void UpdateAll();
     }
     public class MarkModel :ReactiveObject, IMarkModel
     {
@@ -70,6 +71,7 @@ namespace AutoPartSystem.Model.MarkModel
             GetBrandFromDb();
             MarkModelFinds = new ObservableCollection<MarkModelFind>(Model.Select(p => new ViewModel.MarkModelFind(p.Id, $"{p.Mark.Name} {p.Name}")).OrderBy(p => p.model_name));
         }
+
         public void AddMark(Mark mark)
         {
             using var db = new ConDB();
@@ -157,6 +159,14 @@ namespace AutoPartSystem.Model.MarkModel
         public Brand GetBrandFind(string name)
         {
             return Brand.Where(p => p.Name.ToLower()==name.ToLower()).FirstOrDefault();
+        }
+
+        public void UpdateAll()
+        {
+            Model = GetModels();
+
+            Mark = GetMark();
+            GetBrandFromDb();
         }
     }
 }

@@ -191,6 +191,8 @@ namespace Data
             this.WarehouseId = goods.WarehouseId;
             this.Warehouse =goods.Warehouse;
             this.GoodsModel = goods.GoodsModel;
+            this.Brand = goods.Brand;
+            this.BrandId= goods.BrandId;
             this.Description= goods.Description;
             this.Article = goods.Article;
             this.InputPrice = goods.InputPrice;

@@ -38,5 +38,6 @@
                 </Style>
             </Button.Style>
         </Button>
+        <ProgressBar Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Height="35" Value="{Binding Progress}"></ProgressBar>
     </Grid>
 </Window>

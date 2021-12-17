@@ -297,6 +297,7 @@
                     <MenuItem Header="Сделать приход" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.CreatePrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
                     <MenuItem Header="Сделать продажу" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
                     <MenuItem Header="Установить цену"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.SetWarePrice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
+                    <MenuItem Header="Открыть карточку товара"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.OpenGoodCard,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
                     <MenuItem Header="Переместить на другой склад"></MenuItem>
                 </ContextMenu>
                 <ContextMenu x:Key="Menu2">

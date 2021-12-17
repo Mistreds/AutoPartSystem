@@ -564,6 +564,14 @@ namespace AutoPartSystem.ViewModel
             addExcel.DataContext = ExcelViewModel;
             addExcel.Show();
         });
+        public ReactiveCommand<WarehouseTable, Unit> OpenGoodCard=>ReactiveCommand.Create<WarehouseTable>(OpenGoodCardCommand);
+        private void OpenGoodCardCommand(WarehouseTable warehouseTable)
+        {
+           
+            var GoodCardViewModel = new ViewModel.Warehouse.GoodCardViewModel(WarehouseModel, MarkModel,  WarehouseTable.NewTable(warehouseTable));
+            var CardCood = new View.Warehouse.CardGood(GoodCardViewModel, MarkModel);
+            MainControl = CardCood;
+        }
             #endregion
         }
 }

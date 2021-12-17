@@ -11,7 +11,7 @@
            
       Title="Приход" Background="White">
 
-    <Grid DataContext="{Binding table}">
+    <Grid  DataContext="{Binding table}">
         <Grid.RowDefinitions>
             <RowDefinition Height="30"></RowDefinition>
             <RowDefinition Height="60"></RowDefinition>
