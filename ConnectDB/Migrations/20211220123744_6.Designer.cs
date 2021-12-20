@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211220123744_6")]
+    partial class _6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -435,13 +437,6 @@ namespace ConnectDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mark");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = ""
-                        });
                 });
 
             modelBuilder.Entity("Data.MarzhEmployee", b =>
@@ -485,14 +480,6 @@ namespace ConnectDB.Migrations
                     b.HasIndex("MarkId");
 
                     b.ToTable("Model");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MarkId = 1,
-                            Name = ""
-                        });
                 });
 
             modelBuilder.Entity("Data.MoveGoods", b =>

@@ -11,6 +11,9 @@ namespace AutoPartSystem.Model.Client
     public interface IClientModel
     {
         public ObservableCollection<Data.Client> GetClient();
+        public ObservableCollection<Data.Client> GetAgent();
+        public ObservableCollection<Data.Client> FindClientFromNameOrPhone(string name, string phone);
+        public ObservableCollection<Data.Client> FindAgentFromNameOrPhone(string name, string phone);
         public void AddClient(Data.Client client);
        
 
@@ -18,10 +21,12 @@ namespace AutoPartSystem.Model.Client
    public class ClientModel: IClientModel
     {
         private ObservableCollection<Data.Client> Client;
+        private ObservableCollection<Data.Client> AgentClient;
         public ClientModel()
         {
             using var db=new Data.ConDB();
-            Client=new ObservableCollection<Data.Client>(db.Clients.Include(p=>p.City).Include(p=>p.Model).ThenInclude(p=>p.Mark).Select(p=>new Data.Client(p)).ToList());
+            Client=new ObservableCollection<Data.Client>(db.Clients.Include(p=>p.City).Include(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>p.IsAgent==false).Select(p=>new Data.Client(p)).ToList());
+            AgentClient = new ObservableCollection<Data.Client>(db.Clients.Include(p => p.City).Include(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsAgent == true).Select(p => new Data.Client(p)).ToList());
         }
 
         public void AddClient(Data.Client client)
@@ -42,6 +47,25 @@ namespace AutoPartSystem.Model.Client
             Client.Add(clientt);
             client.Id=ss.Id;
             ViewModel.MainViewModel.AdminModel.UpdateCity();
+        }
+
+        public ObservableCollection<Data.Client> FindAgentFromNameOrPhone(string name, string phone)
+        {
+            if (phone == null) phone = "";
+            if (name == null) name = "";
+            return new ObservableCollection<Data.Client>(AgentClient.Where(p => p.Name.ToLower().Contains(name.ToLower()) && p.PhoneName.ToLower().Contains(phone.ToLower())));
+        }
+
+        public ObservableCollection<Data.Client> FindClientFromNameOrPhone(string name, string phone)
+        {
+            if (phone == null) phone = "";
+            if (name == null) name = "";
+            return new ObservableCollection<Data.Client>(Client.Where(p => p.Name.ToLower().Contains(name.ToLower()) && p.PhoneName.ToLower().Contains(phone.ToLower())));
+        }
+
+        public ObservableCollection<Data.Client> GetAgent()
+        {
+            return AgentClient;
         }
 
         public ObservableCollection<Data.Client> GetClient()

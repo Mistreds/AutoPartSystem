@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -93,6 +94,12 @@ namespace AutoPartSystem.ViewModel
             set => this.RaiseAndSetIfChanged(ref _is_selected, value);
 
         }
+        private double prom_input;
+        public double PromInput
+        {
+            get => prom_input;
+            set=>this.RaiseAndSetIfChanged(ref prom_input, value);
+        }
         public void SetArrivel(int almata, int astana, int actau)
         {
             this.InAlmata += almata;
@@ -126,7 +133,7 @@ namespace AutoPartSystem.ViewModel
         {
            
             var WarehouseTable = new WarehouseTable(table.Id, new Data.Goods(table.Goods), table.InAlmata, table.InAstana, table.InAktau, table.WarehousePlace, table.TypePay, table.Note, table.IsVirtual);
-            Console.WriteLine("iuqwueqw " + WarehouseTable.Goods.TypePayId);
+         
             return WarehouseTable;
         }
         public static WarehouseTable NewTable(WarehouseTable table,bool type)
@@ -136,12 +143,40 @@ namespace AutoPartSystem.ViewModel
             Console.WriteLine("iuqwueqw " + WarehouseTable.Goods.TypePayId);
             return WarehouseTable;
         }
+        public ReactiveCommand<Unit, Unit> GetAlmataInput => ReactiveCommand.Create(() => {
+            PromInput = Goods.InputPrice;
+        });
+        public ReactiveCommand<Unit, Unit> GetAstanaInput => ReactiveCommand.Create(() => {
+            PromInput = Goods.InputPrice+Goods.InputAstana;
+        });
+        public ReactiveCommand<Unit, Unit> GetAktauInput => ReactiveCommand.Create(() => {
+            PromInput = Goods.InputPrice+Goods.InputAktau;
+        });
         public WarehouseTable(int id , Data.Goods good, int inAlmata , int inAstana , int inAktau ,
          string warehousePlace ,
             string typePay , string note, bool is_virtual )
         {
             Id = id;
             Goods = good;
+            if(MainViewModel.PositId==3)
+            {
+                switch(MainViewModel.CityId)
+                {
+                    case 1:
+                        PromInput = Goods.InputPrice;
+                        break;
+                    case 2:
+                        PromInput = Goods.InputPrice + Goods.InputAstana;
+                        break;
+                    case 3:
+                        PromInput = Goods.InputPrice + Goods.InputAktau;
+                        break;
+                }
+            }
+           else
+            {
+                PromInput = Goods.InputPrice;
+            }
             Goods.TypePayId = 1;
             Goods.PriceCell = Goods.RecomPrice;
             InAlmata = inAlmata;

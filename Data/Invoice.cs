@@ -89,6 +89,12 @@ namespace Data
             get => _is_invoice;
             set => this.RaiseAndSetIfChanged(ref _is_invoice, value);
         }
+        private bool _is_agent;
+        public bool IsAgent
+        {
+            get => _is_agent;
+            set => this.RaiseAndSetIfChanged(ref _is_agent, value);
+        }
         private void SetAllCountAndAllPrice()
         {
             AllPrice = GoodsInvoice.Sum(p => p.AllPrice);
@@ -106,8 +112,7 @@ namespace Data
             get => _is_del_marzh;
             set
             {
-                this.RaiseAndSetIfChanged(ref _is_del_marzh, value);
-               
+                this.RaiseAndSetIfChanged(ref _is_del_marzh, value);  
             }
         }
         private bool _is_end;
@@ -469,6 +474,12 @@ namespace Data
             get => _city;
             set => this.RaiseAndSetIfChanged(ref _city, value);
         }
+        private bool _is_agent;
+        public bool IsAgent
+        {
+            get => _is_agent;
+            set=>this.RaiseAndSetIfChanged(ref _is_agent, value);
+        }
         public Client()
         {
             Mark = new Mark();
@@ -484,6 +495,10 @@ namespace Data
             this.Mark = p.Model.Mark;
             MarkId = p.Model.MarkId;
             this.ModelId = p.ModelId;
+        }
+        public Client (int model_id)
+        {
+            this.ModelId=model_id;
         }
         public void new_mark_model()
         {

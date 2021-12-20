@@ -17,15 +17,14 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Invoice
 {
     /// <summary>
-    /// Логика взаимодействия для CreateInvoice.xaml
+    /// Логика взаимодействия для AgentInvoice.xaml
     /// </summary>
-    public partial class CreateInvoice : UserControl
+    public partial class AgentInvoice : UserControl
     {
-       private ViewModel.InvoiceWinViewModel invoice_view;
-        public CreateInvoice(ViewModel.InvoiceWinViewModel invoice)
+        private ViewModel.InvoiceWinViewModel invoice_view;
+        public AgentInvoice(ViewModel.InvoiceWinViewModel invoice)
         {
             InitializeComponent();
-
             invoice_view = invoice;
         }
         private void ComboBoxMark_TextChanged(object sender, TextChangedEventArgs e)
@@ -48,8 +47,8 @@ namespace AutoPartSystem.View.Invoice
             {
                 invoice_view.Cities = new ObservableCollection<Data.City>();
                 if (ViewModel.MainViewModel.AdminModel != null)
-                       invoice_view.Cities =
-                           ViewModel.MainViewModel.AdminModel.GetCitiesFromText(text);
+                    invoice_view.Cities =
+                        ViewModel.MainViewModel.AdminModel.GetCitiesFromText(text);
             }
         }
         private void ComboBoxMark_GotFocus(object sender, RoutedEventArgs e)

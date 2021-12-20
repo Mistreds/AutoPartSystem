@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ReactiveUI;
+
 namespace Data
 {
     public class Warehouse:ReactiveObject
@@ -74,7 +75,35 @@ namespace Data
             get => _is_virtual;
             set=>this.RaiseAndSetIfChanged(ref _is_virtual, value);
         }
+        private bool _is_delete;
+        public bool IsDelete
+        {
+            get => _is_delete;
+            set=>this.RaiseAndSetIfChanged(ref _is_delete, value);
+        }
         public Warehouse() { }
+    }
+    public class GoodsImage:MainClass
+    {
+        private byte[] _image_byte;
+        public byte[] ImageByte
+        {
+            get => _image_byte;
+            set=>this.RaiseAndSetIfChanged(ref _image_byte, value);
+        }
+        private int _good_id;
+        public int GoodId
+        {
+            get => _good_id;
+            set => this.RaiseAndSetIfChanged(ref _good_id, value);
+        }
+        private Goods _goods;
+        public  Goods Goods
+        {
+            get => _goods;
+            set => this.RaiseAndSetIfChanged(ref _goods, value);
+        }
+        
     }
     public class Goods:ReactiveObject
     {
@@ -205,6 +234,7 @@ namespace Data
             
 
         }
+        
     }
     public class GoodsModel:ReactiveObject
     {

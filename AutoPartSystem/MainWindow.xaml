@@ -8,7 +8,7 @@
         xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
         d:DataContext="{d:DesignInstance Type=ViewModel:MainViewModel}"
         mc:Ignorable="d"
-        Background="White"
+        Background="White" WindowState="Maximized"
         Title="MainWindow" Height="650" Width="1200">
     <Window.Resources>
         <ResourceDictionary>
@@ -42,9 +42,28 @@
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="Файл">
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад"></MenuItem>
-                <MenuItem Header="Добавить клиента"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding  PositId}" Value="3">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding  PositId}" Value="3">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
                 <MenuItem Header="Добавить кассу" Command="{Binding OpenPage}" CommandParameter="InsertCash"></MenuItem>
                 <MenuItem Header="Снять кассу" Command="{Binding OpenPage}"  CommandParameter="OutCash"></MenuItem>
                 <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
@@ -57,11 +76,31 @@
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="VirtualSkladTable" Header="Виртуальный склад"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenAgentClientTable" Header="Таблица с контрагентами"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoice" Header="Накладные"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoiceComm" Header="Коммерческие предложения"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenMoveGoods" Header="Заявки на перемещение товара"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenMoveGoods" Header="Заявки на перемещение товара">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding  PositId}" Value="3">
+                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="Администратор" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
+                <MenuItem.Style>
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding  PositId}" Value="3">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </MenuItem.Style>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>

@@ -7,6 +7,7 @@
              mc:Ignorable="d" 
               xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
              d:DataContext="{d:DesignInstance Type=ViewModel:InvoiceWinViewModel}"
+             
              d:DesignHeight="450" d:DesignWidth="800" Background="White">
     <Grid>
         <Grid.RowDefinitions>
@@ -152,13 +153,10 @@
                 </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Описание" IsReadOnly="True" Binding="{Binding Goods.Description}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Артикуль" IsReadOnly="True"  Binding="{Binding Goods.Article}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Цена прих" IsReadOnly="True"  Binding="{Binding Goods.InputPrice}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Доставка NQZ" x:Name="Astana" IsReadOnly="True"  Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Доставка SCO" x:Name="Aktau" IsReadOnly="True"  Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Цена прих" IsReadOnly="True"  Binding="{Binding InputPrice}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Рек цена"  IsReadOnly="True"  Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Кол-во"  Binding="{Binding Count, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
-                <DataGridTextColumn Header="Цена продажи"   Binding="{Binding Goods.PriceCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
-                    <DataGridTextColumn Header="Общая доставка" x:Name="alldost"   Binding="{Binding AllTrans, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Цена продажи"   Binding="{Binding Goods.PriceCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                     <DataGridTemplateColumn Header="Тип оплаты">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
@@ -166,7 +164,6 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Общие расходы" IsReadOnly="True"  Binding="{Binding  InputPrice, Mode=OneWay}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Общая сумма" IsReadOnly="True"  Binding="{Binding AllPrice, Mode=OneWay}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Маржа" IsReadOnly="True"  Binding="{Binding Marz, Mode=OneWay}"></DataGridTextColumn>
                 </DataGrid.Columns>

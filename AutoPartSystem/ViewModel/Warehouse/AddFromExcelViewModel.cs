@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reactive;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.Win32;
 using OfficeOpenXml;
 using ReactiveUI;
@@ -38,6 +39,7 @@ namespace AutoPartSystem.ViewModel.Warehouse
             get => progress;
             set=>this.RaiseAndSetIfChanged(ref progress, value);
         }
+       
         public AddFromExcelViewModel(Model.Warehouse.WarehouseModel WarehouseModel, Model.MarkModel.MarkModel MarkModel)
         {
             Cities = MainViewModel.AdminModel.GetEmpCity();
@@ -63,15 +65,13 @@ namespace AutoPartSystem.ViewModel.Warehouse
                 {
                     //Load excel stream
                     FileInfo fileInfo = new FileInfo(FileName);
-
                     ExcelPackage package = new ExcelPackage(fileInfo);
                     ExcelWorksheet worksheet = package.Workbook.Worksheets.FirstOrDefault();
-
                     // get number of rows and columns in the sheet
                     int rows = worksheet.Dimension.Rows; // 20
                     int columns = worksheet.Dimension.Columns; // 7
                     Progress = 0;
-                    double step = (double)(rows - 1) / 100;
+                    double step = (double)100/(double)(rows - 1);
                     Console.WriteLine(step);
                     // loop through the worksheet rows and columns
                     ObservableCollection<Data.Warehouse> warehouses = new ObservableCollection<Data.Warehouse>();
@@ -196,7 +196,11 @@ namespace AutoPartSystem.ViewModel.Warehouse
                         //Get everything as generics and let end user decides on casting to required type
 
                     }
+                    
                     Progress = 100;
+                    WarehouseModel.UpdateAll();
+                    MainViewModel.WarehouseViewModel.UpdateTableCom();
+                    MessageBox.Show("Загрузка данных завершена", "Внимание");
                 }
             });
         }

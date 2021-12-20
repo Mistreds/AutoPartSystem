@@ -26,11 +26,63 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <ToolBar>
-            <Button Height="35" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Добавить товар</Button>
-            <Button Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Продать выбранные</Button>
-            <Button Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.UpdateTable ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Обновить таблицу</Button>
-            <Button Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.OpenMovePage ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Переместить товар</Button>
-            <Button Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.OpenAddExcel ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Добавить товары из Excel</Button>
+            <Button Height="35" Foreground="Black" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0" Content="Добавить товар">
+                <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PosId}" Value="3">
+                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                </Button.Style>
+            </Button>
+            <Button Height="35" Foreground="Black" Margin="15,0,0,0" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Продать выбранные
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PosId}" Value="2">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Height="35" Foreground="Black" Margin="15,0,0,0" Command="{Binding Path=DataContext.AddBooking,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0"> Забронировать выбранные
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PosId}" Value="2">
+                            <Setter Property="Visibility" Value="Collapsed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+            </Button>
+            <Button Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.UpdateTable ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Обновить таблицу
+            </Button>
+            <Button Foreground="Black" Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.OpenMovePage ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Переместить товар
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PosId}" Value="3">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Button Foreground="Black" Height="35" Margin="15,0,0,0" Command="{Binding Path=DataContext.OpenAddExcel ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Добавить товары из Excel
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PosId}" Value="3">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
             <!--<Button FontSize="12" Margin="10,0,0,0" Padding="0">Добавить товар из эксель</Button>-->
         </ToolBar>
         <ContentControl Grid.Column="1" Grid.Row="1" Content="{Binding MainControl}" ></ContentControl>

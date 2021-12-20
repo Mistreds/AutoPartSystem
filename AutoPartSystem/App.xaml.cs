@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Threading;
+using MessageBox = System.Windows.MessageBox;
+
 namespace AutoPartSystem
 {
     public partial class App : System.Windows.Application
@@ -20,13 +23,20 @@ namespace AutoPartSystem
             ConsoleHelper.AllocConsole();
 #endif
 #if RELEASE
-            //this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
+            this.DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 #endif
 
              AppData = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData)+@"/AutoPartSystem";
             if (!Directory.Exists(AppData)) Directory.CreateDirectory(AppData);
             var Autorization = new Autorization();
             Autorization.Show();
+        }
+        void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            // Process unhandled exception
+            MessageBox.Show($"{e.Exception.Message} {e.Exception.StackTrace}", "Ошибка");
+            // Prevent default unhandled exception processing
+            e.Handled = true;
         }
     }
     public class ConsoleHelper

@@ -25,12 +25,12 @@ namespace AutoPartSystem.View.Client
             InitializeComponent();
         }
         private ClientWindow clientWindow;
-        public ClientTable(ClientWindow clientWindow)
+        private Data.Invoice Invoice;
+        public ClientTable(Data.Invoice Invoice,ClientWindow clientWindow)
         {
             InitializeComponent();
-            DataContext = clientWindow;
             this.clientWindow = clientWindow;
-            clientTable.ItemsSource = clientWindow.clients;
+            this.Invoice = Invoice;
             clientTable.IsReadOnly = true;
             clientTable.MouseDoubleClick += ClientTable_MouseDoubleClick;
             
@@ -41,8 +41,8 @@ namespace AutoPartSystem.View.Client
             Data.Client? client = clientTable.SelectedItem as Data.Client;
             if(client!=null)
             {
-                clientWindow.Invoice.Client = new Data.Client { Id = client.Id, Name = client.Name, Mark = client.Model.Mark, City = client.City, Model = client.Model, MarkId=client.Model.MarkId, CityId=client.CityId, ModelId=client.ModelId, PhoneName=client.PhoneName, CityName=client.City.Name  };
-                Console.WriteLine(clientWindow.Invoice.Client.MarkId);
+                Invoice.Client = new Data.Client { Id = client.Id, Name = client.Name, Mark = client.Model.Mark, City = client.City, Model = client.Model, MarkId=client.Model.MarkId, CityId=client.CityId, ModelId=client.ModelId, PhoneName=client.PhoneName, CityName=client.City.Name  };
+                Console.WriteLine(Invoice.Client.MarkId);
                 clientWindow.Close();
             }
         }

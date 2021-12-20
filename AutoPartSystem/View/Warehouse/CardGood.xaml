@@ -27,6 +27,7 @@
             <RowDefinition Height="35"></RowDefinition>
             <RowDefinition Height="35"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -38,20 +39,21 @@
             <ColumnDefinition ></ColumnDefinition>
             <ColumnDefinition  Width="10"></ColumnDefinition>
             <ColumnDefinition ></ColumnDefinition>
-
         </Grid.ColumnDefinitions>
+        <Button Grid.Column="1"  Command="{Binding Back}" Content="Назад" Style="{StaticResource    MaterialDesignOutlinedButton}"></Button>
         <TextBlock VerticalAlignment="Center" Grid.ColumnSpan="8" HorizontalAlignment="Center" Text="Карточка товара" FontSize="35"></TextBlock>
         <TextBlock Text="Кросс" Grid.Row="1" Grid.Column="5" VerticalAlignment="Center" FontSize="15"  HorizontalAlignment="Center"></TextBlock>
         <TextBlock Text="Фото" Grid.Row="1" Grid.Column="7" VerticalAlignment="Center" FontSize="15"  HorizontalAlignment="Center"></TextBlock>
         <TextBlock Text="Марка" Grid.Row="2" Grid.Column="1"></TextBlock>
-        <ComboBox ItemsSource="{Binding MarkList}"  Grid.Row="2"  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"   SelectedItem="{Binding Mark}"  SelectedValue="{Binding Mark.Id}"   Text="{Binding MarkName, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"   Grid.Column="3"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"    ></ComboBox>
-        <TextBlock Text="Модель" Grid.Row="3" Grid.Column="1"></TextBlock>
-         <ComboBox  GotFocus="ComboBoxMark_GotFocus" Grid.Row="3"  Grid.Column="3" SelectedValue="{Binding Model.Id}"  KeyDown="ComboBoxMark_KeyDown" Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}" ItemsSource="{Binding Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"      >
+        <ComboBox ItemsSource="{Binding MarkList}"  Grid.Row="2"  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"   SelectedItem="{Binding Mark}"  SelectedValue="{Binding Mark.Id}"   Text="{Binding MarkName, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"   Grid.Column="3"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"    >
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding ElementName=MainControl, Path=DataContext.SelectModelFromMark}" CommandParameter="{Binding ElementName=ComboBoxMark, Path=SelectedValue}"/>
+                    <i:InvokeCommandAction Command="{Binding SelectModelFromMark}" CommandParameter="{Binding ElementName=ComboBoxMark, Path=SelectedValue}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
+        </ComboBox>
+        <TextBlock Text="Модель" Grid.Row="3" Grid.Column="1"></TextBlock>
+        <ComboBox SelectionChanged="ComboBoxModel_SelectionChanged" GotFocus="ComboBoxMark_GotFocus" Grid.Row="3"  Grid.Column="3" SelectedValue="{Binding Model.Id}"  KeyDown="ComboBoxMark_KeyDown" ItemsSource="{Binding Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"    Text="{Binding ModelName, UpdateSourceTrigger=PropertyChanged}"   >
         </ComboBox>
         <TextBlock Text="Описание" Grid.Row="4" Grid.Column="1"></TextBlock>
         <TextBox   Grid.Row="4" Grid.Column="3" Text="{Binding Warehouse.Goods.Description,UpdateSourceTrigger=PropertyChanged}"></TextBox>
@@ -73,7 +75,73 @@
         <TextBox   Grid.Row="12" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAktau}"></TextBox>
         <TextBlock Text="Бренд" Grid.Row="13" Grid.Column="1"></TextBlock>
         <ComboBox x:Name="ComboBoxBrand" IsDropDownOpen="False" GotFocus="ComboBoxMark_GotFocus"  IsTextSearchEnabled="False" IsEditable="True"   KeyDown="ComboBoxMark_KeyDown" TextBoxBase.TextChanged="ComboBoxMark_TextChanged_1"  Grid.Row="13" Grid.Column="3" ItemsSource="{Binding Brands}" Text="{Binding BrandName}" DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedItem="{Binding Warehouse.Goods.Brand}"></ComboBox>
-        <DataGrid Grid.Row="2"  Grid.Column="5" Grid.RowSpan="10"></DataGrid>
-        <Button Command="{Binding SaveWarehouse}"  Grid.Column="1" Grid.Row="14" Grid.ColumnSpan="7" Width="150" Content="Сохранить"></Button>
+        <StackPanel Grid.Row="2"  Grid.Column="5"  Orientation="Horizontal" >
+            <ComboBox ItemsSource="{Binding MarkList}"  Grid.Row="2"  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"     SelectedItem="{Binding Mark1}"  SelectedValue="{Binding Mark1.Id}"   Text="{Binding MarkName1,UpdateSourceTrigger=PropertyChanged}" x:Name="ComboBoxMark1"    IsTextSearchEnabled="False" IsEditable="True"   Grid.Column="3"  TextBoxBase.TextChanged="ComboBoxMark1_TextChanged" SelectionChanged="ComboBoxMark1_SelectionChanged" SelectedValuePath="Id" DisplayMemberPath="Name" MinWidth="80">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding SelectModelFromMark1}" CommandParameter="{Binding ElementName=ComboBoxMark1, Path=SelectedValue}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+            <ComboBox SelectionChanged="ComboBoxModel_SelectionChanged" GotFocus="ComboBoxMark_GotFocus" Grid.Row="3"  Grid.Column="3" SelectedValue="{Binding Model1.Id}"  KeyDown="ComboBoxMark_KeyDown" ItemsSource="{Binding Models1, UpdateSourceTrigger=PropertyChanged}" x:Name="ComboBoxModel1"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Model1, UpdateSourceTrigger=PropertyChanged}" TextBoxBase.TextChanged="ComboBoxModel1_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"    Text="{Binding ModelName1, UpdateSourceTrigger=PropertyChanged}"  MinWidth="80" Margin="5,0,0,0"></ComboBox>
+            <Button  Command="{Binding AddModelToWareCom}" Margin="5,0,0,0"  Padding="0" Width="35" >+
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PosId}" Value="3">
+                                <Setter Property="IsEnabled" Value="False"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </StackPanel>
+        <DataGrid AutoGenerateColumns="False" CanUserDeleteRows="False"  CanUserAddRows="False" ItemsSource="{Binding GoodsModel}" Grid.Row="3"  Grid.Column="5" Grid.RowSpan="10" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Width="1*" Header="Марка" Binding="{Binding Model.Mark.Name}"></DataGridTextColumn>
+                <DataGridTextColumn Width="1*" Header="Модель" Binding="{Binding Model.Name}"></DataGridTextColumn>
+                <DataGridTemplateColumn >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Padding="0" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.DelGoodModel,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Width="35" Style="{StaticResource MaterialDesignOutlinedButton}">-</Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Image   Grid.Row="2" Grid.Column="7" Grid.RowSpan="7" Source="{Binding GoodsImage.Image}" ></Image>
+        <Button Command="{Binding DeleteWarehouse}"  Grid.Column="3" Grid.Row="14" Width="150" Content="Удалить">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PosId}" Value="3">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button Command="{Binding SaveWarehouse}"  Grid.Column="5" Grid.Row="14" Width="150" Content="Сохранить">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PosId}" Value="3">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button Command="{Binding SelectGoodPicture}"  Grid.Column="7" Grid.Row="14" Width="150" Content="Выбрать фото">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding PosId}" Value="3">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
     </Grid>
 </UserControl>

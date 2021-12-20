@@ -49,9 +49,12 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public void CreateExcelFile(Invoice Invoice)
         {
+            var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog1.Filter = "Excel (*.xlsx)|*.xlsx";
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            var name = "text.xlsx";
-            var newFile = new FileInfo(name);
+            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                return;
+            var newFile = new FileInfo(saveFileDialog1.FileName);
             using (ExcelPackage package = new ExcelPackage(newFile))
             {
                 ExcelWorksheet sheet = package.Workbook.Worksheets.Add("MySheet");
@@ -202,6 +205,11 @@ namespace AutoPartSystem.Model.Warehouse
                 sheet.Cells[$"AL{j}:AQ{j}"].Merge = true;
                 sheet.Cells[$"AL{j}:AQ{j}"].Value = Invoice.AllPrice;
                 getAllBorder(sheet.Cells[$"AL{j}:AQ{j}"]);
+                j+=3;
+                sheet.Cells[$"AC{j}:AL{j}"].Merge = true;
+                sheet.Cells[$"AC{j}:AL{j}"].Value = $"Адрес: {Invoice.Employee.City.Name} {Invoice.Employee.City.Address}";
+                getAllBorder(sheet.Cells[$"AC{j}:AL{j}"]);
+               
                 package.Save();
             }
         }

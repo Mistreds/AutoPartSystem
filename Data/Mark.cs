@@ -13,6 +13,11 @@ namespace Data
         {
             this.Name = name;
         }
+        public Mark(int Id,string name)
+        {
+            this.Id = Id;
+            this.Name = name;
+        }
     }
     public class Model : MainClass, IMainInterface
     {
@@ -48,6 +53,20 @@ namespace Data
             Name = name;
             this.MarkId = MarkId;
             this.Mark = Mark;
+        }
+        public Model(int id,string name, int MarkId, Mark Mark)
+        {
+            Id = id;
+            Name = name;
+            this.MarkId = MarkId;
+            this.Mark = Mark;
+        }
+        public Model(int id, string name, int MarkId)
+        {
+            Id = id;
+            Name = name;
+            this.MarkId = MarkId;
+           
         }
     }
     public class Brand : MainClass

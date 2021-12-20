@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
 using AutoPartSystem.ViewModel;
+using AutoPartSystem.ViewModel.Warehouse;
 using Microsoft.EntityFrameworkCore;
 
 namespace AutoPartSystem.Model.Warehouse
@@ -38,6 +39,11 @@ namespace AutoPartSystem.Model.Warehouse
         public void ArriveGoods(Data.MainMove mainMove);
         public List<Data.TypePay> GetTypePay();
         public Data.Warehouse GetWarehouseFromArticleAndDes(string article, string description);
+        public void UpdateGoodModel(ObservableCollection<Data.GoodsModel> goodsModels, ObservableCollection<Data.GoodsModel> goodsModelsRemove);
+        public void UpdateGoodMode(Data.GoodsModel goodsModels);
+        public void UpdateGoodImage(Data.GoodsImage goodsImage);
+        public ViewModel.Warehouse.ImageGood GetGoodImage(int GoodId);
+        public void UpdateAll();
     }
 
     public class WarehouseModel : IWarehouseModel
@@ -61,12 +67,16 @@ namespace AutoPartSystem.Model.Warehouse
             using var db = new Data.ConDB();
             GetWarehouseFromDb();
             TypePay = db.TypePay.ToList();
-            WarehouseVirtual = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+            WarehouseVirtual = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+        }
+        public void UpdateAll()
+        {
+            GetWarehouseFromDb();
         }
         private void GetWarehouseFromDb()
         {
             using var db = new Data.ConDB();
-            Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p=>p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+            Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false && p.IsDelete==false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
         }
         public void AddWarehouse(Data.Warehouse warehouse)
         {
@@ -291,7 +301,7 @@ namespace AutoPartSystem.Model.Warehouse
                 db.UpdateRange(Warehouses);
                 db.SaveChanges();
 
-                ViewModel.MainViewModel.MoveGoodsModel.RemoveMove(mainMove);            
+                ViewModel.MainViewModel.MoveGoodsModel.RemoveMove(mainMove);
 
             }
         }
@@ -303,7 +313,7 @@ namespace AutoPartSystem.Model.Warehouse
 
         public Data.Warehouse GetWarehouseFromArticleAndDes(string article, string description)
         {
-            return Warehouses.Where(p => p.Goods.Article.ToLower() == article.ToLower() && p.Goods.Description.ToLower() == description.ToLower()).FirstOrDefault();
+            return Warehouses.Where(p => p.Goods.Article.ToLower() == article.ToLower() && p.Goods.Description.ToLower() == description.ToLower() && p.IsDelete == false && p.IsVirtual==false).FirstOrDefault();
         }
 
         public void UpdateWarehouse(Data.Warehouse warehouse)
@@ -312,6 +322,60 @@ namespace AutoPartSystem.Model.Warehouse
             db.Warehouse.Update(warehouse);
             db.SaveChanges();
         }
+
+        public void UpdateGoodModel(ObservableCollection<Data.GoodsModel> goodsModels, ObservableCollection<Data.GoodsModel> goodsModelsRemove)
+        {
+            goodsModels=new ObservableCollection<Data.GoodsModel>(goodsModels.Select(p => new Data.GoodsModel { Id=p.Id, Model=new Data.Model(p.Model.Id, p.Model.Name, p.Model.MarkId, p.Model.Mark), GoodsId=p.GoodsId, ModelId=p.ModelId,  }));
+            foreach (var good in goodsModels)
+            {
+                if (good.Model != null)
+                {
+                    if (good.Model.Mark != null)
+                    {
+                        if (good.Model.Mark.Id != 0)
+                        {
+                            good.Model.MarkId = good.Model.Mark.Id;
+                            good.Model.Mark = null;
+                        }
+                    }
+                    if (good.Model.Id != 0)
+                    {
+                        good.ModelId = good.Model.Id;
+                        good.Model = null;
+                    }
+                    
+                }
+            }
+            using var db = new Data.ConDB();
+            if(goodsModelsRemove!=null)db.GoodModel.RemoveRange(goodsModelsRemove);
+            db.GoodModel.UpdateRange(goodsModels.Where(p => p.Id == 0).ToList());
+            db.SaveChanges();
+        }
+
+        public void UpdateGoodImage(Data.GoodsImage goodsImage)
+        {
+            using var db = new Data.ConDB();
+            if (goodsImage.Id == 0) 
+                db.Add(goodsImage);
+            else
+                db.Update(goodsImage);
+            db.SaveChanges();
+        }
+
+        public ImageGood GetGoodImage(int GoodId)
+        {
+            using var db = new Data.ConDB();
+            return db.GoodsImage.Where(p => p.GoodId == GoodId).Select(p => new ImageGood(p)).FirstOrDefault();
+        }
+
+        public void UpdateGoodMode(Data.GoodsModel goodsModels)
+        {
+            using var db = new Data.ConDB();
+            db.GoodModel.Update(goodsModels);
+            db.SaveChanges();
+        }
+
+        
     }
 
 }

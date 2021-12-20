@@ -52,6 +52,7 @@ namespace AutoPartSystem.ViewModel
         public bool IsEdit { get; set; }
         public bool IsInvoice { get; set; }
         private View.Invoice.CreateInvoice CreateInvoice;
+        private View.Invoice.AgentInvoice AgentInvoice;
         private View.Invoice.InvoceTable InvoiceTable;
         public List<Data.Employee> Employees { get; private set; }
         private bool _is_new_client;
@@ -90,6 +91,11 @@ namespace AutoPartSystem.ViewModel
         }
         public InvoiceWinViewModel(Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel, Model.MarkModel.MarkModel MarkModel)
         {
+            SelectNewClient= ReactiveCommand.Create(() => {
+
+                   ClientViewModel clientView = new ClientViewModel(Invoice);
+
+               });
             this.WarehouseInvoceModel = WarehouseInvoceModel;
             Employees = MainViewModel.AdminModel.GetEmployeeMeneger(MainViewModel.Employee.Id);
             this.MarkModel = MarkModel;
@@ -126,8 +132,37 @@ namespace AutoPartSystem.ViewModel
             TypePay = MainViewModel.WarehouseModel.GetTypePay();
             invoiceGood.Show();      
         }
+        public InvoiceWinViewModel(ObservableCollection<WarehouseTable> warehouseTables,bool isagent)
+        {
+            this.WarehouseInvoceModel = new Model.Warehouse.WarehouseInvoceModel();
+            WarehouseInvoceModel.SetWarehouse(warehouseTables);
+            Employees = MainViewModel.AdminModel.GetEmployeeMeneger(MainViewModel.Employee.Id);
+            Client = new Data.Client(1);
+            AgentInvoice = new View.Invoice.AgentInvoice(this);
+            InvoiceTable = new View.Invoice.InvoceTable();
+            MainControl = AgentInvoice;
+            Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+            CreateInvoiceBase = ReactiveCommand.Create(() =>
+            {
+               
+            });
+         
+            Invoice = new Data.Invoice(new ObservableCollection<Data.Warehouse>(WarehouseInvoceModel.GetWarehouse()), MainViewModel.Employee);
+            View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
+            TypePay = MainViewModel.WarehouseModel.GetTypePay();
+            invoiceGood.Show();
+        }
+        public ReactiveCommand<Unit, Unit> UpdateBooking => ReactiveCommand.Create(() => {
+            
+        
+        });
         public InvoiceWinViewModel(Data.Invoice invoice)
         {
+            SelectNewClient = ReactiveCommand.Create(() => {
+
+                ClientViewModel clientView = new ClientViewModel(Invoice);
+
+            });
             IsEdit = true;
             Invoice = invoice;
             IsInvoice = Invoice.IsInvoice;
@@ -165,11 +200,7 @@ namespace AutoPartSystem.ViewModel
             Models = MarkModel.GetModelFromMarkId(mark_id);
             Client.ModelId = 0;
         }
-        public ReactiveCommand<Unit, Unit> SelectNewClient => ReactiveCommand.Create(() => {
-
-            View.Client.ClientWindow clientWindow = new View.Client.ClientWindow(MainViewModel.ClientModel.GetClient(), Invoice);
-            clientWindow.Show();
-        });
+        public ReactiveCommand<Unit, Unit> SelectNewClient { get; set; }
         public ReactiveCommand<string, Unit> CreateInvoiceCommercial=>ReactiveCommand.Create<string>(CreateInvoiceCommercialCommand);
         private void CreateInvoiceCommercialCommand(string inv_com)
         {
@@ -215,6 +246,7 @@ namespace AutoPartSystem.ViewModel
             var ware_view = new ViewModel.WarehouseViewModel(Invoice,2);
 
         });
+        public ReactiveCommand<Unit, Unit> CreateExcel => ReactiveCommand.Create(() => { WarehouseInvoceModel.CreateExcelFile(Invoice); });
 
-    }
+        }
 }

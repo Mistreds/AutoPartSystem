@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211217223733_4")]
+    partial class _4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -102,9 +104,6 @@ namespace ConnectDB.Migrations
 
                     b.Property<int>("CityId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsAgent")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<int>("ModelId")
                         .HasColumnType("int");
@@ -226,7 +225,7 @@ namespace ConnectDB.Migrations
                     b.Property<int?>("GoodsId")
                         .HasColumnType("int");
 
-                    b.Property<byte[]>("ImageByte")
+                    b.Property<byte[]>("Image")
                         .HasColumnType("longblob");
 
                     b.Property<string>("Name")
@@ -373,9 +372,6 @@ namespace ConnectDB.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsAgent")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<bool>("IsDelMarzh")
                         .HasColumnType("tinyint(1)");
 
@@ -435,13 +431,6 @@ namespace ConnectDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mark");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = ""
-                        });
                 });
 
             modelBuilder.Entity("Data.MarzhEmployee", b =>
@@ -485,14 +474,6 @@ namespace ConnectDB.Migrations
                     b.HasIndex("MarkId");
 
                     b.ToTable("Model");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MarkId = 1,
-                            Name = ""
-                        });
                 });
 
             modelBuilder.Entity("Data.MoveGoods", b =>

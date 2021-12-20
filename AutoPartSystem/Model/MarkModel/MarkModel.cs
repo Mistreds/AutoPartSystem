@@ -64,7 +64,6 @@ namespace AutoPartSystem.Model.MarkModel
         }
         public MarkModel()
         {
-            Console.WriteLine("Тип создалась модель");
             Model = GetModels();
             
             Mark = GetMark();
@@ -81,16 +80,19 @@ namespace AutoPartSystem.Model.MarkModel
         public void AddModel(Data.Model model)
         {
             using var db = new ConDB();
-            
+         
             db.Models.Add(model);
             db.SaveChanges();
+            model.Id = model.Id;
             Model.Add(model);
-            
+           
+
+
         }
         public ObservableCollection<Mark> GetMark()
         {
             using var db = new ConDB();
-            return new ObservableCollection<Mark>(db.Mark.ToList());
+            return new ObservableCollection<Mark>(db.Mark.Where(p=>p.Id!=1).ToList());
         }
         public ObservableCollection<Mark> GetMarkFromName(string name)
         {
@@ -98,7 +100,7 @@ namespace AutoPartSystem.Model.MarkModel
         }
         public Mark GetMarkFromNameFind(string name)
         {
-            return Mark.FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
+            return Mark.Select(p=>new Data.Mark(p.Id, p.Name)).FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public int GetMarkIdFromName(string name)
@@ -117,13 +119,13 @@ namespace AutoPartSystem.Model.MarkModel
 
         public Data.Model GetModelFromNameFind(string name,int id)
         {
-            return Model.FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase) && p.MarkId==id);
+            return Model.Select(p=>new Data.Model(p.Id, p.Name,p.MarkId,p.Mark)).FirstOrDefault(p =>string.Equals(p.Name, name, StringComparison.CurrentCultureIgnoreCase) && p.MarkId==id);
         }
 
         public ObservableCollection<Data.Model> GetModels()
         {
             using var db = new ConDB();
-            return new ObservableCollection<Data.Model>(db.Models.Include(p => p.Mark).ToList());
+            return new ObservableCollection<Data.Model>(db.Models.Include(p => p.Mark).Where(p=>p.Id!=1).ToList());
         }
 
         public ObservableCollection<MarkModelFind> MarkModelFind(string name)

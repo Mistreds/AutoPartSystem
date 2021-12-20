@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace AutoPartSystem
         {
             using var db = new Data.ConDB();
            // var employee = db.Employees.Where(x => x.Login == this.Login.Text && x.Password == Data.Hash.SHA512(this.Password.Password)).FirstOrDefault();
-            var employee = db.Employees.Where(x => x.Login == "Admin").FirstOrDefault();
+            var employee = db.Employees.Include(p=>p.City).Include(p=>p.Position).Where(x => x.Login == "Admin").FirstOrDefault();
             if (employee != null)
             {
                 MainWindow main=new MainWindow(employee);

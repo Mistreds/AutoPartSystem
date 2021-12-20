@@ -94,8 +94,10 @@ namespace AutoPartSystem.ViewModel
         }
 
         private bool is_invoice;
+        public int PosId { get;private set; }
         public InvoiceViewModel()
         {
+            PosId = MainViewModel.PositId;
             InvoiceModel = new Model.InvoiceModel();
             InvoiceTable = InvoiceModel.ComInvoice;
             EmployersTable = MainViewModel.AdminModel.GetEmployeesForSelect();
@@ -112,14 +114,29 @@ namespace AutoPartSystem.ViewModel
                 case "OpenInvoiceComm":
                     MainControl = _control[0];
                     is_invoice = false;
-                    InvoiceTable= InvoiceModel.SelectComInvoiceFromDataBase(0);
+                    if(MainViewModel.PositId!=1)
+                    {
+                        InvoiceTable = InvoiceModel.SelectComInvoiceFromDataBase(MainViewModel.Employee.Id);
+                    }
+                    else
+                    {
+                        InvoiceTable = InvoiceModel.SelectComInvoiceFromDataBase(0);
+                    }
                     InvoiceString = "Коммерческое предложения";
                     FindInvoices = new FindInvoice();
                     break;
                 case "OpenInvoice":
                     MainControl = _control[0];
                     is_invoice = true;
-                    InvoiceTable = InvoiceModel.SelectInvoiceFromDataBase(0);
+                    if (MainViewModel.PositId != 1)
+                    {
+                        InvoiceTable = InvoiceModel.SelectInvoiceFromDataBase(MainViewModel.Employee.Id);
+                    }
+                    else
+                    {
+                        InvoiceTable = InvoiceModel.SelectInvoiceFromDataBase(0);
+                    }
+
                     InvoiceString = "Накладные";
                     FindInvoices = new FindInvoice();
                     break;

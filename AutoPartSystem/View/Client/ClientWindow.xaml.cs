@@ -23,13 +23,13 @@ namespace AutoPartSystem.View.Client
         public ObservableCollection<Data.Client> clients { get; set; }  
         public View.Client.ClientTable ClientTable { get; set; }
         public Data.Invoice Invoice { get; set; }
-        public ClientWindow(ObservableCollection<Data.Client> clients, Data.Invoice invoice)
+        public ClientWindow(ObservableCollection<Data.Client> clients, Data.Invoice invoice, ViewModel.ClientViewModel clientView)
         {
             InitializeComponent();
             this.clients = clients;
             Invoice = invoice;
-            DataContext = this;
-            ClientTable = new ClientTable(this);
+            DataContext = clientView;
+
         }
     }
 }

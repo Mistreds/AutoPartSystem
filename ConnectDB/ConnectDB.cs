@@ -29,6 +29,7 @@ namespace Data
         public DbSet<InsertOutCash> InsertOutCash { get; set; }
         public DbSet<OpenCloseCash> OpenCloseCash { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<GoodsImage> GoodsImage { get; set; }
         private string path_connect;
         private string query_connect;
         public ConDB()
@@ -67,11 +68,12 @@ namespace Data
             modelBuilder.Entity<City>().HasData(new City[] { new City(1, "Алмата"), new City(2, "Астане"), new City(3, "Актау") });
             modelBuilder.Entity<Position>().HasData(new Position[] { new Position(1, "Администратор"), new Position(2, "Завсклад"), new Position(3, "Менеджер"), new Position(4, "Региональный менеджер") });
             modelBuilder.Entity<Employee>().HasData(new Employee[] { new Employee(1, "Администратор", "Admin", "Admin", 1, 1) });
-
             #endregion
             #region MarkModel
             modelBuilder.Entity<Mark>(b => b.ToTable("Mark"));
+            modelBuilder.Entity<Mark>().HasData(new Mark[] { new Mark(1, "") });
             modelBuilder.Entity<Model>(b => b.ToTable("Model"));
+            modelBuilder.Entity<Model>().HasData(new Model[] { new Model(1, "",1) });
             modelBuilder.Entity<Brand>(b => b.ToTable("Brand"));
             modelBuilder.Entity<Brand>().HasData(new Brand[] { new Brand(1,"") });
             #endregion
@@ -79,6 +81,7 @@ namespace Data
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
             modelBuilder.Entity<Goods>(b=>b.ToTable("Goods"));
+            modelBuilder.Entity<GoodsImage>(b=>b.ToTable("GoodsImage"));
             modelBuilder.Entity<Goods>().Ignore(p=>p.CountCell);
             modelBuilder.Entity<Goods>().Ignore(p=>p.PriceCell);
             modelBuilder.Entity<Goods>().Property(p => p.BrandId).HasDefaultValue(1);

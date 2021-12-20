@@ -53,7 +53,7 @@
                 <ColumnDefinition Width="2*"></ColumnDefinition>
                 <ColumnDefinition Width="3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
-            <Button Command="{Binding ElementName=MainControl, Path=DataContext.AddWarehous}" Grid.ColumnSpan="3" Width="150" CommandParameter="Virtual" Content="Добавить" Grid.Column="1"></Button>
+            <Button  Command="{Binding ElementName=MainControl, Path=DataContext.AddWarehous}" Grid.ColumnSpan="3" Width="150" CommandParameter="Virtual" Content="Добавить" Grid.Column="1"></Button>
         </Grid>
     </Grid>
 </Window>

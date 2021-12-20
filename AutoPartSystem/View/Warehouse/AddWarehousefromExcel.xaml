@@ -34,6 +34,9 @@
                         <DataTrigger Binding="{Binding ElementName=FileName, Path=Text}" Value="">
                             <Setter Property="IsEnabled" Value="False"></Setter>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding CityId}" Value="0">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Button.Style>

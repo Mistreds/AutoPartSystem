@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net5.0-windows8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <UseWPF>true</UseWPF>
     <Platforms>AnyCPU;x64</Platforms>
     <UseWindowsForms>True</UseWindowsForms>
     <StartupObject>AutoPartSystem.App</StartupObject>
-    <AssemblyVersion>0.0.1.1</AssemblyVersion>
+    <AssemblyVersion>0.0.1.5</AssemblyVersion>
     <SignAssembly>False</SignAssembly>
   </PropertyGroup>
 

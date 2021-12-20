@@ -26,6 +26,15 @@
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <ComboBox SelectedValue="{Binding FindInvoices.EmpId}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Сотрудник" wpf:HintAssist.IsFloating="True" Margin="30,0,0,0" Height="40" Width="400" SelectedIndex="0"  ItemsSource="{Binding  EmployersTable}" SelectedValuePath="Id">
+                <ComboBox.Style>
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding PosId}" Value="3">
+                                <Setter Property="Visibility" Value="Collapsed"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.Style>
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">

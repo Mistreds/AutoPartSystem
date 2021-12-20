@@ -28,11 +28,16 @@ namespace AutoPartSystem.View.Invoice
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            SaveToPNG(InvoiceGrid, new Size { Height = this.ActualHeight, Width = this.ActualWidth }, "test");
+            var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+            saveFileDialog1.Filter = "Excel (*.jpeg)|*.jpeg";
+            if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                return;
+            var newFile = new FileInfo(saveFileDialog1.FileName);
+            SaveToPNG(InvoiceGrid, new Size { Height = this.ActualHeight, Width = this.ActualWidth }, saveFileDialog1.FileName);
         }
         public  void SaveToPNG(FrameworkElement frameworkElement, Size size, string fileName)
         {
-            using (FileStream stream = new FileStream(string.Format("{0}.png", fileName), FileMode.Create))
+            using (FileStream stream = new FileStream(string.Format("{0}", fileName), FileMode.Create))
             {
                
                 SaveToPNG(frameworkElement, size, stream);

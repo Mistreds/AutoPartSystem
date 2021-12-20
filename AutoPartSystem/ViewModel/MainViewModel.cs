@@ -64,13 +64,21 @@ namespace AutoPartSystem.ViewModel
             get => _open_cash;
             set=>this.RaiseAndSetIfChanged(ref _open_cash, value);
         }
+        public static int CityId { get;private set; }
+        public static int PositId { get;private set; }
         public MainViewModel(Data.Employee employee)
         {
             main = this;
             
             Employee = employee;
             Employee2 = employee;
-            _markModel=new Model.MarkModel.MarkModel();
+            CityId=employee.CityId;
+            PositId = employee.PositionId;
+            if(PositId==4)
+            {
+                PositId = 3;
+            }
+            _markModel =new Model.MarkModel.MarkModel();
             AdminModel= new Model.Admin.AdminModel();
             AdminModel.GetNowCash(Employee.Cash);
             var open_cash = AdminModel.GetOpenCash(Employee.Id);
@@ -138,6 +146,10 @@ namespace AutoPartSystem.ViewModel
                     AdminViewModel.OpenPageCommand(page_id);
                     break;
                 case "OpenClientTable":
+                    MainControl = _controls[2];
+                    ClientViewModel.OpenPageCommand(page_id);
+                    break;
+                case "OpenAgentClientTable":
                     MainControl = _controls[2];
                     ClientViewModel.OpenPageCommand(page_id);
                     break;

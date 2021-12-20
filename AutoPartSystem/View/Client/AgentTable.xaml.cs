@@ -12,25 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-namespace AutoPartSystem
+
+namespace AutoPartSystem.View.Client
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для AgentTable.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class AgentTable : UserControl
     {
-        public MainWindow(Data.Employee employee)
+        public AgentTable()
         {
-
             InitializeComponent();
-            DataContext=new ViewModel.MainViewModel(employee);
-            this.Title = $"Сотружник {employee.Position.Name.ToLower() } {employee.Name } город {employee.City.Name}";
-            
-        }
-
-        private void Close_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
     }
 }

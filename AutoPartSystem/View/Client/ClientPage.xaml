@@ -15,8 +15,8 @@
             </Grid.RowDefinitions>
             <ToolBar>
             <Button Height="35" Command="{Binding OpenPage}" CommandParameter="NewClient" FontSize="12" Padding="0">Добавить нового клиента</Button>
-            <!--<Button FontSize="12" Margin="10,0,0,0" Padding="0">Добавить товар из эксель</Button>-->
-            </ToolBar>
+            <Button Height="35" Command="{Binding OpenPage}" Margin="10,0,0,0" CommandParameter="NewAgentClient" FontSize="12" Padding="0">Добавить нового контрагента</Button>
+        </ToolBar>
         <ContentControl Grid.Row="1" Content="{Binding MainControl }"></ContentControl>
         </Grid>
 </UserControl>
