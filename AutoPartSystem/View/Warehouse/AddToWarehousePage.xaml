@@ -24,14 +24,14 @@
         <StackPanel Grid.Row="1" Orientation="Horizontal">
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal" DataContext="{Binding ElementName=MainControl, Path=DataContext.Model}" >
-            <ComboBox  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"  Width="120" SelectedItem="{Binding Mark}" Height="40" wpf:BottomDashedLineAdorner.Brush="Aquamarine"   Text="{Binding MarkName, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"  ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Mark,Mode=OneWay}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True">
+            <ComboBox  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"  Width="120" SelectedItem="{Binding Mark}" Height="40" wpf:BottomDashedLineAdorner.Brush="Aquamarine"   Text="{Binding MarkName, UpdateSourceTrigger=PropertyChanged,ValidatesOnDataErrors=False, TargetNullValue=''}" x:Name="ComboBoxMark"    IsTextSearchEnabled="False" IsEditable="True"  ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Mark}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Марка" wpf:HintAssist.IsFloating="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding ElementName=MainControl, Path=DataContext.SelectModelFromMark}" CommandParameter="{Binding ElementName=ComboBoxMark, Path=SelectedValue}"/>
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </ComboBox>
-            <ComboBox  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown" Height="40" Width="120" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged,Mode=OneWayToSource}" ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Goods.Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"     wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True"></ComboBox>
+            <ComboBox  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown" Height="40" Width="120" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding ElementName=MainControl, Path=DataContext.Models}" x:Name="ComboBoxModel"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Goods.Model}" TextBoxBase.TextChanged="ComboBoxModel_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"     wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True"></ComboBox>
                     <Button Command="{Binding ElementName=MainControl,Path=DataContext.AddModelToWareTable}">+</Button>
                    
                 </StackPanel>
@@ -63,7 +63,6 @@
                 <ColumnDefinition Width="3*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Button Command="{Binding ElementName=MainControl, Path=DataContext.AddWarehous}" Content="Добавить" CommandParameter="Warehouse" Grid.Column="1"></Button>
-            <Button Content="Сбросить" Grid.Column="3"></Button>
         </Grid>
     </Grid>
 </Window>

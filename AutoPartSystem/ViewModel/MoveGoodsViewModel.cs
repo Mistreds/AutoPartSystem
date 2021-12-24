@@ -12,8 +12,8 @@ namespace AutoPartSystem.ViewModel
 {
     public class MoveGoodsViewModel : ReactiveObject
     {
-        private UserControl? _main_control;
-        public UserControl? MainControl
+        private UserControl _main_control;
+        public UserControl MainControl
         {
             get => _main_control;
             set => this.RaiseAndSetIfChanged(ref _main_control, value);
@@ -73,7 +73,7 @@ namespace AutoPartSystem.ViewModel
             get => city_id_2;
             set => this.RaiseAndSetIfChanged(ref city_id_2, value);
         }
-        private ObservableCollection<MarkModelFind>? _article_find;
+        private ObservableCollection<MarkModelFind> _article_find;
         public ObservableCollection<MarkModelFind> ArticleFind
         {
             get => _article_find;
@@ -114,6 +114,7 @@ namespace AutoPartSystem.ViewModel
             ArticleFind = WarehouseModel.GetAllArticle("");
             MainControl = _controls[0];
             IsReady = false;
+            this.WhenAnyValue(vm => vm.CityId2).WhereNotNull().Subscribe(_=>UpdateTrans());
         }
         #region WarehouseSortFilterCommand
         public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
@@ -319,6 +320,7 @@ namespace AutoPartSystem.ViewModel
             }
             IsReady = true;
             MainControl = _controls[1];
+            UpdateTrans();
         });
         public ReactiveCommand<Unit, Unit> BackMove => ReactiveCommand.Create(() => {
 
@@ -337,6 +339,13 @@ namespace AutoPartSystem.ViewModel
             ViewModel.MainViewModel.MoveGoodsModel.AddMainMove(MainMove);
             mainMove.Close();
         });
-        
+        private void UpdateTrans()
+        {
+            if (MoveGoods == null) return;
+            foreach (var mg in MoveGoods)
+            {
+                mg.UpdateAllTrans(CityId2);
+            }
+        }
     }
 }

@@ -42,7 +42,17 @@
         <ComboBox DisplayMemberPath="Name" SelectedValuePath="Id" SelectedItem="{Binding City}"  ItemsSource="{Binding Path=DataContext.Cities,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Город
                    " wpf:HintAssist.IsFloating="True" Grid.Row="2" Grid.Column="1"  Height="40"></ComboBox>
         <ComboBox SelectedItem="{Binding Mark}" ItemsSource="{Binding Path=DataContext.Mark,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"  wpf:HintAssist.HintOpacity="1" wpf:HintAssist.Hint="Марка" DisplayMemberPath="Name" wpf:HintAssist.IsFloating="True" Grid.Row="3" Grid.Column="1"  Height="40"></ComboBox>
-        <ComboBox  ItemsSource="{Binding Path=DataContext.Models,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" wpf:HintAssist.HintOpacity="1" SelectedValue="{Binding ModelId}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True" Grid.Row="3" Grid.Column="3"  Height="40"></ComboBox>
-        <Button Grid.Column="1" Command="{Binding Path=DataContext.AddClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" Grid.Row="4" Grid.ColumnSpan="3" Width="150">Добавить</Button>
+        <ComboBox  ItemsSource="{Binding Path=DataContext.Models,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" wpf:HintAssist.HintOpacity="1" SelectedItem="{Binding Model}" SelectedValue="{Binding ModelId}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.Hint="Модель" wpf:HintAssist.IsFloating="True" Grid.Row="3" Grid.Column="3"  Height="40"></ComboBox>
+        <Button Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="3" Width="150">Добавить
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatAccentBgButton}">
+                    <Setter Property="Command" Value="{Binding Path=DataContext.AddClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsAgent}" Value="true">
+                            <Setter Property="Command" Value="{Binding Path=DataContext.AddAgent,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style></Button>
     </Grid>
 </Window>

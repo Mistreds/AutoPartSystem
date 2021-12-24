@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace AutoPartSystem
 {
@@ -19,5 +20,19 @@ namespace AutoPartSystem
         //    }
         //    return counter;
         //}
+    }
+    public static class Setting
+    {
+        public static Visibility BoolToVisibility(bool vis)
+        {
+            if(vis)
+            {
+                return Visibility.Visible;
+            }
+            else
+            {
+               return Visibility.Collapsed;
+            }
+        }
     }
 }

@@ -110,7 +110,18 @@ namespace AutoPartSystem.ViewModel
             get => _is_article_find;
             set => this.RaiseAndSetIfChanged(ref _is_article_find, value);
         }
-
+        private bool _is_all_find;
+        public bool IsAllFind
+        {
+            get => _is_all_find;
+            set => this.RaiseAndSetIfChanged(ref _is_all_find, value);
+        }
+        private string _text_find_all;
+        public string TextFindAll
+        {
+            get => _text_find_all;
+            set => this.RaiseAndSetIfChanged(ref _text_find_all,value);
+        }
         private ObservableCollection<MarkModelFind>? _mark_model_find;
         public ObservableCollection<MarkModelFind> MarkModelFind
         {
@@ -133,9 +144,11 @@ namespace AutoPartSystem.ViewModel
         #endregion
         #endregion
         #region WarehouseViewModelInit
+        public Data.Employee Employee { get; set; }
         public int PosId { get;private set; }
         public WarehouseViewModel(Model.MarkModel.MarkModel markModel)
         {
+            Employee=MainViewModel.Employee;
             AddSale = ReactiveCommand.Create(() => {
                 WarehouseInvoceModel.SetWarehouse(new ObservableCollection<WarehouseTable>(WarehousesTable.Where(p => p.IsSelected == true).Select(p => ViewModel.WarehouseTable.NewTable(p,true)).ToList()));
 
@@ -151,7 +164,7 @@ namespace AutoPartSystem.ViewModel
             MainViewModel.WarehouseModel = new Model.Warehouse.WarehouseModel(this);
             WarehouseModel = MainViewModel.WarehouseModel;
             PosId = MainViewModel.PositId;
-            if (MainViewModel.PositId==3)
+            if (MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
                 WarehousesTable = WarehouseModel.GetAllWarehouseForSale();
             else
                 WarehousesTable = WarehouseModel.GetAllWarehouse();
@@ -160,10 +173,12 @@ namespace AutoPartSystem.ViewModel
             Model = new ModelAdd();
             TypePay=WarehouseModel.GetTypePay();
             this.WhenAnyValue(s => s.MarkModel.Model).Subscribe(_ => TestModel());
+            WarehouseModel.WhenAnyValue(s => s.Update).Subscribe(async _ => await UpdateWare());
         }
         private View.Warehouse.WarehouseWindows WarehouseWindows;
         public WarehouseViewModel(Data.Invoice Invoice, int type)
         {
+            Employee = MainViewModel.Employee;
             this._invoce= Invoice;
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.WarehouseTable(_invoce), new View.Warehouse.VirtualWarehouse(), new View.Warehouse.AddVirtualGoodToInvoice() };
             MainControl = _controls[type];
@@ -299,6 +314,8 @@ namespace AutoPartSystem.ViewModel
             }
             WarehouseModel.AddWarehouse(war);
             war = new WarehouseAdd();
+            Warehouse=new WarehouseAdd();
+            WarehouseVirtual = new WarehouseAdd();
         }
         private void NewWarehouseVirt(WarehouseAdd war)
         {
@@ -353,7 +370,7 @@ namespace AutoPartSystem.ViewModel
                         WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p => p.Goods.GoodsModel.Select(p=> $"{ p.Model.Mark.Name} {p.Model.Name}").FirstOrDefault()).ToList());
                         break;
                     case "ModelUp":
-                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.GoodsModel.Select(p => $"{ p.Model.Mark.Name} {p.Model.Name}")).ToList());
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.GoodsModel.Select(p => $"{ p.Model.Mark.Name} {p.Model.Name}").FirstOrDefault()).ToList());
                         break;
                     case "DescriptionDown":
                         WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p =>p.Goods.Description).ToList());
@@ -461,13 +478,16 @@ namespace AutoPartSystem.ViewModel
                     bools.IsSelected = false;
                 }
             }
-        private ReactiveCommand<Unit, Unit> _set_filter;
+            private ReactiveCommand<Unit, Unit> _set_filter;
             public ReactiveCommand<Unit, Unit> SetFilter
-        {
-            get => _set_filter;
-            set=>this.RaiseAndSetIfChanged(ref _set_filter, value);
-        }
-
+            {
+                get => _set_filter;
+                set=>this.RaiseAndSetIfChanged(ref _set_filter, value);
+            }
+        public ReactiveCommand<Unit, Unit> SetStringFilter=>ReactiveCommand.Create(() => { 
+            
+            WarehousesTable= WarehouseModel.GetWarehouseTextFilter(TextFindAll); });
+ 
         #endregion
         public ReactiveCommand<WarehouseTable, Unit> CreatePrihod => ReactiveCommand.Create<WarehouseTable>(CreatePrihodCommand);
         private void CreatePrihodCommand(WarehouseTable table)
@@ -484,7 +504,7 @@ namespace AutoPartSystem.ViewModel
         public void AddNewWarehouseWinOpenCommand()
         {
             View.Warehouse.AddToWarehousePage addToWarehousePage = new View.Warehouse.AddToWarehousePage();
-            
+            Warehouse = new WarehouseAdd();
             Mark = MarkModel.GetMark();
             AddModelToWareTable = ReactiveCommand.Create(() => { AddModelToWareCom(Warehouse); });
             addToWarehousePage.Show();
@@ -497,6 +517,7 @@ namespace AutoPartSystem.ViewModel
             AddModelToWareTable = ReactiveCommand.Create(() => { AddModelToWareCom(WarehouseVirtual); });
             addToWarehousePage.Show();
         }
+        public ReactiveCommand<Unit, Unit> SearchFind => ReactiveCommand.Create(() => { IsAllFind = true; });
         private void AddModelToWareCom(WarehouseAdd war)
         {
             
@@ -549,10 +570,18 @@ namespace AutoPartSystem.ViewModel
         {
             Console.WriteLine("Тип должна обновится модель тачки");
         }
+        private async Task UpdateWare()
+        {
+            await Task.Run(() => { Console.WriteLine("WorkSyka"); WarehousesTable = WarehouseModel.GetWarehouseUpdate(); });
+        }
         public ReactiveCommand<Unit, Unit> UpdateTable => ReactiveCommand.Create(UpdateTableCom);
         public void UpdateTableCom()
         {
-            WarehousesTable = WarehouseModel.GetAllWarehouse();
+            //WarehouseModel.UpdateAll();
+            if (MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
+                WarehousesTable = WarehouseModel.GetAllWarehouseForSale();
+            else
+                WarehousesTable = WarehouseModel.GetAllWarehouse();
         }
         public ReactiveCommand<WarehouseTable, Unit> SetWarePrice => ReactiveCommand.Create<WarehouseTable>(SetWarePriceCommand);
         public ReactiveCommand<Unit, Unit> OpenMovePage => ReactiveCommand.Create(() => {
@@ -579,6 +608,14 @@ namespace AutoPartSystem.ViewModel
             var CardCood = new View.Warehouse.CardGood(GoodCardViewModel, MarkModel);
             MainControl = CardCood;
         }
-            #endregion
+        public ReactiveCommand<WarehouseTable, Unit> OpenGoodCardVirtual => ReactiveCommand.Create<WarehouseTable>(OpenGoodCardCommandVirtual);
+        private void OpenGoodCardCommandVirtual(WarehouseTable warehouseTable)
+        {
+
+            var GoodCardViewModel = new ViewModel.Warehouse.GoodCardViewModel(WarehouseModel, MarkModel, WarehouseTable.NewTable(warehouseTable),true);
+            var CardCood = new View.Warehouse.CardGood(GoodCardViewModel, MarkModel);
+            MainControl = CardCood;
         }
+        #endregion
+    }
 }

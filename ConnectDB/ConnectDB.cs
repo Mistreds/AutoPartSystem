@@ -23,6 +23,7 @@ namespace Data
         public DbSet<Client> Clients { get; set; }
         public DbSet<GoodsModel> GoodModel { get; set; }
         public DbSet<MainMove> MainMove { get; set; }
+        public DbSet<MoveGoods> MoveGoods{ get; set; }
         public DbSet<TypePay> TypePay { get; set; }
         public DbSet<MarzhEmployee> MarzhEmployee { get; set; }
         public DbSet<CashDay> CashDay { get; set; }
@@ -30,25 +31,27 @@ namespace Data
         public DbSet<OpenCloseCash> OpenCloseCash { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<GoodsImage> GoodsImage { get; set; }
-        private string path_connect;
-        private string query_connect;
+        private static string path_connect;
+        private static string query_connect;
+
         public ConDB()
         {
-
-            path_connect = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AutoPartSystem\connect.ini";
-            if (File.Exists(path_connect))
-            {
-                using (FileStream fstream = new FileStream(path_connect, FileMode.OpenOrCreate))
+            if(string.IsNullOrEmpty(path_connect))
+                path_connect = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AutoPartSystem\connect.ini";
+            if(string.IsNullOrEmpty(query_connect))
+                if (File.Exists(path_connect))
                 {
-                    byte[] array = new byte[fstream.Length];
-                    // считываем данные
-                    fstream.Read(array, 0, array.Length);
-                    // декодируем байты в строку
-                    query_connect = Encoding.Default.GetString(array);
-                    //Database.EnsureDeleted();
-                    Database.EnsureCreated();
+                    using (FileStream fstream = new FileStream(path_connect, FileMode.Open))
+                    {
+                        byte[] array = new byte[fstream.Length];
+                        // считываем данные
+                        fstream.Read(array, 0, array.Length);
+                        // декодируем байты в строку
+                        query_connect = Encoding.Default.GetString(array);
+                        //Database.EnsureDeleted();
+                        Database.EnsureCreated();
+                    }
                 }
-            }
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

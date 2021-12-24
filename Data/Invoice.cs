@@ -62,8 +62,8 @@ namespace Data
                 this.RaiseAndSetIfChanged(ref all_count, value);
             }
         }
-        private double all_price;
-        public double AllPrice
+        private int all_price;
+        public int AllPrice
         {
             get => all_price;
             private set
@@ -71,14 +71,14 @@ namespace Data
                 this.RaiseAndSetIfChanged(ref all_price, value);
             }
         }
-        private double _all_input_price;
-        public double AllInputPrice
+        private int _all_input_price;
+        public int AllInputPrice
         {
             get => _all_input_price;
             set => this.RaiseAndSetIfChanged(ref _all_input_price, value);
         }
-        private double _all_marz;
-        public double AllMarz
+        private int _all_marz;
+        public int AllMarz
         {
             get => _all_marz;
             set => this.RaiseAndSetIfChanged(ref _all_marz, value);
@@ -142,6 +142,7 @@ namespace Data
                 this.Client = inv.Client;
             }
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p)));
+            this.IsAgent=inv.IsAgent;
         }
         private void test()
         {
@@ -187,9 +188,20 @@ namespace Data
             this.AllPrice = inv.AllPrice;
             this.AllInputPrice= inv.AllInputPrice;
             this.AllMarz = inv.AllMarz;
+            this.IsAgent = inv.IsAgent;
+            this.IsDelMarzh= inv.IsDelMarzh;
+           
             this.GoodsInvoice = new ObservableCollection<GoodsInvoice>(inv.GoodsInvoice.Select(p => new Data.GoodsInvoice(p, inv.Id)));
+            foreach (var s in GoodsInvoice)
+            {
+                s.WhenAnyValue(s => s.AllPrice).Subscribe(_ => SetAllCountAndAllPrice());
+                s.WhenAnyValue(s => s.Count).Subscribe(_ => SetAllCountAndAllPrice());
+            }
+            this.WhenAnyValue(s => s.GoodsInvoice.Count).Subscribe(_ => test());
+            this.WhenAnyValue(s => s.IsDelMarzh).Subscribe(_ => SetAllCountAndAllPrice());
+            test();
 
-         
+
         }
         public Invoice(ObservableCollection<Warehouse> warehouses, Employee employee)
         {
@@ -228,13 +240,13 @@ namespace Data
         }
         public GoodsInvoice()
         { }
-        private double _all_trans;
-        public double AllTrans
+        private int _all_trans;
+        public int AllTrans
         {
             get => _all_trans;
             set=>this.RaiseAndSetIfChanged(ref _all_trans, value);
         }
-        private double trans;
+        private int trans;
         public GoodsInvoice(GoodsInvoice goodsInvoice, int invoice_id)
         {
 
@@ -251,6 +263,7 @@ namespace Data
             this.InputPrice = goodsInvoice.InputPrice;
             this.AllTrans = goodsInvoice.AllTrans;
             this.Marz = goodsInvoice.Marz;
+            this.TypePayId = goodsInvoice.TypePayId;
             this.WhenAnyValue(vm => vm.Goods.PriceCell).Subscribe(_ => UpdatePrice());
             this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdatePrice());
             this.WhenAnyValue(vm => vm.Count).Subscribe(_ => UpdateTrans());
@@ -284,7 +297,7 @@ namespace Data
             UpdateInput();
             UpdateMarz();
         }
-        public void UpdateTrans(double trans)
+        public void UpdateTrans(int trans)
         {
             this.trans = trans;
             UpdateTrans();
@@ -348,14 +361,14 @@ namespace Data
                 this.RaiseAndSetIfChanged(ref _goods_id, value);
             }
         }
-        private double _price;
-        public double Price
+        private int _price;
+        public int Price
         {
             get => _price;
             set => this.RaiseAndSetIfChanged(ref this._price, value);
         }
-        private double _all_price;
-        public double AllPrice
+        private int _all_price;
+        public int AllPrice
         {
             get => _all_price;
             private set
@@ -392,21 +405,21 @@ namespace Data
             }
         }
 
-        private double _input_price;
-        public double InputPrice
+        private int _input_price;
+        public int InputPrice
         {
             get => _input_price;
             set => this.RaiseAndSetIfChanged(ref _input_price, value);
         }
-        private double _marz;
-        public double Marz
+        private int _marz;
+        public int Marz
         {
             get => _marz;
             set => this.RaiseAndSetIfChanged(ref _marz, value);
         }
-        private double _recom_price;
+        private int _recom_price;
 
-        public double RecomPrice
+        public int RecomPrice
         {
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
@@ -491,10 +504,28 @@ namespace Data
             this.CityId = p.CityId;
             this.City = p.City;
             this.Name = p.Name;
-            this.Model = p.Model;
-            this.Mark = p.Model.Mark;
-            MarkId = p.Model.MarkId;
+            if(p.MarkId==0)
+            {
+                this.Model = p.Model;
+                this.Mark = p.Model.Mark;
+                MarkId = p.Model.MarkId;
+            }
+            else
+            {
+                this.ModelId = p.ModelId;
+                this.Model = null;
+            }
+            
+        }
+        public Client(Client p, bool te)
+        {
+            this.Id = p.Id;
+            this.PhoneName = p.PhoneName;
+            this.CityId = p.CityId;
+            this.City = p.City;
+            this.Name = p.Name;
             this.ModelId = p.ModelId;
+            this.IsAgent = te;
         }
         public Client (int model_id)
         {
@@ -524,8 +555,8 @@ namespace Data
             get => _id;
             set=>this.RaiseAndSetIfChanged(ref _id, value);
         }
-        private double _marz;
-        public double Marz
+        private int _marz;
+        public int Marz
         {
             get => _marz;
             set=>this.RaiseAndSetIfChanged(ref _marz, value);
@@ -556,7 +587,7 @@ namespace Data
             set => this.RaiseAndSetIfChanged(ref _invoice_id, value);
         }
         public MarzhEmployee() { }
-        public MarzhEmployee(double Marzh, int InvioceId, int EmployeeId)
+        public MarzhEmployee(int Marzh, int InvioceId, int EmployeeId)
         {
             this.Marz = Marzh;
             this.InvoiceId = InvioceId;

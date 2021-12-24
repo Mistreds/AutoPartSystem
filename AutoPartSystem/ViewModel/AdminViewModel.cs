@@ -154,6 +154,16 @@ namespace AutoPartSystem.ViewModel
                     break;
             }
         }
+        public ReactiveCommand<Unit, Unit> UpdateEmployee => ReactiveCommand.Create(() => {
+            AdminModel.UpdateEmployee(EmployersTable);
+        });
+        public ReactiveCommand<Data.Employee, Unit> DeleteEmployee => ReactiveCommand.Create<Data.Employee>(AdminModel.DeleteEmployee);
+        public ReactiveCommand<Data.Employee, Unit> UpdatePas => ReactiveCommand.Create<Data.Employee>(UpdatePassword);
+        private void UpdatePassword(Data.Employee employee)
+        {
+            View.Admin.SetPassword setPassword=new View.Admin.SetPassword(employee);
+            setPassword.Show();
+        }
         public ReactiveCommand<Unit,Unit> AddOrTable => ReactiveCommand.Create(() => { IsAdd = !IsAdd; });
         public ReactiveCommand<string, Unit> AddMarkCommand => ReactiveCommand.Create<string>(AddMark);
         private void AddMark(string name)

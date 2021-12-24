@@ -10,6 +10,7 @@ using ReactiveUI;
 using System.IO;
 using OfficeOpenXml.Style;
 using System.Windows.Controls;
+using System.Windows;
 
 namespace AutoPartSystem.ViewModel
 {
@@ -61,16 +62,12 @@ namespace AutoPartSystem.ViewModel
             get => _is_new_client;
             set
             {
-               
-                
-                Client=new Data.Client();
-                Mark = MarkModel.GetMark();
-                Invoice.Client = new Data.Client();
-                Client.new_mark_model();
-                Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+
+                //InitNewAgentCommand();
                 this.RaiseAndSetIfChanged(ref _is_new_client, value);
             }
         }
+        private ReactiveCommand<Unit, Unit> InitNewAgent;
         private Data.Client _client;
         public Data.Client Client
         {
@@ -89,13 +86,42 @@ namespace AutoPartSystem.ViewModel
             get => _emp_id;
             set=>this.RaiseAndSetIfChanged(ref _emp_id , value);
         }
+        private string _city_name;
+        public string CityName
+        {
+            get => _city_name;
+            set=>this.RaiseAndSetIfChanged(ref _city_name , value);
+        }
+        private bool _is_not_new_client;
+        public bool IsNotNewClient
+        {
+            get => _is_not_new_client;
+            set=>this.RaiseAndSetIfChanged(ref _is_not_new_client, value);
+        }
+        delegate void InitNewAgentCommandDelegate();
+        InitNewAgentCommandDelegate InitNewAgentCommand;
         public InvoiceWinViewModel(Model.Warehouse.WarehouseInvoceModel WarehouseInvoceModel, Model.MarkModel.MarkModel MarkModel)
         {
-            SelectNewClient= ReactiveCommand.Create(() => {
+            BackInvoice = ReactiveCommand.Create(() => {
+                MainControl = CreateInvoice;
+            });
+            SelectNewClient = ReactiveCommand.Create(() => {
 
                    ClientViewModel clientView = new ClientViewModel(Invoice);
 
                });
+            InitNewAgentCommand =delegate() {
+                Client = new Data.Client();
+                CityName = "";
+                Mark = MarkModel.GetMark();
+                Invoice.Client = new Data.Client();
+                Client.new_mark_model();
+                Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+            };
+            Client = new Data.Client();
+            CityName = "";
+            Action action = new Action(InitNewAgentCommand);
+            InitNewAgent = ReactiveCommand.Create(action);
             this.WarehouseInvoceModel = WarehouseInvoceModel;
             Employees = MainViewModel.AdminModel.GetEmployeeMeneger(MainViewModel.Employee.Id);
             this.MarkModel = MarkModel;
@@ -110,6 +136,20 @@ namespace AutoPartSystem.ViewModel
              {
                  if (IsNewClient)
                  {
+                     if (!string.IsNullOrEmpty(Client.PhoneName) && !string.IsNullOrEmpty(Client.Name) && !string.IsNullOrEmpty(CityName) && (Invoice.IsAgent == true || Client.ModelId != 0))
+                     {
+                         IsNotNewClient = true;
+
+                     }
+                     else
+                     {
+                         IsNotNewClient = false;
+                         if (Invoice.IsAgent == true)
+                         {
+                             MessageBox.Show("Не введены данные нового клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                             return;
+                         }
+                     }
                      MainViewModel.ClientModel.AddClient(Client);
                  }
                  if(Invoice.IsDelMarzh)
@@ -117,10 +157,7 @@ namespace AutoPartSystem.ViewModel
                  else
                     WarehouseInvoceModel.AddInvoiceToDataBase(Invoice);
              });
-            foreach(var ss in WarehouseInvoceModel.GetWarehouse())
-            {
-                Console.WriteLine("asdata "+ss.Goods.TypePayId);
-            }
+            
             Invoice = new Data.Invoice(new ObservableCollection<Data.Warehouse>(WarehouseInvoceModel.GetWarehouse()),MainViewModel.Employee);
             try
             {
@@ -128,34 +165,74 @@ namespace AutoPartSystem.ViewModel
                 this.WhenAnyValue(vm => vm.Invoice.Client.MarkId).WhereNotNull().Subscribe(x => UpdateModels(x));
             }
             catch { }
-            View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
+            invoiceGood = new View.Warehouse.InvoiceGood(this);
             TypePay = MainViewModel.WarehouseModel.GetTypePay();
             invoiceGood.Show();      
         }
         public InvoiceWinViewModel(ObservableCollection<WarehouseTable> warehouseTables,bool isagent)
         {
+            SelectNewClient = ReactiveCommand.Create(() => {
+
+                ClientViewModel clientView = new ClientViewModel(Invoice,true);
+
+            });
+            BackInvoice = ReactiveCommand.Create(() => {
+                MainControl = AgentInvoice;
+            });
+            InitNewAgentCommand = delegate ()
+            {
+                Console.WriteLine("sdadas");
+                Client = new Data.Client(1);
+                CityName = "";
+                Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+            };
+            Client = new Data.Client(1);
+            CityName = "";
             this.WarehouseInvoceModel = new Model.Warehouse.WarehouseInvoceModel();
             WarehouseInvoceModel.SetWarehouse(warehouseTables);
             Employees = MainViewModel.AdminModel.GetEmployeeMeneger(MainViewModel.Employee.Id);
-            Client = new Data.Client(1);
             AgentInvoice = new View.Invoice.AgentInvoice(this);
             InvoiceTable = new View.Invoice.InvoceTable();
             MainControl = AgentInvoice;
             Cities = MainViewModel.AdminModel.GetCitiesFromText("");
             CreateInvoiceBase = ReactiveCommand.Create(() =>
             {
-               
+                if (IsNewClient)
+                {
+                    if (!string.IsNullOrEmpty(Client.PhoneName) && !string.IsNullOrEmpty(Client.Name) && !string.IsNullOrEmpty(CityName) && (Invoice.IsAgent == true || Client.ModelId != 0))
+                    {
+                        IsNotNewClient = true;
+                        
+                    }
+                    else
+                    {
+                        IsNotNewClient = false;
+                        if (Invoice.IsAgent == true)
+                        {
+                            MessageBox.Show("Не введены данные нового клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+                    var city = MainViewModel.AdminModel.GetCityFromName(CityName);
+                    if (city == null)
+                    {
+                        city = new Data.City { Name = CityName };
+                    }
+                    Client.IsAgent = true;
+                    Client.City = city;
+                    Invoice.Client = Client;
+                    CityName = Client.City.Name;
+                }
+                invoice.IsAgent = false;
+                invoice.IsInvoice = true;
+                WarehouseInvoceModel.UpdateInvoice(Invoice);
             });
-         
             Invoice = new Data.Invoice(new ObservableCollection<Data.Warehouse>(WarehouseInvoceModel.GetWarehouse()), MainViewModel.Employee);
-            View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
+            Invoice.IsAgent = true;
+            invoiceGood = new View.Warehouse.InvoiceGood(this);
             TypePay = MainViewModel.WarehouseModel.GetTypePay();
             invoiceGood.Show();
-        }
-        public ReactiveCommand<Unit, Unit> UpdateBooking => ReactiveCommand.Create(() => {
-            
-        
-        });
+        } 
         public InvoiceWinViewModel(Data.Invoice invoice)
         {
             SelectNewClient = ReactiveCommand.Create(() => {
@@ -163,16 +240,60 @@ namespace AutoPartSystem.ViewModel
                 ClientViewModel clientView = new ClientViewModel(Invoice);
 
             });
+            BackInvoice = ReactiveCommand.Create(() => {
+                MainControl = CreateInvoice;
+            });
+            InitNewAgentCommand = delegate ()
+            {
+                Client = new Data.Client();
+                CityName = "";
+                Mark = MarkModel.GetMark();
+                Invoice.Client = new Data.Client();
+                Client.new_mark_model();
+                Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+            }; 
+            CityName = "";
+            Client = new Data.Client();
+            InitNewAgent.WhenAnyValue(vm => this.IsNewClient).Subscribe();
             IsEdit = true;
             Invoice = invoice;
             IsInvoice = Invoice.IsInvoice;
             this.WarehouseInvoceModel = new Model.Warehouse.WarehouseInvoceModel();
             this.MarkModel = MainViewModel._markModel;
-            CreateInvoiceBase = ReactiveCommand.Create(() =>
-             {
-                 
-                 WarehouseInvoceModel.UpdateInvoice(Invoice);
-             });
+            if(IsInvoice && MainViewModel.PositId==1)
+            {
+                CreateInvoiceBase = ReactiveCommand.Create(() =>
+                {
+                    if (MessageBox.Show("После возврата товаров, удалить накладную из базы?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    {
+                        WarehouseInvoceModel.ReturnInvoice(Invoice,true); ;
+                        
+                    }
+                    else
+                    {
+                        WarehouseInvoceModel.ReturnInvoice(Invoice,false);
+                    }
+                    MessageBox.Show("Товары возвращены на склад", "Успех");
+                    invoiceGood.Close();
+                });
+            }
+            else
+            {
+                CreateInvoiceBase = ReactiveCommand.Create(() =>
+                {
+                    if (IsNewClient && !string.IsNullOrEmpty(Client.PhoneName) && !string.IsNullOrEmpty(Client.Name) && !string.IsNullOrEmpty(CityName) && (Invoice.IsAgent == true || Client.ModelId != 0))
+                    {
+                        IsNotNewClient = true;
+                        if (Invoice.IsAgent == true)
+                        {
+                            MessageBox.Show("Не введены данные нового клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+                    WarehouseInvoceModel.UpdateInvoice(Invoice);
+                });
+            }
+            
             try
             {
                 this.WhenAnyValue(vm => vm.Invoice.Client.Model.MarkId).WhereNotNull().Subscribe(x => UpdateModels(x));
@@ -181,8 +302,70 @@ namespace AutoPartSystem.ViewModel
             CreateInvoice = new View.Invoice.CreateInvoice(this);
             InvoiceTable = new View.Invoice.InvoceTable();
             MainControl = InvoiceTable;
-            View.Warehouse.InvoiceGood invoiceGood = new View.Warehouse.InvoiceGood(this);
+            invoiceGood = new View.Warehouse.InvoiceGood(this);
             //this.WhenAnyValue(vm =>ViewModel.MainViewModel.AdminModel.Cities.Count).Subscribe(x=> UpdateCity());
+            invoiceGood.Show();
+        }
+        private View.Warehouse.InvoiceGood invoiceGood;
+        public InvoiceWinViewModel(Data.Invoice invoice, bool IsAgent)
+        {
+            BackInvoice = ReactiveCommand.Create(() => {
+                MainControl = AgentInvoice;
+            });
+            Invoice = invoice;
+            SelectNewClient = ReactiveCommand.Create(() => {
+
+                ClientViewModel clientView = new ClientViewModel(Invoice, true);
+
+            });
+            InitNewAgentCommand = delegate ()
+            {
+                Client = new Data.Client(1);
+                CityName = "";
+                Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+            }; CityName = "";
+            Client = new Data.Client(1);
+            this.WarehouseInvoceModel = new Model.Warehouse.WarehouseInvoceModel();
+            Employees = MainViewModel.AdminModel.GetEmployeeMeneger(MainViewModel.Employee.Id);
+            AgentInvoice = new View.Invoice.AgentInvoice(this);
+            InvoiceTable = new View.Invoice.InvoceTable();
+            MainControl = AgentInvoice;
+            Cities = MainViewModel.AdminModel.GetCitiesFromText("");
+            CreateInvoiceBase = ReactiveCommand.Create(() =>
+            {
+                if (IsNewClient)
+                {
+                    if (!string.IsNullOrEmpty(Client.PhoneName) && !string.IsNullOrEmpty(Client.Name) && !string.IsNullOrEmpty(CityName))
+                    {
+                        IsNotNewClient = true;
+
+                    }
+                    else
+                    {
+                        IsNotNewClient = false;
+                        if (Invoice.IsAgent == true)
+                        {
+                            MessageBox.Show("Не введены данные нового клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                            return;
+                        }
+                    }
+                    var city = MainViewModel.AdminModel.GetCityFromName(CityName);
+                    if (city == null)
+                    {
+                        city = new Data.City { Name = CityName };
+                    }
+                    Client.IsAgent = true;
+                    Client.City = city;
+                    Invoice.Client = Client;
+                    CityName = Client.City.Name;
+                }
+                invoice.IsAgent=false;
+                invoice.IsInvoice = true;
+                WarehouseInvoceModel.UpdateInvoice(Invoice);
+            });
+            invoiceGood = new View.Warehouse.InvoiceGood(this);
+            TypePay = MainViewModel.WarehouseModel.GetTypePay();
+            IsEdit = true;
             invoiceGood.Show();
         }
         private void UpdateCity()
@@ -194,6 +377,52 @@ namespace AutoPartSystem.ViewModel
             
             Models=MarkModel.GetModelFromMarkId(mark_id);
         }
+        public ReactiveCommand<Data.GoodsInvoice, Unit> DeleteGoodInvoice => ReactiveCommand.Create<Data.GoodsInvoice>(DeleteGoodInvoiceCom);
+        private void DeleteGoodInvoiceCom(Data.GoodsInvoice goodsInvoice)
+        {
+            invoice.GoodsInvoice.Remove(goodsInvoice);
+            WarehouseInvoceModel.RemoveGoodInvoice(goodsInvoice);
+            if (invoice.GoodsInvoice.Count==0)
+            {
+                if (MessageBox.Show("В заявке не осталось товаров, удалить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+                {
+                    WarehouseInvoceModel.RemoveInvoce(Invoice);
+                    invoiceGood.Close();   
+                }
+            }
+        }
+        public ReactiveCommand<Unit, Unit> UpdateBooking => ReactiveCommand.Create(() => {
+
+            if (IsNewClient)
+            {
+                
+                if (!string.IsNullOrEmpty(Client.PhoneName) && !string.IsNullOrEmpty(Client.Name) && !string.IsNullOrEmpty(CityName))
+                {
+                    IsNotNewClient = true;
+
+                }
+                else
+                {
+                    IsNotNewClient = false;
+                    if (Invoice.IsAgent == true)
+                    {
+                        MessageBox.Show("Не введены данные нового клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+                var city = MainViewModel.AdminModel.GetCityFromName(CityName);
+                if (city == null)
+                {
+                    city = new Data.City { Name = CityName };
+                }
+                Client.City = city;
+                Client.IsAgent = true;
+                Invoice.Client = Client;
+                CityName= Client.City.Name;
+               
+            }
+            WarehouseInvoceModel.AddBookingToDatabase(Invoice);
+        });
         private void UpdateModelsNew(int mark_id)
         {
 
@@ -206,13 +435,27 @@ namespace AutoPartSystem.ViewModel
         {
             if(IsNewClient)
             {
-                var city=MainViewModel.AdminModel.GetCityFromName(Client.CityName);
+                if (!string.IsNullOrEmpty(Client.PhoneName) && !string.IsNullOrEmpty(Client.Name) && !string.IsNullOrEmpty(CityName) && (Invoice.IsAgent==true || Client.ModelId!=0) )
+                {
+                    IsNotNewClient = true;
+                    if(Invoice.IsAgent==true)
+                    {
+                        MessageBox.Show("Не введены данные нового клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+                else
+                {
+                    IsNotNewClient=false;
+                }
+                    var city=MainViewModel.AdminModel.GetCityFromName(CityName);
                 if(city==null)
                 {
-                    city = new Data.City { Name = Client.CityName };
+                    city = new Data.City { Name = CityName };
                 }
                 Client.City=city;
                 Invoice.Client = Client;
+                CityName = Client.City.Name;
             }
             if(inv_com=="Invoice")
             {
@@ -224,10 +467,7 @@ namespace AutoPartSystem.ViewModel
             }
             MainControl = InvoiceTable;
         }
-        public ReactiveCommand<Unit, Unit> BackInvoice => ReactiveCommand.Create(() => {
-            MainControl=CreateInvoice;
-        
-        });
+        public ReactiveCommand<Unit, Unit> BackInvoice { get; set; }
         private ReactiveCommand<Unit, Unit> _create_invoice_base;
         public ReactiveCommand<Unit, Unit> CreateInvoiceBase
         {

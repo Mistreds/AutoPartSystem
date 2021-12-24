@@ -25,7 +25,7 @@
             <TextBlock VerticalAlignment="Center" Text="Выбрать клиента"></TextBlock>
             <ToggleButton x:Name="NewOldClient" IsChecked="{Binding Path=DataContext.IsNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></ToggleButton>
             <TextBlock VerticalAlignment="Center" Text="Создать нового"></TextBlock>
-            <Button Margin="45,0,0,0" Command="{Binding Path=DataContext.SelectNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"   Content="Выбрать клиента" Cursor="Hand" Background="#00000000">
+            <Button Margin="45,0,0,0" Command="{Binding Path=DataContext.SelectNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"   Content="Выбрать контрагента" Cursor="Hand" Background="#00000000">
                 <Button.Style>
                     <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignOutlinedButton}">
                         <Style.Triggers>
@@ -72,13 +72,12 @@
             <TextBox  Height="30" Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="0" Text="{Binding PhoneName}"></TextBox>
          
             <TextBlock Margin="10,0,0,0" FontSize="17" Grid.Column="0"  Grid.Row="1"><Run Text="Город:" ></Run></TextBlock>
-            <ComboBox  Grid.ColumnSpan="2"   KeyDown="ComboBoxMark_KeyDown"   x:Name="ComboBoxMark"  ItemsSource="{Binding Path=DataContext.Cities,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  Grid.Row="1" Grid.Column="1">
+            <ComboBox  Grid.ColumnSpan="2" Text="{Binding DataContext.CityName,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"   KeyDown="ComboBoxMark_KeyDown"   x:Name="ComboBoxMark"  ItemsSource="{Binding Path=DataContext.Cities,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  TextBoxBase.TextChanged="ComboBoxMark_TextChanged" SelectedValuePath="Id" DisplayMemberPath="Name"  Grid.Row="1" Grid.Column="1">
                 <ComboBox.Style >
                     <Style TargetType="ComboBox" BasedOn="{StaticResource MaterialDesignComboBox}">
-
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding Path=DataContext.IsNewClient, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="True">
-                                <Setter Property="Text" Value="{Binding DataContext.Client.CityName,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></Setter>
+                                <Setter Property="Text" Value="{Binding DataContext.CityName, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></Setter>
                                 <Setter Property="IsTextSearchEnabled" Value="False"></Setter>
                                 <Setter Property="IsEditable" Value="True"></Setter>
                             </DataTrigger>
@@ -119,10 +118,25 @@
                 <DataGridTextColumn Header="Общая сумма" IsReadOnly="True"  Binding="{Binding AllPrice, Mode=OneWay}"></DataGridTextColumn>
                 <DataGridTextColumn Header="Маржа" IsReadOnly="True"  Binding="{Binding Marz, Mode=OneWay}"></DataGridTextColumn>
             </DataGrid.Columns>
+            <DataGrid.Resources>
+                <ContextMenu x:Key="Menu">
+                    <MenuItem Header="Удалить"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.DeleteGoodInvoice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                    <Setter Property="ContextMenu" Value="{StaticResource Menu}"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DontHaveGoods}" Value="True">
+                            <Setter Property="Background" Value="Red"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
         </DataGrid>
       
         <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="3">
-            <TextBlock Margin="50,0,0,0"  > <Run Text="Всего отпущено "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run> <Run Text=" наименования"></Run></TextBlock>
+            <TextBlock Margin="50,0,0,0"  > <Run Text="Всего будет забронированно "></Run><Run Text="{Binding AllCount, Mode=OneWay}"></Run> <Run Text=" наименования"></Run></TextBlock>
             <TextBlock   Margin="10,0,0,0"> <Run Text="на сумму "></Run><Run Text="{Binding AllPrice, Mode=OneWay}"></Run> <Run Text=" тенге"></Run></TextBlock>
             <TextBlock   Margin="10,0,0,0"> <Run Text="общие расходы "></Run><Run Text="{Binding AllInputPrice, Mode=OneWay}"></Run> <Run Text=" тенге"></Run></TextBlock>
             <TextBlock   Margin="10,0,0,0"> <Run Text="общая маржа "></Run><Run Text="{Binding AllMarz, Mode=OneWay}"></Run> <Run Text=" тенге"></Run></TextBlock>
@@ -136,8 +150,42 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Button  Grid.Column="1" CommandParameter="Invoice" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  HorizontalAlignment="Center" Width="200" >Создать накладную</Button>
-            <Button  Grid.Column="3" CommandParameter="Commercial" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" HorizontalAlignment="Center" Width="200" >Сохранить бронь</Button>
+            <Button  Grid.Column="1" CommandParameter="Invoice" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  HorizontalAlignment="Center" Width="200" >Создать накладную
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignFlatAccentBgButton}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Id}" Value="0">
+                                <Setter Property="IsEnabled" Value="False"></Setter>
+                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Path=DataContext.IsNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False"></Condition>
+                                    <Condition Binding="{Binding Client.Id }" Value="0"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style></Button>
+            <Button  Grid.Column="3"  Command="{Binding Path=DataContext.UpdateBooking ,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" HorizontalAlignment="Center" Width="200" >Сохранить бронь
+                <Button.Style>
+                    <Style TargetType="Button" BasedOn="{StaticResource  MaterialDesignFlatAccentBgButton}">
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Path=DataContext.IsNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False"></Condition>
+                                    <Condition Binding="{Binding Client.Id }" Value="0"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
 
     </Grid>

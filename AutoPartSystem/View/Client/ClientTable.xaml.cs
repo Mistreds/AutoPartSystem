@@ -32,11 +32,11 @@ namespace AutoPartSystem.View.Client
             this.clientWindow = clientWindow;
             this.Invoice = Invoice;
             clientTable.IsReadOnly = true;
-            clientTable.MouseDoubleClick += ClientTable_MouseDoubleClick;
+            clientTable.MouseDoubleClick += ClientTable_MouseintClick;
             
         }
 
-        private void ClientTable_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void ClientTable_MouseintClick(object sender, MouseButtonEventArgs e)
         {
             Data.Client? client = clientTable.SelectedItem as Data.Client;
             if(client!=null)

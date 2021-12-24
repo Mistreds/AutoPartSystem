@@ -56,6 +56,41 @@ namespace AutoPartSystem.Converted
             throw new InvalidOperationException("IsNullConverter can only be used OneWay.");
         }
     }
+    public partial class IntToSpace: IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var nfi = new NumberFormatInfo();
+            nfi.NumberGroupSeparator = " "; // set the group separator to a space
+           
+            int d = (int)value;
+            return d.ToString("N0", nfi);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new InvalidOperationException("IsNullConverter can only be used OneWay.");
+        }
+    }
+    public class MultiConverterIntString : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+
+        {
+
+            return System.Convert.ToInt32(values[0]) * System.Convert.ToInt32(values[1]);
 
 
+        }
+
+
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+
+        {
+
+            throw new NotImplementedException();
+
+        }
+    }
 }

@@ -159,6 +159,7 @@ namespace AutoPartSystem.ViewModel.Warehouse
         public int PosId { get; private set; }
         public GoodCardViewModel(Model.Warehouse.WarehouseModel WarehouseModel, Model.MarkModel.MarkModel MarkModel, Data.Warehouse Warehouse)
         {
+            Back = ReactiveCommand.Create(() => { Console.Write("123"); MainViewModel.WarehouseViewModel.OpenPageCommand("ZavSkladTable"); });
             PosId = MainViewModel.PositId;
             _warehouse_stock = WarehouseTable.NewTable(Warehouse as WarehouseTable);
             this.Warehouse = Warehouse;
@@ -184,6 +185,41 @@ namespace AutoPartSystem.ViewModel.Warehouse
             Mark1 = new Data.Mark();
 
             BrandName = Warehouse.Goods.Brand.Name;
+
+            MarkList = MarkModel.GetMark();
+            Brands = MarkModel.GetBrand();
+
+            this.WarehouseModel = WarehouseModel;
+            this.MarkModel = MarkModel;
+            GoodsImage = WarehouseModel.GetGoodImage(Warehouse.Goods.Id);
+
+        }
+        public GoodCardViewModel(Model.Warehouse.WarehouseModel WarehouseModel, Model.MarkModel.MarkModel MarkModel, Data.Warehouse Warehouse,bool isvirtual)
+        {
+            Back = ReactiveCommand.Create(() => { MainViewModel.WarehouseViewModel.OpenPageCommand("VirtualSkladTable"); });
+            PosId = MainViewModel.PositId;
+            _warehouse_stock = WarehouseTable.NewTable(Warehouse as WarehouseTable);
+            this.Warehouse = Warehouse;
+            Console.WriteLine(Warehouse.Goods.GoodsModel.Count);
+            var model = Warehouse.Goods.GoodsModel.FirstOrDefault();
+            GoodsModel = new ObservableCollection<Data.GoodsModel>(Warehouse.Goods.GoodsModel.ToList());
+            GoodsModel.Remove(model);
+            if (model != null)
+            {
+                ModelName = model.Model.Name;
+                MarkName = model.Model.Mark.Name;
+                Model = new Data.Model(model.Model.Id, model.Model.Name, model.Model.MarkId, model.Model.Mark);
+
+                Mark = model.Model.Mark;
+                Models = MarkModel.GetModelFromMarkId(Mark.Id);
+            }
+            else
+            {
+                Model = new Data.Model(); ModelName = ""; MarkName = "";
+                Mark = new Data.Mark();
+            }
+
+            Mark1 = new Data.Mark();
 
             MarkList = MarkModel.GetMark();
             Brands = MarkModel.GetBrand();
@@ -296,7 +332,7 @@ namespace AutoPartSystem.ViewModel.Warehouse
             Warehouse.Goods.GoodsModel = null;
             WarehouseModel.UpdateWarehouse(Warehouse);
             WarehouseModel.UpdateAll();
-            MainViewModel.WarehouseViewModel.OpenPageCommand("ZavSkladTable");
+            Back.Subscribe();
         });
         public ReactiveCommand<Unit, Unit> AddModelToWareCom => ReactiveCommand.Create(() =>
         {
@@ -359,8 +395,8 @@ namespace AutoPartSystem.ViewModel.Warehouse
 
         });
         public ReactiveCommand<Data.GoodsModel, Unit> DelGoodModel => ReactiveCommand.Create<Data.GoodsModel>(DelGoodModelCommand);
-        public ReactiveCommand<Unit, Unit> Back => ReactiveCommand.Create(() => { MainViewModel.WarehouseViewModel.OpenPageCommand("ZavSkladTable"); });
-        public ReactiveCommand<Unit, Unit> DeleteWarehouse => ReactiveCommand.Create(() => { Warehouse.IsDelete = true; WarehouseModel.UpdateWarehouse(Warehouse); WarehouseModel.UpdateAll(); MainViewModel.WarehouseViewModel.OpenPageCommand("ZavSkladTable"); });
+        public ReactiveCommand<Unit, Unit> Back { get; set; }
+        public ReactiveCommand<Unit, Unit> DeleteWarehouse => ReactiveCommand.Create(() => { Warehouse.IsDelete = true; WarehouseModel.UpdateWarehouse(Warehouse); WarehouseModel.UpdateAll(); Back.Subscribe(); });
         private void DelGoodModelCommand(Data.GoodsModel goodsModel)
         {
             GoodsModel.Remove(goodsModel);

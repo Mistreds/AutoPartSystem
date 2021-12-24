@@ -32,6 +32,13 @@ namespace AutoPartSystem.View.Warehouse
             InitializeComponent();
             DataContext = goodCardViewModel;
             this.MarkModel = MarkModel;  
+            if(!ViewModel.MainViewModel.Employee.SetEditGood)
+            {
+                SaveWare.IsEnabled= false;
+                DeleteWare.IsEnabled= false;
+                addModel.IsEnabled= false;
+                SelectImage.IsEnabled= false;
+            }
         }
         private void ComboBoxMark_TextChanged(object sender, TextChangedEventArgs e)
         {

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ReactiveUI;
+using System.Windows;
+
 namespace AutoPartSystem.Model.Admin
 {
     public interface IAdminModelation
@@ -26,11 +28,14 @@ namespace AutoPartSystem.Model.Admin
         public void GetAddres(out string Almata, out string Astana, out  string Aktau);
         public void SaveAddress( string Almata, string Astana,  string Aktau);
         public void AddCity(string city);
-        public void GetNowCash(double Cash);
-        public void UpdateCash(double Cash,string name, Employee employee, string type);
-        public void UpdateCash(double Cash, Employee employee);
+        public void GetNowCash(int Cash);
+        public void UpdateCash(int Cash,string name, Employee employee, string type);
+        public void UpdateCash(int Cash, Employee employee);
         public Data.OpenCloseCash GetOpenCash(int emp_id);
         public ObservableCollection<Data.OpenCloseCash> GetNotCloseCashs(int emp_id);
+        public void UpdateEmployee(ObservableCollection<Data.Employee> employees);
+        public void UpdatePassEmployee(Data.Employee employee); 
+        public void DeleteEmployee(Data.Employee employee);
     }
     public class AdminModel :ReactiveObject, IAdminModelation
     {
@@ -49,7 +54,7 @@ namespace AutoPartSystem.Model.Admin
         public AdminModel()
         {
             using var db = new ConDB();
-            Employees = new ObservableCollection<Employee>(db.Employees.Include(p => p.Position).Include(p => p.City).Select(p => new Employee(p.Id, p.Name, p.Login, p.PositionId, p.Position, p.CityId, p.City, p.PhoneNumber)));
+            Employees = new ObservableCollection<Employee>(db.Employees.Include(p => p.Position).Include(p => p.City).Where(p=>p.IsDelete==false));
             Cities = new ObservableCollection<City>(db.City.ToList());
         }
         public ObservableCollection<Employee> AddEmployers(Data.Employee employee)
@@ -61,7 +66,6 @@ namespace AutoPartSystem.Model.Admin
             Employees.Add(employee);
             return GetEmployees();
         }
-
         public List<City> GetCities()
         {
             using var db = new Data.ConDB();
@@ -71,7 +75,7 @@ namespace AutoPartSystem.Model.Admin
         public ObservableCollection<Employee> GetEmployees()
         {
             using var db = new ConDB();
-            return new ObservableCollection<Employee>(db.Employees.Include(p => p.Position).Include(p=>p.City).Select(p => new Employee(p.Id, p.Name, p.Login, p.PositionId, p.Position,p.CityId, p.City, p.PhoneNumber)));
+            return new ObservableCollection<Employee>(db.Employees.Include(p => p.Position).Include(p=>p.City).Where(p=>p.IsDelete==false));
         }
 
         public ObservableCollection<Employee> GetEmployeesForSelect()
@@ -148,7 +152,7 @@ namespace AutoPartSystem.Model.Admin
             return Employees.Where(p => p.Id != EmpId && (p.PositionId == 3 || p.PositionId == 4)).ToList();
         }
 
-        public void GetNowCash(double Cash)
+        public void GetNowCash(int Cash)
         {
             using var db = new Data.ConDB();
             var date = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
@@ -161,9 +165,9 @@ namespace AutoPartSystem.Model.Admin
             }
         }
 
-        public void UpdateCash(double Cash, string name, Employee employee, string type)
+        public void UpdateCash(int Cash, string name, Employee employee, string type)
         {
-            double cash = 0;
+            int cash = 0;
             if(type== "Добавить" || type== "Оплата товара")
             {
                 cash += Cash;
@@ -180,12 +184,13 @@ namespace AutoPartSystem.Model.Admin
             db.InsertOutCash.Add(new Data.InsertOutCash(name, employee.Cash, cash, employee.Cash + cash, type, employee.Id));
             db.SaveChanges();
             employee.Cash=employee.Cash + cash;
+            if(ViewModel.MainViewModel.Employee.Id==employee.Id)
             ViewModel.MainViewModel.Employee.Cash = employee.Cash;
             db.Update(employee);
             db.SaveChanges();
         }
 
-        public void UpdateCash(double Cash, Employee employee)
+        public void UpdateCash(int Cash, Employee employee)
         {
             using var db = new Data.ConDB();
             employee.Cash = employee.Cash + Cash;
@@ -213,6 +218,40 @@ namespace AutoPartSystem.Model.Admin
         {
             using var db = new Data.ConDB();
             return new ObservableCollection<OpenCloseCash>(db.OpenCloseCash.Where(p => p.EmployeeId == emp_id && p.Status == 1).ToList());
+        }
+
+        public void UpdateEmployee(ObservableCollection<Employee> employees)
+        {
+            using var db=new Data.ConDB();
+            {
+                db.UpdateRange(employees);
+                db.SaveChanges();
+                
+            }
+        }
+
+        public void DeleteEmployee(Employee employee)
+        {
+            if (MessageBox.Show($"Вы действительно хотите удалить сотрудника {employee.Name} ?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            {
+                using var db = new Data.ConDB();
+                {
+                    db.Update(employee);
+                    db.SaveChanges();
+                    Employees.Remove(employee);
+                }
+
+            }
+        }
+
+        public void UpdatePassEmployee(Employee employee)
+        {
+            using var db = new Data.ConDB();
+            {
+                db.Update(employee);
+                db.SaveChanges();
+
+            }
         }
     }
 }

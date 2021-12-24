@@ -24,6 +24,11 @@ namespace AutoPartSystem.View.Warehouse
         {
             InitializeComponent();
             DataContext = ViewModel.MainViewModel.WarehouseViewModel;
+            AddExcel.Visibility = Setting.BoolToVisibility(ViewModel.MainViewModel.Employee.SetGood);
+            AddGood.Visibility = Setting.BoolToVisibility(ViewModel.MainViewModel.Employee.SetGood);
+            CellThis.Visibility = Setting.BoolToVisibility(ViewModel.MainViewModel.Employee.SetCell);
+            MoveAgent.Visibility = Setting.BoolToVisibility(ViewModel.MainViewModel.Employee.SetMoveAgent);
+            MoveGood.Visibility = Setting.BoolToVisibility(ViewModel.MainViewModel.Employee.SetMoveCity);
         }
     }
 }

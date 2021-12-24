@@ -20,9 +20,28 @@ namespace AutoPartSystem.View.Client
     /// </summary>
     public partial class AgentTable : UserControl
     {
+        private ClientWindow clientWindow;
+        private Data.Invoice Invoice;
         public AgentTable()
         {
             InitializeComponent();
+        }
+        public AgentTable(Data.Invoice Invoice, ClientWindow clientWindow)
+        {
+            InitializeComponent();
+            this.clientWindow = clientWindow;
+            this.Invoice = Invoice;
+            clientTable.IsReadOnly = true;
+            clientTable.MouseDoubleClick += ClientTable_MouseintClick;
+        }
+        private void ClientTable_MouseintClick(object sender, MouseButtonEventArgs e)
+        {
+            Data.Client client = clientTable.SelectedItem as Data.Client;
+            if (client != null)
+            {
+                Invoice.Client = new Data.Client { Id = client.Id, Name = client.Name, City = client.City,  MarkId = client.Model.MarkId, CityId = client.CityId, ModelId = client.ModelId, PhoneName = client.PhoneName, CityName = client.City.Name };
+                clientWindow.Close();
+            }
         }
     }
 }

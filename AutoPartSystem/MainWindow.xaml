@@ -42,33 +42,16 @@
         </Grid.RowDefinitions>
         <Menu>
             <MenuItem Header="Файл">
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewGoods" Header="Добавить товар">
-                    <MenuItem.Style>
-                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding  PositId}" Value="3">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </MenuItem.Style>
+                <MenuItem Command="{Binding OpenPage}" x:Name="AddNewGood" CommandParameter="AddNewGoods" Header="Добавить товар">
                 </MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад">
-                    <MenuItem.Style>
-                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding  PositId}" Value="3">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </MenuItem.Style>
+                <MenuItem Command="{Binding OpenPage}" x:Name="AddNewVirtualGood" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад">
+                   
                 </MenuItem>
-                <MenuItem Header="Добавить кассу" Command="{Binding OpenPage}" CommandParameter="InsertCash"></MenuItem>
-                <MenuItem Header="Снять кассу" Command="{Binding OpenPage}"  CommandParameter="OutCash"></MenuItem>
+                <MenuItem Header="Добавить кассу" Command="{Binding OpenPage}" x:Name="InsCash" CommandParameter="InsertCash"></MenuItem>
+                <MenuItem Header="Снять кассу" Command="{Binding OpenPage}" x:Name="OutCash"  CommandParameter="OutCash"></MenuItem>
                 <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Касса">
+            <MenuItem Header="Касса" x:Name="Cash">
                 <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Open" Header="Открыть кассу"></MenuItem>
                 <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Close" Header="Закрыть кассу"></MenuItem>
             </MenuItem>
@@ -76,36 +59,22 @@
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="VirtualSkladTable" Header="Виртуальный склад"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenAgentClientTable" Header="Таблица с контрагентами"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoice" Header="Накладные"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoiceComm" Header="Коммерческие предложения"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenMoveGoods" Header="Заявки на перемещение товара">
-                    <MenuItem.Style>
-                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding  PositId}" Value="3">
-                                    <Setter Property="Visibility" Value="Collapsed"></Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </MenuItem.Style>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenAgentClientTable" x:Name="AgentMenu" Header="Таблица с контрагентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoice" x:Name="Invoce" Header="Накладные"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoiceComm" x:Name="ComInvoice" Header="Коммерческие предложения"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenBooking" x:Name="MoveAgent" Header="Бронь товаров контрагентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenMoveGoods" x:Name="MoveCity" Header="Заявки на перемещение товара">
+                   
                 </MenuItem>
             </MenuItem>
-            <MenuItem Header="Администратор" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
-                <MenuItem.Style>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding  PositId}" Value="3">
-                                <Setter Property="Visibility" Value="Collapsed"></Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </MenuItem.Style>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
+            <MenuItem Command="{Binding OpenPage}" x:Name="Report"  CommandParameter="Report" Header="Отчет"></MenuItem>
+            <MenuItem Header="Администратор" x:Name="AdminMenu" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
+                <MenuItem Command="{Binding OpenPage}"  CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="Report" Header="Отчет"></MenuItem>
+               
             </MenuItem>
+           
             <MenuItem Header="Проверить наличие обновлений" Command="{Binding CheckUpdate}"></MenuItem>
         </Menu>
         <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>

@@ -71,8 +71,7 @@ namespace AutoPartSystem.ViewModel.Warehouse
                     int rows = worksheet.Dimension.Rows; // 20
                     int columns = worksheet.Dimension.Columns; // 7
                     Progress = 0;
-                    double step = (double)100/(double)(rows - 1);
-                    Console.WriteLine(step);
+                    double step = (double)100/ (double)(rows - 1);
                     // loop through the worksheet rows and columns
                     ObservableCollection<Data.Warehouse> warehouses = new ObservableCollection<Data.Warehouse>();
                     for (int i = 2; i <= rows; i++)
@@ -140,6 +139,9 @@ namespace AutoPartSystem.ViewModel.Warehouse
                                     warehouse.Goods.Article = content;
                                     break;
                                 case 7:
+                                    warehouse.Note = content;
+                                    break;
+                                case 8:
                                     switch (CityId)
                                     {
                                         case 1:
@@ -153,20 +155,23 @@ namespace AutoPartSystem.ViewModel.Warehouse
                                             break;
                                     }
                                     break;
-                                case 8:
+                                case 9:
                                     warehouse.WarehousePlace = content;
                                     break;
-                                case 9:
-                                    warehouse.Goods.InputPrice = Convert.ToInt32(content);
-                                    break;
                                 case 10:
-                                    warehouse.Goods.RecomPrice = Convert.ToInt32(content);
+                                    warehouse.Goods.InputPrice = Convert.ToInt32(content.Replace(" ",""));
+                                    break;
+                                case 11:
+                                    warehouse.Goods.RecomPrice = Convert.ToInt32(content.Replace(" ", ""));
+                                    break;
+                                case 12:
+                                    warehouse.Goods.InputAstana=Convert.ToInt32(content.Replace(" ", ""));
+                                    break;
+                                case 13:
+                                    warehouse.Goods.InputAktau=Convert.ToInt32(content.Replace(" ", ""));
                                     break;
 
                             }
-
-                            Console.Write(content + " ");
-                            /* Do something ...*/
                         }
                         Data.Warehouse war_update = WarehouseModel.GetWarehouseFromArticleAndDes(warehouse.Goods.Article, warehouse.Goods.Description);
                         if (war_update != null)
@@ -185,6 +190,8 @@ namespace AutoPartSystem.ViewModel.Warehouse
                             }
                             war_update.Goods.InputPrice = warehouse.Goods.InputPrice;
                             war_update.Goods.RecomPrice = warehouse.Goods.RecomPrice;
+                            war_update.Goods.InputAktau = warehouse.Goods.InputAktau;
+                            war_update.Goods.InputAstana = warehouse.Goods.InputAstana;
                             WarehouseModel.UpdateWarehouse(war_update);
                         }
                         else
@@ -193,14 +200,12 @@ namespace AutoPartSystem.ViewModel.Warehouse
                         }
                         MarkModel.UpdateAll();
                         Progress += step;
-                        //Get everything as generics and let end user decides on casting to required type
 
-                    }
-                    
+                    }            
                     Progress = 100;
                     WarehouseModel.UpdateAll();
                     MainViewModel.WarehouseViewModel.UpdateTableCom();
-                    MessageBox.Show("Загрузка данных завершена", "Внимание");
+                    MessageBox.Show("Загрузка данных завершена", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             });
         }

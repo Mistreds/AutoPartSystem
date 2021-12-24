@@ -12,23 +12,23 @@
              d:DesignHeight="750" d:DesignWidth="800" Background="White"    >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="35"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition Height="1.2*"></RowDefinition>
+            <RowDefinition Height="0.8*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="1.2*"></RowDefinition>
+            <RowDefinition Height="1.2*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="15"></ColumnDefinition>
@@ -60,21 +60,35 @@
         <TextBlock Text="Артикуль" Grid.Row="5" Grid.Column="1"></TextBlock>
         <TextBox   Grid.Row="5" Grid.Column="3" Text="{Binding Warehouse.Goods.Article}"></TextBox>
         <TextBlock Text="Кол-во Алмата" Grid.Row="6" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="6" Grid.Column="3" Text="{Binding Warehouse.InAlmata}"></TextBox>
+        <TextBox  IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}"  Grid.Row="6" Grid.Column="3" Text="{Binding Warehouse.InAlmata}"></TextBox>
         <TextBlock Text="Кол-во Астана" Grid.Row="7" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="7" Grid.Column="3" Text="{Binding Warehouse.InAktau}"></TextBox>
+        <TextBox IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}"  Grid.Row="7" Grid.Column="3" Text="{Binding Warehouse.InAktau}"></TextBox>
         <TextBlock Text="Кол-во Актау" Grid.Row="8" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="8" Grid.Column="3" Text="{Binding Warehouse.InAstana}"></TextBox>
+        <TextBox  IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}" Grid.Row="8" Grid.Column="3" Text="{Binding Warehouse.InAstana}"></TextBox>
         <TextBlock Text="Цена приходная" Grid.Row="9" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="9" Grid.Column="3" Text="{Binding Warehouse.Goods.InputPrice}"></TextBox>
+        <TextBox    Grid.Row="9" Grid.Column="3" Text="{Binding Warehouse.Goods.InputPrice}"></TextBox>
         <TextBlock Text="Цена РЕК" Grid.Row="10" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="10" Grid.Column="3" Text="{Binding Warehouse.Goods.RecomPrice}"> </TextBox>
+        <TextBox  IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}" Grid.Row="10" Grid.Column="3" Text="{Binding Warehouse.Goods.RecomPrice}"> </TextBox>
         <TextBlock Text="Астана +" Grid.Row="11" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="11" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAstana}"></TextBox>
+        <TextBox  IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}"  Grid.Row="11" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAstana}"></TextBox>
         <TextBlock Text="Актау +" Grid.Row="12" Grid.Column="1"></TextBlock>
-        <TextBox   Grid.Row="12" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAktau}"></TextBox>
-        <TextBlock Text="Бренд" Grid.Row="13" Grid.Column="1"></TextBlock>
-        <ComboBox x:Name="ComboBoxBrand" IsDropDownOpen="False" GotFocus="ComboBoxMark_GotFocus"  IsTextSearchEnabled="False" IsEditable="True"   KeyDown="ComboBoxMark_KeyDown" TextBoxBase.TextChanged="ComboBoxMark_TextChanged_1"  Grid.Row="13" Grid.Column="3" ItemsSource="{Binding Brands}" Text="{Binding BrandName}" DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedItem="{Binding Warehouse.Goods.Brand}"></ComboBox>
+        <TextBox IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}"  Grid.Row="12" Grid.Column="3" Text="{Binding Warehouse.Goods.InputAktau}"></TextBox>
+        <TextBlock  Grid.Row="13" Grid.Column="1">
+            <TextBlock.Style>
+                <Style TargetType="TextBlock">
+                    <Setter Property="Text" Value="ОЕМ"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Warehouse.IsVirtual}" Value="true">
+                            <Setter Property="Text" Value="Магазин"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+                
+            </TextBlock.Style>
+        </TextBlock>
+        <TextBox   Grid.Row="13" Grid.Column="3" Text="{Binding Warehouse.Note}"></TextBox>
+        <TextBlock Text="Бренд" Grid.Row="14" Grid.Column="1"></TextBlock>
+        <ComboBox IsEnabled="{Binding Warehouse.IsVirtual, Converter={StaticResource InvertBooleanConverter}}" x:Name="ComboBoxBrand" IsDropDownOpen="False" GotFocus="ComboBoxMark_GotFocus"  IsTextSearchEnabled="False" IsEditable="True"   KeyDown="ComboBoxMark_KeyDown" TextBoxBase.TextChanged="ComboBoxMark_TextChanged_1"  Grid.Row="14" Grid.Column="3" ItemsSource="{Binding Brands}" Text="{Binding BrandName}" DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedItem="{Binding Warehouse.Goods.Brand}"></ComboBox>
         <StackPanel Grid.Row="2"  Grid.Column="5"  Orientation="Horizontal" >
             <ComboBox ItemsSource="{Binding MarkList}"  Grid.Row="2"  GotFocus="ComboBoxMark_GotFocus"   KeyDown="ComboBoxMark_KeyDown"     SelectedItem="{Binding Mark1}"  SelectedValue="{Binding Mark1.Id}"   Text="{Binding MarkName1,UpdateSourceTrigger=PropertyChanged}" x:Name="ComboBoxMark1"    IsTextSearchEnabled="False" IsEditable="True"   Grid.Column="3"  TextBoxBase.TextChanged="ComboBoxMark1_TextChanged" SelectionChanged="ComboBoxMark1_SelectionChanged" SelectedValuePath="Id" DisplayMemberPath="Name" MinWidth="80">
                 <i:Interaction.Triggers>
@@ -84,16 +98,8 @@
                 </i:Interaction.Triggers>
             </ComboBox>
             <ComboBox SelectionChanged="ComboBoxModel_SelectionChanged" GotFocus="ComboBoxMark_GotFocus" Grid.Row="3"  Grid.Column="3" SelectedValue="{Binding Model1.Id}"  KeyDown="ComboBoxMark_KeyDown" ItemsSource="{Binding Models1, UpdateSourceTrigger=PropertyChanged}" x:Name="ComboBoxModel1"    IsTextSearchEnabled="False" IsEditable="True" SelectedItem="{Binding Model1, UpdateSourceTrigger=PropertyChanged}" TextBoxBase.TextChanged="ComboBoxModel1_TextChanged"  SelectedValuePath="Id" DisplayMemberPath="Name"    Text="{Binding ModelName1, UpdateSourceTrigger=PropertyChanged}"  MinWidth="80" Margin="5,0,0,0"></ComboBox>
-            <Button  Command="{Binding AddModelToWareCom}" Margin="5,0,0,0"  Padding="0" Width="35" >+
-                <Button.Style>
-                    <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding PosId}" Value="3">
-                                <Setter Property="IsEnabled" Value="False"></Setter>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
+            <Button  Command="{Binding AddModelToWareCom}" x:Name="addModel" Margin="5,0,0,0"  Padding="0" Width="35" >+
+                
             </Button>
         </StackPanel>
         <DataGrid AutoGenerateColumns="False" CanUserDeleteRows="False"  CanUserAddRows="False" ItemsSource="{Binding GoodsModel}" Grid.Row="3"  Grid.Column="5" Grid.RowSpan="10" IsReadOnly="True">
@@ -110,29 +116,13 @@
             </DataGrid.Columns>
         </DataGrid>
         <Image   Grid.Row="2" Grid.Column="7" Grid.RowSpan="7" Source="{Binding GoodsImage.Image}" ></Image>
-        <Button Command="{Binding DeleteWarehouse}"  Grid.Column="3" Grid.Row="14" Width="150" Content="Удалить">
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding PosId}" Value="3">
-                            <Setter Property="IsEnabled" Value="False"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+        <Button Command="{Binding DeleteWarehouse}"  x:Name="DeleteWare" Grid.Column="3" Grid.Row="15" Width="150" Content="Удалить">
+            
         </Button>
-        <Button Command="{Binding SaveWarehouse}"  Grid.Column="5" Grid.Row="14" Width="150" Content="Сохранить">
-            <Button.Style>
-                <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding PosId}" Value="3">
-                            <Setter Property="IsEnabled" Value="False"></Setter>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Button.Style>
+        <Button Command="{Binding SaveWarehouse}" x:Name="SaveWare"  Grid.Column="5" Grid.Row="15" Width="150" Content="Сохранить">
+         
         </Button>
-        <Button Command="{Binding SelectGoodPicture}"  Grid.Column="7" Grid.Row="14" Width="150" Content="Выбрать фото">
+        <Button Command="{Binding SelectGoodPicture}" x:Name="SelectImage" Grid.Column="7" Grid.Row="15" Width="150" Content="Выбрать фото">
             <Button.Style>
                 <Style TargetType="Button" BasedOn="{StaticResource   MaterialDesignOutlinedLightButton}">
                     <Style.Triggers>

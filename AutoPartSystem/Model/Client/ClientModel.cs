@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,17 +19,30 @@ namespace AutoPartSystem.Model.Client
        
 
     }
-   public class ClientModel: IClientModel
+   public class ClientModel: ReactiveObject, IClientModel 
     {
-        private ObservableCollection<Data.Client> Client;
-        private ObservableCollection<Data.Client> AgentClient;
+        private ObservableCollection<Data.Client> _client;
+        public ObservableCollection<Data.Client> Client
+        {
+            get => _client;
+            set => this.RaiseAndSetIfChanged(ref _client, value);
+        }
+        private ObservableCollection<Data.Client> _agent;
+        public  ObservableCollection<Data.Client> AgentClient
+        {
+            get => _agent;
+            set => this.RaiseAndSetIfChanged(ref _agent, value);
+        }
         public ClientModel()
         {
-            using var db=new Data.ConDB();
-            Client=new ObservableCollection<Data.Client>(db.Clients.Include(p=>p.City).Include(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>p.IsAgent==false).Select(p=>new Data.Client(p)).ToList());
+            UpdateAll();
+        }
+        private void UpdateAll()
+        {
+            using var db = new Data.ConDB();
+            Client = new ObservableCollection<Data.Client>(db.Clients.Include(p => p.City).Include(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsAgent == false).Select(p => new Data.Client(p)).ToList());
             AgentClient = new ObservableCollection<Data.Client>(db.Clients.Include(p => p.City).Include(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsAgent == true).Select(p => new Data.Client(p)).ToList());
         }
-
         public void AddClient(Data.Client client)
         {
             var ss = new Data.Client(client);
@@ -43,9 +57,26 @@ namespace AutoPartSystem.Model.Client
             if (ss.Id != 0) return;
             db.Clients.Add(ss);
             db.SaveChanges();
-            var clientt = db.Clients.Include(p => p.City).Include(p => p.Model).ThenInclude(p => p.Mark).Where(p=>p.Id== ss.Id).Select(p => new Data.Client(p)).FirstOrDefault();
-            Client.Add(clientt);
             client.Id=ss.Id;
+            UpdateAll();
+            ViewModel.MainViewModel.AdminModel.UpdateCity();
+        }
+        public void AddClientAgent(Data.Client client)
+        {
+            var ss = new Data.Client(client, true);
+            using var db = new Data.ConDB();
+            if (ss.City.Id != 0)
+            {
+                ss.CityId = client.City.Id;
+                ss.City = null;
+            }
+            if (ss.Id != 0) return;
+            db.Clients.Add(ss);
+            db.SaveChanges();
+            var clientt = db.Clients.Include(p => p.City).Include(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.Id == ss.Id).Select(p => new Data.Client(p)).FirstOrDefault();
+            AgentClient.Add(clientt);
+            client.Id = ss.Id;
+            UpdateAll();
             ViewModel.MainViewModel.AdminModel.UpdateCity();
         }
 

@@ -111,8 +111,28 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition>
+                        <ColumnDefinition.Style>
+                            <Style TargetType="ColumnDefinition">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAgent}" Value="true">
+                                        <Setter Property="Width" Value="0"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ColumnDefinition.Style>
+                    </ColumnDefinition>
+                    <ColumnDefinition>
+                        <ColumnDefinition.Style>
+                            <Style TargetType="ColumnDefinition">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsAgent}" Value="true">
+                                        <Setter Property="Width" Value="0"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ColumnDefinition.Style>
+                    </ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
@@ -120,10 +140,10 @@
                 <Border  BorderBrush="Black" BorderThickness="1">
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Марка</TextBlock>
                 </Border>
-                <Border  BorderBrush="Black" Grid.Column="1" BorderThickness="0,1,1,1">
+                <Border  BorderBrush="Black" Grid.Column="1" BorderThickness="0,1,0,1">
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">Модель</TextBlock>
                 </Border>
-                <Border  BorderBrush="Black" Grid.Column="2" BorderThickness="0,1,1,1">
+                <Border  BorderBrush="Black" Grid.Column="2" BorderThickness="1,1,1,1">
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">ФИО</TextBlock>
                 </Border>
                 <Border  BorderBrush="Black" Grid.Column="3" BorderThickness="0,1,1,1">
@@ -135,10 +155,10 @@
                 <Border  BorderBrush="Black" Grid.Column="0" Grid.Row="1" BorderThickness="1,0,1,1">
                     <TextBox VerticalAlignment="Center"  Text="{Binding Client.Model.Mark.Name}"></TextBox>
                 </Border>
-                <Border  BorderBrush="Black" Grid.Column="1" Grid.Row="1" BorderThickness="0,0,1,1">
+                <Border  BorderBrush="Black" Grid.Column="1" Grid.Row="1" BorderThickness="0,0,0,1">
                     <TextBox VerticalAlignment="Center" Text="{Binding Client.Model.Name}"></TextBox>
                 </Border>
-                <Border  BorderBrush="Black" Grid.Column="2" Grid.Row="1" BorderThickness="0,0,1,1">
+                <Border  BorderBrush="Black" Grid.Column="2" Grid.Row="1" BorderThickness="1,0,1,1">
                     <TextBox VerticalAlignment="Center"  Text="{Binding Client.Name}"></TextBox>
                 </Border>
                 <Border  BorderBrush="Black" Grid.Column="3" Grid.Row="1" BorderThickness="0,0,1,1">
@@ -234,6 +254,17 @@
                                     <Setter Property="Content" Value="Сохранить"></Setter>
                                 </MultiDataTrigger.Setters>
                             </MultiDataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding IsNotNewClient}" Value="false"></Condition>
+                                    <Condition Binding="{Binding IsNewClient}" Value="true"></Condition>
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                             
+                                <Setter Property="IsEnabled" Value="False"></Setter>
+                                <Setter Property="ToolTip" Value="Не создан новый клиент"></Setter>
+                                </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
                         </Style.Triggers>
                     </Style>
                 </Button.Style>

@@ -25,6 +25,13 @@ namespace AutoPartSystem.ViewModel
         {
             MainMove = ViewModel.MainViewModel.MoveGoodsModel.GetMainMove();
         }
+        public ReactiveCommand<Unit,Unit> UpdateMoveCommand=>ReactiveCommand.Create(UpdateMove);
+       public void UpdateMove()
+        {
+            ViewModel.MainViewModel.MoveGoodsModel.GetMoveFromDb();
+               MainMove = ViewModel.MainViewModel.MoveGoodsModel.GetMainMove();
+        }
+       
         public ReactiveCommand<Data.MainMove, Unit> ArriveGoods=>ReactiveCommand.Create<Data.MainMove>(MainViewModel.WarehouseModel.ArriveGoods);
        
         

@@ -8,6 +8,9 @@
         d:DataContext="{d:DesignInstance Type=ViewModel:GetMoveGoodsViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="White">
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5"  Command="{Binding UpdateMoveCommand}"/>
+    </UserControl.InputBindings>
     <Grid>
         <GroupBox Header="Заявки на перемещаемые товары">
             <ListBox  x:Name="MainList" ItemsSource="{Binding MainMove}">
@@ -52,13 +55,8 @@
                                     </DataGridTextColumn>
                                     <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Артикуль"  CanUserSort="False"  Binding="{Binding Warehouse.Goods.Article}">
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="ALA" Binding="{Binding Warehouse.InAlmata}"></DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="NQZ" Binding="{Binding Warehouse.InAstana}"></DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="SCO" Binding="{Binding Warehouse.InAktau}"></DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Место" Binding="{Binding Warehouse.WarehousePlace}"></DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Цена прих" Binding="{Binding Warehouse.Goods.InputPrice}"></DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Доставка NQZ" Binding="{Binding Warehouse.Goods.InputAstana}"></DataGridTextColumn>
-                                    <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Доставка SCO" Binding="{Binding Warehouse.Goods.InputAktau}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Принять кол-во" Binding="{Binding Warehouse.Goods.CountCell}"></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Возврат кол-во" Binding="{Binding BackCount}"></DataGridTextColumn>
                                     <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Кол-во" Binding="{Binding Count}"></DataGridTextColumn>
                                 </DataGrid.Columns>
                                 <DataGrid.Style>

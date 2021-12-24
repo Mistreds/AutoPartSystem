@@ -11,7 +11,36 @@
              d:DesignHeight="450" 
              xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes" d:DesignWidth="600"
              x:Name="warehousetable"
+             xmlns:conv="clr-namespace:AutoPartSystem.Converted"
+             LostKeyboardFocus="warehousetable_LostKeyboardFocus"
+             
+             PreviewKeyDown="warehouse_KeyDown" 
              >
+    <UserControl.Style>
+        <Style TargetType="UserControl">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding WarehousesTable.Count}" Value="0">
+                    <Setter Property="FocusManager.IsFocusScope" Value="True"></Setter>
+                    <Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=TextFindAll}"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsAllFind}" Value="True">
+                    <Setter Property="FocusManager.IsFocusScope" Value="False"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsModelFind}" Value="True">
+                    <Setter Property="FocusManager.IsFocusScope" Value="False"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsDesctiptionFind}" Value="True">
+                    <Setter Property="FocusManager.IsFocusScope" Value="False"></Setter>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsArticleFind}" Value="True">
+                    <Setter Property="FocusManager.IsFocusScope" Value="False"></Setter>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Style>
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5"  Command="{Binding UpdateTable}"/>
+    </UserControl.InputBindings>
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -56,13 +85,25 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+            <conv:IntToSpace x:Key="IntToSpace"></conv:IntToSpace>
         </ResourceDictionary>
+       
     </UserControl.Resources>
-    <Grid>
+    <Grid  PreviewKeyDown="warehouse_KeyDown" Background="White" >
 
-        <DataGrid FrozenColumnCount="3" SelectionMode="Extended"  BorderBrush="Black"  LoadingRow="warehouse_LoadingRow" BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable}" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
+        <DataGrid VirtualizingStackPanel.VirtualizationMode="Recycling"  ClipboardCopyMode="None" SourceUpdated="warehouse_SourceUpdated" CopyingRowClipboardContent="warehouse_CopyingRowClipboardContent" FrozenColumnCount="8" ContextMenuOpening="warehouse_ContextMenuOpening" ContextMenuClosing="warehouse_ContextMenuClosing" MouseMove="warehouse_MouseMove" KeyDown="warehouse_KeyDown" KeyUp="warehouse_KeyDown"  PreviewKeyDown="warehouse_KeyDown"   BorderBrush="Black"  LoadingRow="warehouse_LoadingRow" BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable, UpdateSourceTrigger=PropertyChanged}" Background="White" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
+            <DataGrid.InputBindings>
+                
+            </DataGrid.InputBindings>
             <DataGrid.Columns>
-                <DataGridTemplateColumn>
+                <DataGridTextColumn  Width="75" IsReadOnly="True" Header="Бренд" Binding="{Binding Goods.Brand.Name}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTemplateColumn Width="120" >
                     <DataGridTemplateColumn.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -77,10 +118,13 @@
                                 <ListBox ItemsSource="{Binding Goods.GoodsModel}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding Model.Mark.Name}"></TextBlock>
-                                                <TextBlock Margin="10,0,0,0" Text="{Binding Model.Name}" ></TextBlock>
-                                            </StackPanel>
+                                            <Grid>
+                                                <TextBlock TextWrapping="Wrap" >
+                                                    <Run Text="{Binding Model.Mark.Name}"></Run>
+                                                    <Run></Run>
+                                                    <Run Text="{Binding Model.Name}"></Run>
+                                                </TextBlock>
+                                            </Grid>
                                         </DataTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
@@ -89,7 +133,12 @@
                     </DataGridTemplateColumn.CellTemplate>
                    
                 </DataGridTemplateColumn>
-                <DataGridTextColumn   IsReadOnly="True" x:Name="DescrFind" CanUserSort="False"   Binding="{Binding Goods.Description}">
+                <DataGridTextColumn Width="150"   IsReadOnly="True" x:Name="DescrFind" CanUserSort="False"   Binding="{Binding Goods.Description}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel  Orientation="Horizontal">
@@ -100,7 +149,12 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True"  CanUserSort="False"  Binding="{Binding Goods.Article}">
+                <DataGridTextColumn Width="120" IsReadOnly="True"  CanUserSort="False"  Binding="{Binding Goods.Article}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style>
+                            <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
                     <DataGridTextColumn.HeaderTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -111,8 +165,8 @@
                         </DataTemplate>
                     </DataGridTextColumn.HeaderTemplate>
                 </DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Бренд" Binding="{Binding Goods.Brand.Name}"></DataGridTextColumn>
-                <DataGridTemplateColumn IsReadOnly="True"  Header="ALA">
+                <DataGridTextColumn  IsReadOnly="True" Header="OEM"  Width="100" Binding="{Binding Note}"></DataGridTextColumn>
+                <DataGridTemplateColumn IsReadOnly="True"  SortMemberPath="InAlmata" Header="ALA">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border >
@@ -124,13 +178,11 @@
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
                                 </Button>
-
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
-                <DataGridTemplateColumn IsReadOnly="True" Header="NQZ">
+                <DataGridTemplateColumn IsReadOnly="True" SortMemberPath="InAstana" Header="NQZ">
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
 
@@ -145,7 +197,7 @@
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn  IsReadOnly="True" Header="SCO" >
+                <DataGridTemplateColumn  IsReadOnly="True" SortMemberPath="InAktau" Header="SCO" >
                     <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
 
@@ -161,20 +213,13 @@
                 </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTextColumn  IsReadOnly="True" Header="Место" Binding="{Binding WarehousePlace}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Цена прих" Binding="{Binding  PromInput}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Доставка NQZ" x:Name="NQZArrive" Binding="{Binding Goods.InputAstana}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Доставка SCO" x:Name="SCOArrive" Binding="{Binding Goods.InputAktau}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice}"></DataGridTextColumn>
-                <DataGridTextColumn  IsReadOnly="True" Header="Заметка" Binding="{Binding Note}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Цена прих" Binding="{Binding  PromInput, Converter={StaticResource IntToSpace}, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Доставка NQZ" x:Name="NQZArrive" Binding="{Binding Goods.InputAstana, Converter={StaticResource IntToSpace}, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Доставка SCO" x:Name="SCOArrive" Binding="{Binding Goods.InputAktau, Converter={StaticResource IntToSpace}, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                <DataGridTextColumn  IsReadOnly="True" Header="Цена рек" Binding="{Binding Goods.RecomPrice, Converter={StaticResource IntToSpace}, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
+                
                 <DataGridTextColumn x:Name="CellCount"  Header="Кол-во" Binding="{Binding Goods.CountCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
                 <DataGridTextColumn x:Name="CellPrice" Header="Цена продажи" Binding="{Binding Goods.PriceCell, UpdateSourceTrigger=PropertyChanged}"></DataGridTextColumn>
-                <DataGridTemplateColumn x:Name="TypePay" Header="Тип оплаты">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedValue="{Binding Goods.TypePayId, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" ></ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Продажа" x:Name="Prodash">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -182,6 +227,14 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTemplateColumn x:Name="TypePay" Header="Тип оплаты">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ComboBox Height="40"  VerticalAlignment="Center"  ItemsSource="{Binding Path=DataContext.TypePay,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  DisplayMemberPath="Name"  SelectedValuePath="Id" SelectedValue="{Binding Goods.TypePayId, UpdateSourceTrigger=PropertyChanged}" SelectedIndex="0" ></ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+               
                 <DataGridTemplateColumn Header="Приход"  x:Name="Prihod"  >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -192,43 +245,60 @@
             </DataGrid.Columns>
             <DataGrid.Resources>
                 <DataTemplate x:Key="Row_Sel">
-                    <Grid  MinHeight="30" Background="White">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="Забронировал менеджер 1 в кол-ве 10 штук"></TextBlock>
-                    </Grid>
+                    <ListBox ItemsSource="{Binding GoodsBooking}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Сотрудник "></TextBlock>
+                                    <TextBlock Text="{Binding Invoice.Employee.Name}"></TextBlock>
+                                    <TextBlock Text=" забронировал "></TextBlock>
+                                    <TextBlock Text="{Binding Count}"></TextBlock>
+                                    <TextBlock Text=" товаров"></TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
                 </DataTemplate>
                 <ContextMenu x:Key="Menu1">
                     <MenuItem Header="Добавить товар" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                         <MenuItem.Style>
                             <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=DataContext.PosId,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="3">
+                                    <DataTrigger Binding="{Binding Path=DataContext.Employee.SetGood,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False">
                                         <Setter Property="Visibility" Value="Collapsed"></Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </MenuItem.Style>
                     </MenuItem>
-                    <MenuItem Header="Сделать приход" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.CreatePrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
+                    <MenuItem Header="Сделать приход" x:Name="CreatePrihodMenu" CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.CreatePrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
                         <MenuItem.Style>
                             <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=DataContext.PosId,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="3">
+                                    <DataTrigger Binding="{Binding Path=DataContext.Employee.SetGoodCount,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False">
                                         <Setter Property="Visibility" Value="Collapsed"></Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
                         </MenuItem.Style>
                     </MenuItem>
-                    <MenuItem Header="Сделать продажу" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" ></MenuItem>
+                    <MenuItem Header="Сделать продажу" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
+                        <MenuItem.Style>
+                            <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=DataContext.Employee.SetCell,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False">
+                                        <Setter Property="Visibility" Value="Collapsed"></Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </MenuItem.Style>
+                    </MenuItem>
                     <MenuItem Header="Установить цену"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.SetWarePrice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}">
                         <MenuItem.Style>
                             <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Path=DataContext.PosId,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="3">
+                                    <DataTrigger Binding="{Binding Path=DataContext.Employee.SetPrihod,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False">
                                         <Setter Property="Visibility" Value="Collapsed"></Setter>
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -250,6 +320,11 @@
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding Path=DataContext.IsSelectForInvoice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="True">
                             <Setter Property="ContextMenu" Value="{StaticResource Menu2 }"></Setter>
+                           
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsBooking}" Value="True">
+                            <Setter Property="DetailsVisibility" Value="Visible"></Setter>
+                            <Setter Property="DetailsTemplate" Value="{StaticResource Row_Sel}"></Setter>
                         </DataTrigger>
                     </Style.Triggers>
                 </Style>
@@ -373,7 +448,7 @@ Background="Black"
                 </Grid>
             </Border>
         </Popup>
-        <Popup x:Name="PopupArticle"  Height="320" Width="260" Placement="Mouse" StaysOpen="False" IsOpen="{Binding ElementName=warehousetable, Path=DataContext.IsArticleFind}">
+        <Popup x:Name="PopupArticle"  Height="320" Width="260" Placement="Mouse" StaysOpen="False" IsOpen="{Binding ElementName=warehousetable, Path=DataContext.IsArticleFind}" Opened="PopupArticle_Opened">
             <Border   BorderBrush="Black" BorderThickness="1">
                 <Grid Background="White" >
                     <Grid.RowDefinitions>
@@ -430,6 +505,30 @@ Background="Black"
                         <Button Grid.Column="3" Content="Отмена"></Button>
                     </Grid>
                 </Grid>
+            </Border>
+        </Popup>
+        <Popup x:Name="PopupFind"  Height="60" Width="350" Placement="Mouse" StaysOpen="False" IsOpen="{Binding ElementName=warehousetable, Path=DataContext.IsAllFind}">
+            <Border BorderBrush="Black" BorderThickness="1">
+            <Grid Background="White" >
+                <Grid.RowDefinitions>
+                    
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                    <ColumnDefinition Width="75" ></ColumnDefinition>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBox Text="{Binding TextFindAll, UpdateSourceTrigger=PropertyChanged}"   x:Name="TextFindAll" Height="40" Grid.Column="1">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding SetStringFilter}"></KeyBinding>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Grid.Column="3" Width="75" Command="{Binding SetStringFilter}" Content="Найти">
+                   
+                </Button>
+            </Grid>
             </Border>
         </Popup>
     </Grid>

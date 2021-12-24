@@ -47,9 +47,9 @@ namespace AutoPartSystem.ViewModel
                 using var db = new Data.ConDB();
                 var emp = db.Employees.Include(p => p.City).Where(p => p.Id == EmpDay).FirstOrDefault();
                 ExcelWorksheet sheet = package.Workbook.Worksheets.Add(emp.Name);
-                double input = 0;
-                double all_marz = 0;
-                double account_cashe = 0;
+                int input = 0;
+                int all_marz = 0;
+                int account_cashe = 0;
                 var date = new DateTime(DateDay.Year, DateDay.Month, DateDay.Day);
                 var cash = db.CashDay.Where(p => p.Date == date && p.EmployeeId == EmpDay).FirstOrDefault();
                 if (cash == null)

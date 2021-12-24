@@ -17,19 +17,19 @@ namespace AutoPartSystem.ViewModel
 {
    public class MainViewModel:ReactiveObject
     {
-        public static AdminViewModel? AdminViewModel { get; set; }
-        public static WarehouseViewModel? WarehouseViewModel { get; set;}
-        public static ClientViewModel? ClientViewModel { get; set; }
-        public static InvoiceViewModel? InvoiceViewModel { get; set; }
-        public static GetMoveGoodsViewModel? GetMoveGoodsViewModel { get; set; }
-        public static Data.Employee? Employee { get;private set; }
+        public static AdminViewModel AdminViewModel { get; set; }
+        public static WarehouseViewModel WarehouseViewModel { get; set;}
+        public static ClientViewModel ClientViewModel { get; set; }
+        public static InvoiceViewModel InvoiceViewModel { get; set; }
+        public static GetMoveGoodsViewModel GetMoveGoodsViewModel { get; set; }
+        public static Data.Employee Employee { get;private set; }
         private Data.Employee _employee;
         public Data.Employee Employee2
         {
             get=>this._employee;
             set=>this.RaiseAndSetIfChanged(ref _employee, value);
         }
-        public static Model.MarkModel.MarkModel? _markModel;
+        public static Model.MarkModel.MarkModel _markModel;
         public static Model.Admin.AdminModel AdminModel;
         public static Model.Client.ClientModel ClientModel;
         public static Model.Warehouse.WarehouseModel WarehouseModel;
@@ -106,9 +106,10 @@ namespace AutoPartSystem.ViewModel
             }
             ClientModel=new Model.Client.ClientModel();
             AdminViewModel = new AdminViewModel(_markModel);
-            WarehouseViewModel=new WarehouseViewModel(_markModel);
-            ClientViewModel = new ClientViewModel(_markModel);
             InvoiceViewModel = new InvoiceViewModel();
+            WarehouseViewModel =new WarehouseViewModel(_markModel);
+            ClientViewModel = new ClientViewModel(_markModel);
+           
             MoveGoodsModel=new Model.Warehouse.MoveGoodsModel();
             GetMoveGoodsViewModel=new GetMoveGoodsViewModel();
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage(), new View.MoveGoods.GetMoveGoods()};
@@ -158,6 +159,10 @@ namespace AutoPartSystem.ViewModel
                     InvoiceViewModel.OpenPageCommand(page_id);
                     break;
                 case "OpenInvoice":
+                    MainControl = _controls[3];
+                    InvoiceViewModel.OpenPageCommand(page_id);
+                    break;
+                case "OpenBooking":
                     MainControl = _controls[3];
                     InvoiceViewModel.OpenPageCommand(page_id);
                     break;

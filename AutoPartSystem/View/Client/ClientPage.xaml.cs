@@ -24,6 +24,14 @@ namespace AutoPartSystem.View.Client
         {
             InitializeComponent();
             DataContext = ViewModel.MainViewModel.ClientViewModel;
+            if(!ViewModel.MainViewModel.Employee.SetCell)
+            {
+                AddNewClient.Visibility = Visibility.Collapsed;
+            }
+            if(!ViewModel.MainViewModel.Employee.SetMoveAgent)
+            {
+                AddNewAgent.Visibility = Visibility.Collapsed;  
+            }
         }
     }
 }

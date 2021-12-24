@@ -156,27 +156,27 @@ namespace Data
             get => _article;
             set => this.RaiseAndSetIfChanged(ref _article, value);
         }
-        private  double _input_price;
-        public  double InputPrice
+        private  int _input_price;
+        public  int InputPrice
         {
             get => _input_price;
             set => this.RaiseAndSetIfChanged(ref _input_price, value);
         }
-        private double _recom_price;
-        public double RecomPrice
+        private int _recom_price;
+        public int RecomPrice
         {
             get => _recom_price;
             set => this.RaiseAndSetIfChanged(ref _recom_price, value);
         }
-        private double _input_astana;
-        public double InputAstana
+        private int _input_astana;
+        public int InputAstana
 
         {
             get => _input_astana;
             set => this.RaiseAndSetIfChanged(ref _input_astana, value);
         }
-        private double _input_aktau;
-        public double InputAktau
+        private int _input_aktau;
+        public int InputAktau
 
         {
             get => _input_aktau;
@@ -188,8 +188,8 @@ namespace Data
             get => _count_cell;
             set => this.RaiseAndSetIfChanged(ref _count_cell, value);
         }
-        private double _price_cell;
-        public double PriceCell
+        private int _price_cell;
+        public int PriceCell
         {
             get => _price_cell;
             set { this.RaiseAndSetIfChanged(ref _price_cell, value);

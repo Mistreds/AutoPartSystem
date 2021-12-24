@@ -114,13 +114,48 @@ namespace Data
         public int Count
         {
             get => _count;
-            set => this.RaiseAndSetIfChanged(ref _count, value);
+            set
+            {
+
+                this.RaiseAndSetIfChanged(ref _count, value);
+
+            }
+        }
+        private int _back_count;
+        [NotMapped]
+        public int BackCount
+        {
+            get => _back_count;
+            set => this.RaiseAndSetIfChanged(ref _back_count, value);
         }
         private int _main_move_id;
         public int MainMoveId
         {
             get => _main_move_id;
             set=>this.RaiseAndSetIfChanged(ref _main_move_id,value);
+        }
+        private int _all_trans;
+        [NotMapped]
+        public int AllTrans
+        {
+            get => this._all_trans;
+            set => this.RaiseAndSetIfChanged(ref _all_trans, value);
+        }
+        public void UpdateAllTrans(int city)
+        {
+            switch (city)
+            {
+                case 1:
+                    AllTrans = 0;
+                    break;
+                case 2:
+                    AllTrans = Warehouse.Goods.InputAstana * Count;
+                    break;
+                case 3:
+                    AllTrans = Warehouse.Goods.InputAktau * Count;
+                    break;
+
+            }
         }
         private MainMove _main_move;
         public MainMove MainMove

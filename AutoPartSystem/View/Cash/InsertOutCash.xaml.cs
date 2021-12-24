@@ -21,7 +21,7 @@ namespace AutoPartSystem.View.Cash
     {
         private Data.Employee emp;
         private string type;
-        private double cash;
+        private int cash;
         Model.Admin.AdminModel admin;
         public InsertOutCash(Data.Employee emp, string type,  Model.Admin.AdminModel admin)
         {
@@ -40,10 +40,10 @@ namespace AutoPartSystem.View.Cash
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            double _cash = 0;
+            int _cash = 0;
             try
             {
-                _cash = Convert.ToDouble(count.Text);
+                _cash = Convert.ToInt32(count.Text);
                 admin.UpdateCash(_cash, name.Text, emp, type);
             }
             catch

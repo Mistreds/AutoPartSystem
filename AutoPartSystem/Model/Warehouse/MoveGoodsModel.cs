@@ -13,6 +13,7 @@ namespace AutoPartSystem.Model.Warehouse
     {
         public void AddMainMove(Data.MainMove mainMove);
         public ObservableCollection<Data.MainMove> GetMainMove();
+        public void GetMoveFromDb();
         public void RemoveMove(Data.MainMove mainMove);
     }
     public class MoveGoodsModel:ReactiveObject, IMoveGoodsModel
@@ -28,7 +29,7 @@ namespace AutoPartSystem.Model.Warehouse
             GetMoveFromDb();
             
         }
-        private void GetMoveFromDb()
+        public void GetMoveFromDb()
         {
             using var db = new Data.ConDB();
             switch (ViewModel.MainViewModel.Employee.PositionId)
@@ -45,7 +46,9 @@ namespace AutoPartSystem.Model.Warehouse
         {
             using var db=new Data.ConDB();
             db.MainMove.Add(mainMove); ;
+            
             db.SaveChanges();
+            GetMoveFromDb();
         }
 
         public ObservableCollection<MainMove> GetMainMove()

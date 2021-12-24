@@ -15,8 +15,8 @@ namespace Data
             get => _id;
             set=>this.RaiseAndSetIfChanged(ref _id, value);
         }
-        private double _cash;
-        public double Cash
+        private int _cash;
+        public int Cash
         {
             get=> _cash;    
             set=>this.RaiseAndSetIfChanged(ref _cash, value);
@@ -40,7 +40,7 @@ namespace Data
             set=>this.RaiseAndSetIfChanged(ref _date, value);
         }
         public CashDay() { }
-        public CashDay(double cash, int emp)
+        public CashDay(int cash, int emp)
         {
             Cash = cash;
             EmployeeId = emp;
@@ -49,20 +49,20 @@ namespace Data
     }
     public class InsertOutCash:MainClass
     {
-        private double _old_cash;
-        public double OldCash
+        private int _old_cash;
+        public int OldCash
         {
             get => _old_cash;
             set => this.RaiseAndSetIfChanged(ref _old_cash, value);
         }
-        private double _cash;
-        public double Cash
+        private int _cash;
+        public int Cash
         {
             get => _cash;
             set => this.RaiseAndSetIfChanged(ref _cash, value);
         }
-        private double _new_cash;
-        public double NewCash
+        private int _new_cash;
+        public int NewCash
         {
             get => _new_cash;
             set => this.RaiseAndSetIfChanged(ref _new_cash, value);
@@ -92,7 +92,7 @@ namespace Data
             set => this.RaiseAndSetIfChanged(ref _employee, value);
         }
         public InsertOutCash() { }
-        public InsertOutCash(string Name, double OldCash, double Cash, double NewCash, string type, int emp_id)
+        public InsertOutCash(string Name, int OldCash, int Cash, int NewCash, string type, int emp_id)
         {
             this.Name = Name;
             this.OldCash= OldCash;
@@ -145,20 +145,20 @@ namespace Data
             get => _status;
             set => this.RaiseAndSetIfChanged(ref _status, value);
         }
-        private double _open_cash;
-        public double OpenCash
+        private int _open_cash;
+        public int OpenCash
         {
             get => _open_cash;
             set=>this.RaiseAndSetIfChanged(ref _open_cash, value);
         }
-        private double _close_cash;
-        public double CloseCash
+        private int _close_cash;
+        public int CloseCash
         {
             get => _close_cash;
             set => this.RaiseAndSetIfChanged(ref _close_cash, value);
         }
         public OpenCloseCash() { }
-        public OpenCloseCash(int emp_id, double Cash)
+        public OpenCloseCash(int emp_id, int Cash)
         {
             this.EmployeeId = emp_id;
             this.OpenDate = DateTime.Now;

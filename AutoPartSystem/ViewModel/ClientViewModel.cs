@@ -76,12 +76,14 @@ namespace AutoPartSystem.ViewModel
             AdminModel = MainViewModel.AdminModel;
             Mark = MarkModel.GetMark();
             Client = new Data.Client();
+            
             Client.new_mark_model();
             _cities = AdminModel.GetCities();
             MainControl = _control[0];
             ClientTable = MainViewModel.ClientModel.GetClient();
             ClientAgent = MainViewModel.ClientModel.GetAgent();
-
+            MainViewModel.ClientModel.WhenAnyValue(p => p.AgentClient.Count).Subscribe(_ => UpdateAgent());
+            MainViewModel.ClientModel.WhenAnyValue(p => p.Client.Count).Subscribe(_ => UpdateClient());
         }
 
         public ClientViewModel(Data.Invoice invoice)
@@ -93,9 +95,26 @@ namespace AutoPartSystem.ViewModel
             MainControl = _control[0];
             clientWindow.Show();
         }
+        public ClientViewModel(Data.Invoice invoice,bool isagent)
+        {
+
+            ClientAgent = MainViewModel.ClientModel.GetAgent();
+            View.Client.ClientWindow clientWindow = new View.Client.ClientWindow(MainViewModel.ClientModel.GetClient(), invoice, this);
+            _control = new ObservableCollection<UserControl> { new View.Client.AgentTable(invoice, clientWindow) };
+            MainControl = _control[0];
+            clientWindow.Show();
+        }
         private void UpdateModels(int mark_id)
         {
             Models = MarkModel.GetModelFromMarkId(mark_id);
+        }
+        private void UpdateAgent() 
+        {
+            ClientAgent = MainViewModel.ClientModel.GetAgent();
+        }
+        private void UpdateClient()
+        {
+            ClientTable = MainViewModel.ClientModel.GetClient();
         }
         public ReactiveCommand<string, Unit> OpenPage => ReactiveCommand.Create<string>(OpenPageCommand);
         public void OpenPageCommand(string command)
@@ -112,23 +131,29 @@ namespace AutoPartSystem.ViewModel
                     Client = new Data.Client();
                     Client.new_mark_model();
                     this.WhenAnyValue(vm => vm.Client.Mark).Subscribe(x => UpdateModels(x.Id));
-                    var new_client = new View.Client.NewClient();
+                     new_client = new View.Client.NewClient();
                     new_client.Show();
                     break;
                 case "NewAgentClient":
                     Client = new Data.Client();
                     Client.ModelId = 1;
                     Client.IsAgent = true;
-                    var new_client_ag = new View.Client.NewClient();
+                     new_client_ag = new View.Client.NewClient();
                     new_client_ag.Show();
                     break;
             }
         }
+        private View.Client.NewClient new_client;
+        private View.Client.NewClient new_client_ag;
         public ReactiveCommand<Unit, Unit> AddClient => ReactiveCommand.Create(() => { 
         
                 MainViewModel.ClientModel.AddClient(Client);
-                ClientTable = MainViewModel.ClientModel.GetClient();
+            new_client.Close();
+        });
+        public ReactiveCommand<Unit, Unit> AddAgent => ReactiveCommand.Create(() => {
 
+            MainViewModel.ClientModel.AddClientAgent(Client);
+            new_client_ag.Close();
 
         });
         public ReactiveCommand<Unit, Unit> FindClient => ReactiveCommand.Create(() => {

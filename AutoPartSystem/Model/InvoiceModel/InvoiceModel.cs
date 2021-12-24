@@ -14,10 +14,13 @@ namespace AutoPartSystem.Model
     {
         public ObservableCollection<Data.Invoice> SelectComInvoiceFromDataBase(int EmpId);
         public ObservableCollection<Data.Invoice> SelectInvoiceFromDataBase(int EmpId);
-
+        public ObservableCollection<Data.Invoice> SelectInvoiceAgentFromDataBase(int EmpId);
         public ObservableCollection<Data.Invoice> FindInvoice(ViewModel.InvoiceViewModel.FindInvoice find,
             bool is_invoice);
         public bool IsHaveInvoice(DateTime date1, DateTime date2, int emp_id);
+        public ObservableCollection<Data.GoodsInvoice> FindBookingGoods(int good_id);
+       
+
     }
     public  class InvoiceModel:ReactiveObject, IInvoiceModel
     {
@@ -43,13 +46,13 @@ namespace AutoPartSystem.Model
         public  ObservableCollection<Data.Invoice> SelectComInvoiceFromDataBase(int EmpId)
         {
             using var db = new Data.ConDB();
-            ComInvoice = new ObservableCollection<Data.Invoice>(db.Invoices.Include(p=>p.Client).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Include(p=>p.Employee).ThenInclude(p=>p.City).Include(p=>p.Employee).ThenInclude(p=>p.Position).Include(p=>p.Client.City).Include(p=>p.GoodsInvoice).ThenInclude(p=>p.Goods).Include(p=>p.GoodsInvoice).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Where(p=>(EmpId==0 || p.EmployeeId==EmpId) && p.IsInvoice==false).Select(p=>new Data.Invoice(p, "Com")));
+            ComInvoice = new ObservableCollection<Data.Invoice>(db.Invoices.Include(p=>p.Client).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Include(p=>p.Employee).ThenInclude(p=>p.City).Include(p=>p.Employee).ThenInclude(p=>p.Position).Include(p=>p.Client.City).Include(p=>p.GoodsInvoice).ThenInclude(p=>p.Goods).Include(p=>p.GoodsInvoice).ThenInclude(p=>p.Model).ThenInclude(p=>p.Mark).Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Where(p=>(EmpId==0 || p.EmployeeId==EmpId) && p.IsInvoice==false && p.IsAgent==false && p.IsEnd == false).Select(p=>new Data.Invoice(p, "Com")));
            return ComInvoice;
         }
         public ObservableCollection<Invoice> SelectInvoiceFromDataBase(int EmpId)
         {
             using var db = new Data.ConDB();
-            InvoiceTable = new ObservableCollection<Data.Invoice>(db.Invoices.Include(p => p.Client).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Include(p => p.Employee).ThenInclude(p => p.City).Include(p => p.Employee).ThenInclude(p => p.Position).Include(p => p.Client.City).Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).Include(p => p.GoodsInvoice).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => (EmpId == 0 || p.EmployeeId == EmpId) && p.IsInvoice == true).Select(p => new Data.Invoice(p, "Inv")));
+            InvoiceTable = new ObservableCollection<Data.Invoice>(db.Invoices.Include(p => p.Client).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Include(p => p.Employee).ThenInclude(p => p.City).Include(p => p.Employee).ThenInclude(p => p.Position).Include(p => p.Client.City).Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).Include(p => p.GoodsInvoice).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Where(p => (EmpId == 0 || p.EmployeeId == EmpId) && p.IsInvoice == true && p.IsAgent==false && p.IsEnd == false).Select(p => new Data.Invoice(p, "Inv")));
             return InvoiceTable;
         }
 
@@ -64,13 +67,26 @@ namespace AutoPartSystem.Model
         public bool IsHaveInvoice(DateTime date1, DateTime date2, int emp_id)
         {
             using var db = new Data.ConDB();
-            var inv = db.Invoices.Where(p => p.Date >= date1 && p.Date <= date2 && p.EmployeeId == emp_id).Count();
+            var inv = db.Invoices.Where(p => p.Date >= date1 && p.Date <= date2 && p.EmployeeId == emp_id && p.IsEnd == false && p.IsAgent==false && p.IsInvoice==true && p.IsEnd==false).Count();
             if (inv > 0)
             {
 
                 return true;
             }
             return false;
+        }
+
+        public ObservableCollection<GoodsInvoice> FindBookingGoods(int good_id)
+        {
+            using var db = new Data.ConDB();
+            return new ObservableCollection<GoodsInvoice>(db.GoodsInvoices.Include(p => p.Invoice).ThenInclude(p => p.Employee).Where(p => p.GoodsId == good_id && p.Invoice.IsAgent == true && p.Invoice.IsEnd == false));
+        }
+
+        public ObservableCollection<Invoice> SelectInvoiceAgentFromDataBase(int EmpId)
+        {
+            using var db = new Data.ConDB();
+            InvoiceTable = new ObservableCollection<Data.Invoice>(db.Invoices.Include(p => p.Client).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Include(p => p.Employee).ThenInclude(p => p.City).Include(p => p.Employee).ThenInclude(p => p.Position).Include(p => p.Client.City).Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).Include(p => p.GoodsInvoice).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Include(p=>p.GoodsInvoice).ThenInclude(p=>p.Goods).ThenInclude(p=>p.Warehouse).Where(p => (EmpId == 0 || p.EmployeeId == EmpId) && p.IsAgent == true && p.IsEnd==false).Select(p => new Data.Invoice(p, "Inv")));
+            return InvoiceTable;
         }
     }
 }

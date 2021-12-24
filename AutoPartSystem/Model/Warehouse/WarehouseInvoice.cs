@@ -21,8 +21,12 @@ namespace AutoPartSystem.Model.Warehouse
         public void CreateExcelFile(Data.Invoice invoice);
         public void AddInvoiceToDataBase (Data.Invoice invoice);
         public void AddInvoiceToDataBase(Data.Invoice invoice, int EmpId);
-        public void UpdateInvoice(Data.Invoice invoice);  
-       
+        public void UpdateInvoice(Data.Invoice invoice);
+        public void AddBookingToDatabase(Data.Invoice invoice);
+        public void SaveInvoiceFromBooking(Data.Invoice invoice);
+        public void RemoveInvoce(Data.Invoice invoice);
+        public void RemoveGoodInvoice(Data.GoodsInvoice goodsInvoice);
+        public void ReturnInvoice(Data.Invoice invoice, bool isdelete);
     }
     public class WarehouseInvoceModel : IWarehouseInvoce
     {
@@ -318,7 +322,6 @@ namespace AutoPartSystem.Model.Warehouse
             {
                 if (invo.Goods.Warehouse.IsVirtual == true) continue;
                 var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
-
                 switch (MainViewModel.Employee.CityId)
                 {
                     case 1:
@@ -385,44 +388,209 @@ namespace AutoPartSystem.Model.Warehouse
         {
             using var db = new Data.ConDB();
             {
-
+                var inv = new Data.Invoice(invoice);
                 var ware = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)).Select(p => WarehouseTable.NewTable(p)));
                 bool is_have_good = true;
                 foreach (var invo in invoice.GoodsInvoice)
                 {
+                    if (invo.Goods.Warehouse.IsVirtual == true) continue;
                     var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
-                    war.InAlmata -= invo.Count;
-                    if (war.InAlmata < 0)
+                    switch (MainViewModel.Employee.CityId)
                     {
-                        invo.DontHaveGoods = true;
-                        is_have_good = false;
+                        case 1:
+                            if (war.InAlmata < invo.Count)
+                            {
+                                invo.DontHaveGoods = true;
+                                is_have_good = false;
+                            }
+                            break;
+                        case 2:
+                            if (war.InAstana < invo.Count)
+                            {
+                                invo.DontHaveGoods = true;
+                                is_have_good = false;
+                            }
+                            break;
+                        case 3:
+                            if (war.InAktau < invo.Count)
+                            {
+                                invo.DontHaveGoods = true;
+                                is_have_good = false;
+                            }
+                            break;
                     }
                 }
                 if (is_have_good)
                 {
-                    if (invoice.IsInvoice)
+                    if (inv.IsInvoice)
                     {
                         var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
                         foreach (var invo in invoice.GoodsInvoice)
                         {
+                            if (invo.Goods.TypePayId == 1)
+                            {
+                                MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Оплата товара", invoice.Employee, "Оплата товара");
+                            }
+                            if (invo.Goods.Warehouse.IsVirtual == true) continue;
                             var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
-                            war.InAlmata -= invo.Count;
+                            switch (invoice.Employee.CityId)
+                            {
+                                case 1:
+                                    war.InAlmata -= invo.Count;
+                                    break;
+                                case 2:
+                                    war.InAstana -= invo.Count;
+                                    break;
+                                case 3:
+                                    war.InAktau -= invo.Count;
+                                    break;
+                            }
                         }
                         db.Warehouse.UpdateRange(wares);
                     }
-                    var inv = new Data.Invoice(invoice);
-                    db.Invoices.Update(inv);
+                    db.Invoices.Add(inv);
                     db.SaveChanges();
+                    invoice.Id = inv.Id;
                 }
                 else
                 {
                     MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
                 }
             }
-            Console.WriteLine("dsadasd");
+        }
+        public void AddBookingToDatabase(Invoice invoice)
+        {
+            var inv = new Data.Invoice(invoice);
+            using var db = new Data.ConDB();
+            var ware = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)).Select(p => WarehouseTable.NewTable(p)));
+            bool is_have_good = true;
+            foreach (var invo in invoice.GoodsInvoice)
+            {
+                if (invo.Goods.Warehouse.IsVirtual == true) continue;
+                var war = ware.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+
+                switch (MainViewModel.Employee.CityId)
+                {
+                    case 1:
+                        if (war.InAlmata < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+
+                        }
+                        else
+                        {
+                            invo.DontHaveGoods = false;
+                        }
+                        break;
+                    case 2:
+                        if (war.InAstana < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        else
+                        {
+                            invo.DontHaveGoods = false;
+                        }
+                        break;
+                    case 3:
+                        if (war.InAktau < invo.Count)
+                        {
+                            invo.DontHaveGoods = true;
+                            is_have_good = false;
+                        }
+                        else
+                        {
+                            invo.DontHaveGoods = false;
+                        }
+                        break;
+                }
+            }
+            if (is_have_good)
+            {
+                if (inv.IsInvoice)
+                {
+                    var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
+                    foreach (var invo in invoice.GoodsInvoice)
+                    {
+                        if (invo.Goods.TypePayId == 1)
+                        {
+                            MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Оплата товара", MainViewModel.SelMain().Employee2, "Оплата товара");
+                        }
+                        if (invo.Goods.Warehouse.IsVirtual == true) continue;
+                        var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                    }
+                    db.Warehouse.UpdateRange(wares);
+                }
+                db.Invoices.Update(inv);
+                db.SaveChanges();
+                invoice.Id = inv.Id;
+            }
+            else
+            {
+                MessageBox.Show("Выделенных товаров не хватает на складе", "Ошибка");
+            }
         }
 
-       
+        public void SaveInvoiceFromBooking(Invoice invoice)
+        {
+            
+        }
+
+        public void RemoveInvoce(Invoice invoice)
+        {
+            if (invoice.Id == 0) return;
+            using var db = new Data.ConDB();
+            var inv = new Data.Invoice(invoice);
+            db.Invoices.Remove(inv);
+            db.SaveChanges();
+        }
+
+        public void RemoveGoodInvoice(GoodsInvoice goodsInvoice)
+        {
+            if(goodsInvoice.Id == 0) return;
+            using var db = new Data.ConDB();
+            db.GoodsInvoices.Remove(goodsInvoice);
+            db.SaveChanges();
+        }
+
+        public void ReturnInvoice(Invoice invoice, bool isdelete)
+        {
+            using var db = new Data.ConDB();    
+            var inv = new Data.Invoice(invoice);
+            inv.IsEnd = true;
+            var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
+            foreach (var invo in invoice.GoodsInvoice)
+            {
+                if (invo.Goods.TypePayId == 1)
+                {
+                    MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Возврат товара", invoice.Employee, "Возврат товара");
+                }
+                if (invo.Goods.Warehouse.IsVirtual == true) continue;
+                var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
+                switch (invoice.Employee.CityId)
+                {
+                    case 1:
+                        war.InAlmata += invo.Count;
+                        break;
+                    case 2:
+                        war.InAstana += invo.Count;
+                        break;
+                    case 3:
+                        war.InAktau += invo.Count;
+                        break;
+                }
+            }
+
+            db.Warehouse.UpdateRange(wares);
+            if (isdelete)
+                db.Invoices.Remove(inv);
+            else
+                db.Invoices.Update(inv);
+            db.SaveChanges();
+        }
+        
     }
 }
 

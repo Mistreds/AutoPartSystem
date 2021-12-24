@@ -126,7 +126,7 @@
                            
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=DataContext.IsNewClient, UpdateSourceTrigger=PropertyChanged,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="True">
-                                    <Setter Property="Text" Value="{Binding DataContext.Client.CityName,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></Setter>
+                                    <Setter Property="Text" Value="{Binding DataContext.CityName,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></Setter>
                                     <Setter Property="IsTextSearchEnabled" Value="False"></Setter>
                                     <Setter Property="IsEditable" Value="True"></Setter>
                                 </DataTrigger>
@@ -167,7 +167,17 @@
                     <DataGridTextColumn Header="Общая сумма" IsReadOnly="True"  Binding="{Binding AllPrice, Mode=OneWay}"></DataGridTextColumn>
                     <DataGridTextColumn Header="Маржа" IsReadOnly="True"  Binding="{Binding Marz, Mode=OneWay}"></DataGridTextColumn>
                 </DataGrid.Columns>
-        </DataGrid>
+                <DataGrid.Resources>
+                    <ContextMenu x:Key="Menu">
+                        <MenuItem Header="Удалить"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.DeleteGoodInvoice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
+                    </ContextMenu>
+                </DataGrid.Resources>
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow" BasedOn="{StaticResource MaterialDesignDataGridRow}">
+                        <Setter Property="ContextMenu" Value="{StaticResource Menu}"></Setter>
+                    </Style>
+                </DataGrid.RowStyle>
+            </DataGrid>
             <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
                 <CheckBox Content="Разделить маржу" x:Name="RazdMarz"  IsChecked="{Binding IsDelMarzh}"></CheckBox>
                 <ComboBox Height="40" Margin="20,0,0,0" MinWidth="150" IsEnabled="{Binding  ElementName=RazdMarz, Path=IsChecked}" ItemsSource="{Binding Path=DataContext.Employees,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" SelectedValue="{Binding Path=DataContext.EmpId,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" DisplayMemberPath="Name" SelectedValuePath="Id"></ComboBox>
@@ -187,9 +197,40 @@
                 <ColumnDefinition></ColumnDefinition>
             </Grid.ColumnDefinitions>
 
-            <Button  Grid.Column="1" CommandParameter="Invoice" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  HorizontalAlignment="Center" Width="200" >Создать накладную</Button>
-            <Button  Grid.Column="3" CommandParameter="Commercial" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" HorizontalAlignment="Center" Width="200" >Создать ком предлож</Button>
-        </Grid>
+            <Button  Grid.Column="1" CommandParameter="Invoice" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"  HorizontalAlignment="Center" Width="200" >Создать накладную
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource  MaterialDesignFlatAccentBgButton}">
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=DataContext.IsNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False"></Condition>
+                                        <Condition Binding="{Binding Client.Id }" Value="0"></Condition>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="IsEnabled" Value="False"></Setter>
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style></Button>
+                <Button  Grid.Column="3" CommandParameter="Commercial" Command="{Binding Path=DataContext.CreateInvoiceCommercial,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" HorizontalAlignment="Center" Width="200" >Создать ком предлож
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource  MaterialDesignFlatAccentBgButton}">
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=DataContext.IsNewClient,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="False"></Condition>
+                                        <Condition Binding="{Binding Client.Id }" Value="0"></Condition>
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="IsEnabled" Value="False"></Setter>
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
 
     </Grid>
     </Grid>

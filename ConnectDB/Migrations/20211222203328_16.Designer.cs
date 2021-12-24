@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211222203328_16")]
+    partial class _16
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,9 +144,6 @@ namespace ConnectDB.Migrations
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
@@ -167,9 +166,6 @@ namespace ConnectDB.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("SetGood")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetGoodCount")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("SetMoveAgent")
@@ -203,7 +199,6 @@ namespace ConnectDB.Migrations
                             CityId = 1,
                             DownGoods = false,
                             IsAdmin = false,
-                            IsDelete = false,
                             Login = "Admin",
                             Name = "Администратор",
                             Password = "887375DAEC62A9F02D32A63C9E14C7641A9A8A42E4FA8F6590EB928D9744B57BB5057A1D227E4D40EF911AC030590BBCE2BFDB78103FF0B79094CEE8425601F5",
@@ -211,7 +206,6 @@ namespace ConnectDB.Migrations
                             SetCell = false,
                             SetEditGood = false,
                             SetGood = false,
-                            SetGoodCount = false,
                             SetMoveAgent = false,
                             SetMoveCity = false,
                             SetPrihod = false,

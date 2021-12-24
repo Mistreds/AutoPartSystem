@@ -4,12 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem.View.Warehouse"
+             xmlns:conv="clr-namespace:AutoPartSystem.Converted"
                xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
           xmlns:wpf="http://materialdesigninxaml.net/winfx/xaml/themes"
              d:DataContext="{d:DesignInstance Type=ViewModel:MoveGoodsViewModel}"
         mc:Ignorable="d"
         d:DesignHeight="450" d:DesignWidth="800" Background="White">
+    <UserControl.Resources>
+        <conv:MultiConverterIntString x:Key="MultiInt"></conv:MultiConverterIntString>
+    </UserControl.Resources>
     <Grid>
         <GroupBox Header="Проверка товара"  >
             <DataGrid BorderBrush="Black" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False" CanUserDeleteRows="False" ItemsSource="{Binding MoveGoods}" BorderThickness="1" GridLinesVisibility="All">
@@ -34,7 +38,28 @@ xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Width="1*" Binding="{Binding Warehouse.Goods.Description}"  Header="Описание"></DataGridTextColumn>
                     <DataGridTextColumn Width="1*" Binding="{Binding Warehouse.Goods.Article}" Header="Артикул"></DataGridTextColumn>
+                    <DataGridTemplateColumn Width="1*" Header="Доставка">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate >
+                                <TextBlock>
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock" >
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Path=DataContext.CityId2,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Value="2">
+                                                    <Setter Property="Text" Value="{Binding Warehouse.Goods.InputAstana }"></Setter>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding CityId2}" Value="3">
+                                                    <Setter Property="Text" Value="{Binding Warehouse.Goods.InputAktau }"></Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                     <DataGridTextColumn Width="1*" Binding="{Binding Count}" Header="Кол-во"></DataGridTextColumn>
+                    <DataGridTextColumn Header="Общая доставка" Binding="{Binding AllTrans}"></DataGridTextColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </GroupBox>

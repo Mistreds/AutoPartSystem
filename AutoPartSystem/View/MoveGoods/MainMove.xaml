@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:AutoPartSystem.View.MoveGoods" xmlns:viewmodel="clr-namespace:AutoPartSystem.ViewModel" d:DataContext="{d:DesignInstance Type=viewmodel:MoveGoodsViewModel}"
         mc:Ignorable="d"
         Title="MainMove" Height="650" Width="1200">
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="80"></RowDefinition>

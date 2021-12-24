@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211222183635_15")]
+    partial class _15
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,15 +138,6 @@ namespace ConnectDB.Migrations
                     b.Property<int>("CityId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("DownGoods")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("Login")
                         .HasColumnType("longtext");
 
@@ -160,33 +153,6 @@ namespace ConnectDB.Migrations
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("SetCell")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetEditGood")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetGood")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetGoodCount")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetMoveAgent")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetMoveCity")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetPrihod")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetReport")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("SetStat")
-                        .HasColumnType("tinyint(1)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CityId");
@@ -201,22 +167,10 @@ namespace ConnectDB.Migrations
                             Id = 1,
                             Cash = 0,
                             CityId = 1,
-                            DownGoods = false,
-                            IsAdmin = false,
-                            IsDelete = false,
                             Login = "Admin",
                             Name = "Администратор",
                             Password = "887375DAEC62A9F02D32A63C9E14C7641A9A8A42E4FA8F6590EB928D9744B57BB5057A1D227E4D40EF911AC030590BBCE2BFDB78103FF0B79094CEE8425601F5",
-                            PositionId = 1,
-                            SetCell = false,
-                            SetEditGood = false,
-                            SetGood = false,
-                            SetGoodCount = false,
-                            SetMoveAgent = false,
-                            SetMoveCity = false,
-                            SetPrihod = false,
-                            SetReport = false,
-                            SetStat = false
+                            PositionId = 1
                         });
                 });
 

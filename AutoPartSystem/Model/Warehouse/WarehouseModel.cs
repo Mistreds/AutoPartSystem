@@ -4,11 +4,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using AutoPartSystem.ViewModel;
 using AutoPartSystem.ViewModel.Warehouse;
 using Microsoft.EntityFrameworkCore;
+using ReactiveUI;
 
 namespace AutoPartSystem.Model.Warehouse
 {
@@ -32,7 +34,7 @@ namespace AutoPartSystem.Model.Warehouse
         public ObservableCollection<WarehouseTable> GetWarehousesVirtualFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
         public ObservableCollection<WarehouseTable> GetWarehousesFilterZav(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
         public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id);
-        public void UpdateWarehouseMainPrice(double input_price, double rec_price, double ast_price, double akt_price, int id);
+        public void UpdateWarehouseMainPrice(int input_price, int rec_price, int ast_price, int akt_price, int id);
         public void UpdateWarehouse(WarehouseTable warehouse);
         public void UpdateWarehouse(Data.Warehouse warehouse);
         public void MoveOrderToWarehouse(Data.MainMove mainMove);
@@ -44,39 +46,139 @@ namespace AutoPartSystem.Model.Warehouse
         public void UpdateGoodImage(Data.GoodsImage goodsImage);
         public ViewModel.Warehouse.ImageGood GetGoodImage(int GoodId);
         public void UpdateAll();
+        public ObservableCollection<WarehouseTable> GetWarehouseTextFilter(string Filter);
     }
 
-    public class WarehouseModel : IWarehouseModel
+    public class WarehouseModel : ReactiveObject,IWarehouseModel
     {
-        private ObservableCollection<WarehouseTable> Warehouses;
+        private int update;
+        public int Update
+        {
+            get=>this.update;
+            set=>this.RaiseAndSetIfChanged(ref update, value);
+        }
+        private ObservableCollection<WarehouseTable> _warehouses;
+        public ObservableCollection<WarehouseTable> Warehouses
+        {
+            get => _warehouses;
+            set => this.RaiseAndSetIfChanged(ref _warehouses, value);
+        }
+        private ObservableCollection<WarehouseTable> _warehouse_sale;
+        public ObservableCollection<WarehouseTable> WarehousesSale
+        {
+            get => _warehouse_sale;
+            set=>this.RaiseAndSetIfChanged(ref _warehouse_sale, value);
+        }
+        private ObservableCollection<WarehouseTable> _warehouse_filter;
+        public ObservableCollection<WarehouseTable> WarehouseFilter
+        {
+            get => _warehouse_filter;
+            set=>this.RaiseAndSetIfChanged(ref _warehouse_filter,value);
+        }
+        private int is_filter;
         private ObservableCollection<WarehouseTable> WarehouseVirtual;
         private List<Data.TypePay> TypePay;
+        private async Task getWareHouse()
+        {
+            await Task.Run(() => {
+                using var db = new Data.ConDB();
+                Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+                if(Warehouses==null)
+                {
+                    Warehouses = new ObservableCollection<WarehouseTable>();
+                }
+            });
+        }
         private async Task _get_warehouse_from_db()
         {
             await Task.Run(() =>
             {
+                while(true)
+                {
+                
                 using var db = new Data.ConDB();
-                // Warehouses=new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Model).ThenInclude(p => p.Mark)
-                // .ToList());
+                    try
+                    {
+                var Warehousess = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+                        
+                        while (Warehouses == null) { }
+                        foreach (var Warehouse in Warehouses)
+                        {
+
+                            Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+
+                        }
+                        var not_in_ware = Warehousess.Where(p => !Warehouses.Select(s => s.Id).Contains(p.Id));
+                        foreach (var ware in not_in_ware)
+                        {
+                            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                            {
+                                Warehouses.Add(ware);
+                            });
+                        }
+                        if(is_filter==1)
+                        {
+                            foreach(var Warehouse in WarehouseFilter)
+                            {
+                                Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+                            }
+                        }
+                        if(is_filter==2)
+                        {
+                            foreach(var Warehouse in WarehousesSale)
+                            {
+                                Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+                            }
+                            not_in_ware = Warehousess.Where(p => !Warehouses.Select(s => s.Id).Contains(p.Id));
+                            foreach (var ware in not_in_ware)
+                            {
+                                foreach (var item2 in ware.Goods.GoodsModel)
+                                {
+                                    var bi = WarehouseTable.NewTable(ware);
+                                    bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
+                                    App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                                    {
+                                        WarehousesSale.Add(bi);
+                                    });
+                                }
+                            }
+                        }
+                        Update++;
+                        Thread.Sleep(10000);
+                    }
+                    catch(Exception e) { Console.WriteLine(e.Message);  }
+                }
             });
         }
         private WarehouseViewModel _view_model;
         public WarehouseModel(ViewModel.WarehouseViewModel ViewModel)
         {
+            _=getWareHouse();
+            if(MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
+                _ = SaleWarehouse();
+            Update = 0;
+            is_filter = 0;
             _view_model = ViewModel;
             using var db = new Data.ConDB();
-            GetWarehouseFromDb();
+            _ = _get_warehouse_from_db();
             TypePay = db.TypePay.ToList();
-            WarehouseVirtual = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+            GetWarehouseVirtualFromDb();
+           
         }
         public void UpdateAll()
         {
             GetWarehouseFromDb();
+            GetWarehouseVirtualFromDb();
         }
         private void GetWarehouseFromDb()
         {
             using var db = new Data.ConDB();
-            Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false && p.IsDelete==false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+            Warehouses = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+        }
+        private void GetWarehouseVirtualFromDb()
+        {
+            using var db = new Data.ConDB();
+            WarehouseVirtual = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
         }
         public void AddWarehouse(Data.Warehouse warehouse)
         {
@@ -86,6 +188,7 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetAllWarehouse()
         {
+            is_filter = 0;
             return Warehouses;
         }
         public ObservableCollection<MarkModelFind> GetAllDesctiption(string name)
@@ -110,19 +213,29 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
         {
-            var a = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false));
-            var b = new ObservableCollection<WarehouseTable>();
-            foreach (var item in a)
+            is_filter = 1;
+            WarehouseFilter = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false));
+            
+            if (!MainViewModel.Employee.SetCell)
+            {
+                
+                return WarehouseFilter;
+            }
+            var WarehouseFilter1 = new ObservableCollection<WarehouseTable>(WarehouseFilter);
+                
+            WarehouseFilter = new ObservableCollection<WarehouseTable>();
+            foreach (var item in WarehouseFilter1)
             {
                 foreach (var item2 in item.Goods.GoodsModel.Where(p => model.Where(s => s.IsSelected == true).Select(s => s.model_id).Contains(p.ModelId)))
                 {
                     var bi = WarehouseTable.NewTable(item);
                     bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
-                    b.Add(bi);
+                    WarehouseFilter.Add(bi);
                 }
             }
-            return b;
-        }
+                return WarehouseFilter;
+            }
+            
         public ObservableCollection<WarehouseTable> GetWarehousesFilterZav(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
         {
             var a = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false));
@@ -135,7 +248,7 @@ namespace AutoPartSystem.Model.Warehouse
             Warehouse.SetArrivel(almata, astana, ackau);
             UpdateWarehouse(Warehouse);
         }
-        public void UpdateWarehouseMainPrice(double input_price, double rec_price, double ast_price, double akt_price, int war_id)
+        public void UpdateWarehouseMainPrice(int input_price, int rec_price, int ast_price, int akt_price, int war_id)
         {
             var Warehouse = Warehouses.Where(p => p.Id == war_id).FirstOrDefault();
             Warehouse.SetPrice(input_price, rec_price, ast_price, akt_price);
@@ -148,24 +261,46 @@ namespace AutoPartSystem.Model.Warehouse
             db.SaveChanges();
             _view_model.WarehousesTable = GetAllWarehouse();
         }
-
+        public ObservableCollection<WarehouseTable> GetWarehouseUpdate()
+        {
+            if(is_filter==0)
+            {
+                return Warehouses;
+            }
+            if (is_filter == 1)
+            {
+                return WarehouseFilter;
+            }
+            if(is_filter==2)
+            {
+                return WarehousesSale;
+            }
+            return null;
+        }
         public ObservableCollection<WarehouseTable> GetWarehouseVirtualTables()
         {
             return WarehouseVirtual;
         }
         public ObservableCollection<MarkModelFind> GetAllVirtualDesctiption(string name)
         {
-            if (Warehouses == null)
+            if (WarehouseVirtual == null)
             {
                 return new ObservableCollection<MarkModelFind>();
             }
-            var a = new ObservableCollection<MarkModelFind>(WarehouseVirtual.Where(p => p.Goods.Description.ToLower().Contains(name.ToLower())).GroupBy(x => new { x.Id, x.Goods.Description }).Select(p => new MarkModelFind(p.Key.Id, p.Key.Description)).ToList());
-            a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
-            return a;
+            try
+            {
+                var a = new ObservableCollection<MarkModelFind>(WarehouseVirtual.Where(p => p.Goods.Description.ToLower().Contains(name.ToLower())).GroupBy(x => new { x.Id, x.Goods.Description }).Select(p => new MarkModelFind(p.Key.Id, p.Key.Description)).ToList());
+                a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
+                return a;
+            } catch
+            {
+                return new ObservableCollection<MarkModelFind>();
+            }
+
         }
         public ObservableCollection<MarkModelFind> GetAllVirtualArticle(string name)
         {
-            if (Warehouses == null)
+            if (WarehouseVirtual == null)
             {
                 return new ObservableCollection<MarkModelFind>();
             }
@@ -192,19 +327,34 @@ namespace AutoPartSystem.Model.Warehouse
             }
             return b;
         }
+        private async Task SaleWarehouse()
+        {
+            await Task.Run(() => {
+                while(Warehouses==null)
+                {
+
+                }
+                WarehousesSale = new ObservableCollection<WarehouseTable>();
+                is_filter = 2;
+                foreach (var item in Warehouses)
+                {
+                    foreach (var item2 in item.Goods.GoodsModel)
+                    {
+                        var bi = WarehouseTable.NewTable(item);
+                        bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
+                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                        {
+                            WarehousesSale.Add(bi);
+                        });
+                    }
+                }
+            });
+           
+        }
         public ObservableCollection<WarehouseTable> GetAllWarehouseForSale()
         {
-            var b = new ObservableCollection<WarehouseTable>();
-            foreach (var item in Warehouses)
-            {
-                foreach (var item2 in item.Goods.GoodsModel)
-                {
-                    var bi = WarehouseTable.NewTable(item);
-                    bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
-                    b.Add(bi);
-                }
-            }
-            return b;
+            
+            return WarehousesSale;
         }
         public ObservableCollection<WarehouseTable> GetWarehouseVirtualForSale()
         {
@@ -282,27 +432,81 @@ namespace AutoPartSystem.Model.Warehouse
         {
             if (MessageBox.Show("Данным действием вы подтверждаете что товар пришел на склад, продолжить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
+                using var db = new Data.ConDB();
                 foreach (var ware in Warehouses.Where(p => mainMove.MoveGoods.Select(p => p.WarehouseId).Contains(p.Id)))
                 {
+
+                    var move = mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).FirstOrDefault();
+                    if(move.Warehouse.Goods.CountCell>move.Count)
+                    {
+                        MessageBox.Show("Кол-во принимаемого товара не может быть больше отправленного", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        continue;
+                    }
                     switch (mainMove.CityToId)
                     {
                         case 1:
-                            ware.InAlmata += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.Count).FirstOrDefault();
+                            ware.InAlmata += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.Warehouse.Goods.CountCell).FirstOrDefault();
                             break;
                         case 2:
-                            ware.InAstana += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.Count).FirstOrDefault();
+                            ware.InAstana += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.Warehouse.Goods.CountCell).FirstOrDefault();
                             break;
                         case 3:
-                            ware.InAktau += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.Count).FirstOrDefault();
+                            ware.InAktau += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.Warehouse.Goods.CountCell).FirstOrDefault();
                             break;
                     }
+                    //ware.Goods.GoodsModel = null;
+                    
+                    db.Warehouse.Update(ware);
+                    db.SaveChanges();
+                    move.Count -= move.Warehouse.Goods.CountCell;
+                    if (move.Count == 0)
+                    {
+                        move.Warehouse = null;
+                        mainMove.MoveGoods.Remove(move);
+                        db.MoveGoods.Remove(move);
+                        db.SaveChanges();
+                        continue;
+                    }
+                    if (move.BackCount > move.Count)
+                    {
+                        MessageBox.Show("Кол-во возвращаемого товара не может быть больше отправленного", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        continue;
+                    }
+                    Console.WriteLine(mainMove.CityFrom.Id);
+                    switch (mainMove.CityFrom.Id)
+                    {
+                        case 1:
+                            Console.WriteLine("dsdadas123123");
+                            ware.InAlmata += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.BackCount).FirstOrDefault();
+                            break;
+                        case 2:
+                            ware.InAstana += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.BackCount).FirstOrDefault();
+                            break;
+                        case 3:
+                            ware.InAktau += mainMove.MoveGoods.Where(p => p.WarehouseId == ware.Id).Select(p => p.BackCount).FirstOrDefault();
+                            break;
+                    }
+                    move.Count -= move.BackCount;
+                    db.Warehouse.Update(ware);
+                    db.SaveChanges();
+                    if (move.Count==0)
+                    {
+                        move.Warehouse = null;
+                        mainMove.MoveGoods.Remove(move);
+                        db.MoveGoods.Remove(move);
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        move.Warehouse = null;
+                        db.MoveGoods.Update(move);
+                        db.SaveChanges();
+                    }
                 }
-                using var db = new Data.ConDB();
-                db.UpdateRange(Warehouses);
                 db.SaveChanges();
-
-                ViewModel.MainViewModel.MoveGoodsModel.RemoveMove(mainMove);
-
+                if(mainMove.MoveGoods.Count==0)
+                    ViewModel.MainViewModel.MoveGoodsModel.RemoveMove(mainMove);
+                MainViewModel.GetMoveGoodsViewModel.UpdateMove();
             }
         }
 
@@ -313,7 +517,7 @@ namespace AutoPartSystem.Model.Warehouse
 
         public Data.Warehouse GetWarehouseFromArticleAndDes(string article, string description)
         {
-            return Warehouses.Where(p => p.Goods.Article.ToLower() == article.ToLower() && p.Goods.Description.ToLower() == description.ToLower() && p.IsDelete == false && p.IsVirtual==false).FirstOrDefault();
+            return Warehouses.Where(p => p.Goods.Article.ToLower() == article.ToLower() && p.Goods.Description.ToLower() == description.ToLower() && p.IsDelete == false && p.IsVirtual == false).FirstOrDefault();
         }
 
         public void UpdateWarehouse(Data.Warehouse warehouse)
@@ -322,10 +526,9 @@ namespace AutoPartSystem.Model.Warehouse
             db.Warehouse.Update(warehouse);
             db.SaveChanges();
         }
-
         public void UpdateGoodModel(ObservableCollection<Data.GoodsModel> goodsModels, ObservableCollection<Data.GoodsModel> goodsModelsRemove)
         {
-            goodsModels=new ObservableCollection<Data.GoodsModel>(goodsModels.Select(p => new Data.GoodsModel { Id=p.Id, Model=new Data.Model(p.Model.Id, p.Model.Name, p.Model.MarkId, p.Model.Mark), GoodsId=p.GoodsId, ModelId=p.ModelId,  }));
+            goodsModels = new ObservableCollection<Data.GoodsModel>(goodsModels.Select(p => new Data.GoodsModel { Id = p.Id, Model = new Data.Model(p.Model.Id, p.Model.Name, p.Model.MarkId, p.Model.Mark), GoodsId = p.GoodsId, ModelId = p.ModelId, }));
             foreach (var good in goodsModels)
             {
                 if (good.Model != null)
@@ -343,11 +546,11 @@ namespace AutoPartSystem.Model.Warehouse
                         good.ModelId = good.Model.Id;
                         good.Model = null;
                     }
-                    
+
                 }
             }
             using var db = new Data.ConDB();
-            if(goodsModelsRemove!=null)db.GoodModel.RemoveRange(goodsModelsRemove);
+            if (goodsModelsRemove != null) db.GoodModel.RemoveRange(goodsModelsRemove);
             db.GoodModel.UpdateRange(goodsModels.Where(p => p.Id == 0).ToList());
             db.SaveChanges();
         }
@@ -355,13 +558,12 @@ namespace AutoPartSystem.Model.Warehouse
         public void UpdateGoodImage(Data.GoodsImage goodsImage)
         {
             using var db = new Data.ConDB();
-            if (goodsImage.Id == 0) 
+            if (goodsImage.Id == 0)
                 db.Add(goodsImage);
             else
                 db.Update(goodsImage);
             db.SaveChanges();
         }
-
         public ImageGood GetGoodImage(int GoodId)
         {
             using var db = new Data.ConDB();
@@ -374,8 +576,37 @@ namespace AutoPartSystem.Model.Warehouse
             db.GoodModel.Update(goodsModels);
             db.SaveChanges();
         }
+        public ObservableCollection<WarehouseTable> GetWarehouseTextFilter(string Filter)
+        {
+            is_filter = 1;
+            WarehouseFilter = new ObservableCollection<WarehouseTable>(Warehouses.Where(p =>
+            p.Goods.GoodsModel.Any(g => g.Model.Name.ToLower().Contains(Filter.ToLower()) || g.Model.Mark.Name.ToLower().Contains(Filter.ToLower()))
+           || p.Goods.Description.ToLower().Contains(Filter.ToLower())
+           || p.Goods.Article.ToLower().Contains(Filter.ToLower())
+           || p.Goods.Brand.Name.ToLower().Contains(Filter.ToLower())
+           ||(p.Note!=null && p.Note.ToLower().Contains(Filter.ToLower()))
 
-        
+            ));
+            if (!MainViewModel.Employee.SetCell)
+            {
+                return WarehouseFilter;
+            }
+            var WarehouseFilter1 = new ObservableCollection<WarehouseTable>(WarehouseFilter);
+            WarehouseFilter = new ObservableCollection<WarehouseTable>();
+            foreach(var item in WarehouseFilter1)
+            {
+                foreach (var item2 in item.Goods.GoodsModel)
+                {
+                    var bi = WarehouseTable.NewTable(item);
+                    bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
+                    WarehouseFilter.Add(bi);
+                }
+            }
+            return WarehouseFilter;
+            
+            
+           
+        }
     }
 
 }

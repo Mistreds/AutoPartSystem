@@ -94,11 +94,52 @@ namespace AutoPartSystem.ViewModel
             set => this.RaiseAndSetIfChanged(ref _is_selected, value);
 
         }
-        private double prom_input;
-        public double PromInput
+        private int prom_input;
+        public int PromInput
         {
             get => prom_input;
             set=>this.RaiseAndSetIfChanged(ref prom_input, value);
+        }
+        private bool _is_booking;
+        public bool IsBooking
+        {
+            get => _is_booking;
+            set=>this.RaiseAndSetIfChanged(ref _is_booking, value);
+        }
+        public void UpdateWare(WarehouseTable update)
+        {
+            this.Goods.InputPrice = update.Goods.InputPrice;
+            this.InAktau=update.InAktau;
+            this.InAlmata=update.InAlmata;
+            this.InAstana=update.InAstana;
+            this.Goods.RecomPrice=update.Goods.RecomPrice;
+            this.Goods.InputAstana=update.Goods.InputAstana;
+            this.Goods.InputAktau=update.Goods.InputAktau;
+            if (MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
+            {
+                switch (MainViewModel.CityId)
+                {
+                    case 1:
+                        PromInput = Goods.InputPrice;
+                        break;
+                    case 2:
+                        PromInput = Goods.InputPrice + Goods.InputAstana;
+                        break;
+                    case 3:
+                        PromInput = Goods.InputPrice + Goods.InputAktau;
+                        break;
+                }
+            }
+            else
+            {
+                PromInput = Goods.InputPrice;
+            }
+        }
+        private ObservableCollection<Data.GoodsInvoice> _goods_booking;
+        public ObservableCollection<Data.GoodsInvoice> GoodsBooking
+        {
+            get => _goods_booking;
+            set=>this.RaiseAndSetIfChanged(ref _goods_booking, value);
         }
         public void SetArrivel(int almata, int astana, int actau)
         {
@@ -106,7 +147,7 @@ namespace AutoPartSystem.ViewModel
             this.InAktau += actau;
             this.InAstana += astana;
         }
-        public void SetPrice(double input, double recoum, double astana, double aktau)
+        public void SetPrice(int input, int recoum, int astana, int aktau)
         {
             this.Goods.RecomPrice = recoum;
             this.Goods.InputPrice = input;
@@ -117,7 +158,6 @@ namespace AutoPartSystem.ViewModel
         public WarehouseTable()
         {
         }
-
         public void SetFromThisObject(WarehouseTable table)
         {
             Id = table.Id;
@@ -158,7 +198,7 @@ namespace AutoPartSystem.ViewModel
         {
             Id = id;
             Goods = good;
-            if(MainViewModel.PositId==3)
+            if(MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
             {
                 switch(MainViewModel.CityId)
                 {
@@ -179,6 +219,15 @@ namespace AutoPartSystem.ViewModel
             }
             Goods.TypePayId = 1;
             Goods.PriceCell = Goods.RecomPrice;
+            GoodsBooking = MainViewModel.InvoiceViewModel.InvoiceModel.FindBookingGoods(Goods.Id);
+            foreach(var item in GoodsBooking)
+            {
+                Console.WriteLine(item.Invoice.Employee.Name+" "+item.Count);
+            }
+            if(GoodsBooking.Count>0)
+            {
+                IsBooking = true;
+            }
             InAlmata = inAlmata;
             InAstana = inAstana;
             InAktau = inAktau;

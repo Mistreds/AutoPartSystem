@@ -85,7 +85,7 @@ namespace AutoPartSystem.ViewModel
             get => _employers_table;
             set => this.RaiseAndSetIfChanged(ref _employers_table, value);
         }
-        private Model.InvoiceModel InvoiceModel;
+        public Model.InvoiceModel InvoiceModel { get; private set; }
         private string _invoice_string;
         public string InvoiceString
         {
@@ -114,7 +114,8 @@ namespace AutoPartSystem.ViewModel
                 case "OpenInvoiceComm":
                     MainControl = _control[0];
                     is_invoice = false;
-                    if(MainViewModel.PositId!=1)
+                    OpenInvoiceInformation = ReactiveCommand.Create<Data.Invoice>(OpenInvoiceInformationCommad);
+                    if (MainViewModel.PositId!=1)
                     {
                         InvoiceTable = InvoiceModel.SelectComInvoiceFromDataBase(MainViewModel.Employee.Id);
                     }
@@ -128,6 +129,7 @@ namespace AutoPartSystem.ViewModel
                 case "OpenInvoice":
                     MainControl = _control[0];
                     is_invoice = true;
+                    OpenInvoiceInformation = ReactiveCommand.Create<Data.Invoice>(OpenInvoiceInformationCommad);
                     if (MainViewModel.PositId != 1)
                     {
                         InvoiceTable = InvoiceModel.SelectInvoiceFromDataBase(MainViewModel.Employee.Id);
@@ -136,18 +138,35 @@ namespace AutoPartSystem.ViewModel
                     {
                         InvoiceTable = InvoiceModel.SelectInvoiceFromDataBase(0);
                     }
-
                     InvoiceString = "Накладные";
+                    FindInvoices = new FindInvoice();
+                    break;
+                case "OpenBooking":
+                    MainControl = _control[0];
+                    is_invoice = false;
+                    OpenInvoiceInformation = ReactiveCommand.Create<Data.Invoice>(OpenInvoiceInformationCommadAgent);
+                    if (MainViewModel.PositId != 1)
+                    {
+                        InvoiceTable = InvoiceModel.SelectInvoiceAgentFromDataBase(MainViewModel.Employee.Id);
+                    }
+                    else
+                    {
+                        InvoiceTable = InvoiceModel.SelectInvoiceAgentFromDataBase(0);
+                    }
+                    InvoiceString = "Бронирования товаров контрагентами";
                     FindInvoices = new FindInvoice();
                     break;
             }
         }
-        public ReactiveCommand<Data.Invoice, Unit> OpenInvoiceInformation =>ReactiveCommand.Create<Data.Invoice>(OpenInvoiceInformationCommad);
+        public ReactiveCommand<Data.Invoice, Unit> OpenInvoiceInformation { get; set; }
         private void OpenInvoiceInformationCommad(Data.Invoice invoice)
         {
             InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(invoice);
         }
-
+        private void OpenInvoiceInformationCommadAgent(Data.Invoice invoice)
+        {
+            InvoiceWinViewModel invoiceWinViewModel = new InvoiceWinViewModel(invoice,true);
+        }
         public ReactiveCommand<Unit, Unit> FindInvoiceCommand => ReactiveCommand.Create(() =>
         {
 
