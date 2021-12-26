@@ -103,9 +103,74 @@ namespace Data
             Date = DateTime.Now;
         }
     }
-    public class Expenses:ReactiveObject
+    public class Expenses: MainClass
+    {
+        private DateTime _date;
+        public DateTime Date
+        {
+            get => _date;
+            set => this.RaiseAndSetIfChanged(ref _date, value);
+        }
+        private int _employee_id;
+        public int EmployeeId
+        {
+            get => _employee_id;
+            set => this.RaiseAndSetIfChanged(ref _employee_id, value);
+        }
+        private Employee _employee;
+        public Employee Employee
+        {
+            get => _employee;
+            set => this.RaiseAndSetIfChanged(ref _employee, value);
+        }
+        private int cash;
+        public int Cash
+        {
+            get => cash;
+            set=>this.RaiseAndSetIfChanged(ref cash, value);
+        }
+        private int _type_expenses_id;
+        public int TypeExpensesId
+        {
+            get => _type_expenses_id;
+            set=>this.RaiseAndSetIfChanged(ref _type_expenses_id, value);
+        }
+        private TypeExpenses _type_expenses;
+        public TypeExpenses TypeExpenses
+        {
+            get => _type_expenses;
+            set => this.RaiseAndSetIfChanged(ref _type_expenses, value);
+        }
+        private int type_pay_id;
+        public int TypePayId
+        {
+            get => type_pay_id;
+            set=>this.RaiseAndSetIfChanged(ref type_pay_id, value);
+        }
+        private TypePay _type_pay;
+        public TypePay TypePay
+        {
+            get=> _type_pay;
+            set=>this.RaiseAndSetIfChanged(ref _type_pay,value);
+        }
+        private bool is_open_day;
+        public bool IsOpenDay
+        {
+            get => is_open_day;
+            set=>this.RaiseAndSetIfChanged(ref is_open_day, value);
+        }
+        
+
+    }
+    public class TypeExpenses : MainClass
     {
 
+        public TypeExpenses() { }
+        public TypeExpenses(int id, string name)
+        {
+            Id= id;
+            Name= name;
+        }
     }
     public class OpenCloseCash : ReactiveObject
     {
@@ -157,12 +222,26 @@ namespace Data
             get => _close_cash;
             set => this.RaiseAndSetIfChanged(ref _close_cash, value);
         }
+        private int _shortage;
+        public int Shortage
+        {
+            get => _shortage;
+            set=>this.RaiseAndSetIfChanged(ref _shortage, value);
+        }
+        private int _marz;
+        public int Marz
+        {
+            get => _marz;
+            set=>this.RaiseAndSetIfChanged(ref _marz,value);
+        }
         public OpenCloseCash() { }
         public OpenCloseCash(int emp_id, int Cash)
         {
             this.EmployeeId = emp_id;
             this.OpenDate = DateTime.Now;
             this.OpenCash = Cash;
+            this.Status = 1;
         }
+      
     }
 }

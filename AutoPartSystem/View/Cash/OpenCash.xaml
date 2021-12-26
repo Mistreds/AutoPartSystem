@@ -5,8 +5,22 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AutoPartSystem.View.Cash"
         mc:Ignorable="d"
-        Title="OpenCash" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="OpenCash" Height="150" Width="300">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="5"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="Введите сумму в кассе"></TextBlock>
+        <TextBox PreviewTextInput="NumberValidationTextBox" Grid.Column="3" VerticalAlignment="Center"  x:Name="Cash"></TextBox>
+        <Button Content="Сохранить" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Width="150" Click="Button_Click"></Button>
     </Grid>
 </Window>

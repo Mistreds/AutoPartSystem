@@ -188,5 +188,11 @@ namespace AutoPartSystem.ViewModel
             AddModel = new Data.Model();
             ModelTable = MarkModel.GetModels();
         });
+        public ReactiveCommand<Data.Brand, Unit> UpdateBrandPrice=>ReactiveCommand.Create<Data.Brand>(UpdateBrandPriceCommand);
+        private void UpdateBrandPriceCommand(Data.Brand brand)
+        {
+            View.Admin.UpdateBrandPrice updateBrandPrice = new View.Admin.UpdateBrandPrice(brand);
+            updateBrandPrice.Show();
+        }
     }
 }

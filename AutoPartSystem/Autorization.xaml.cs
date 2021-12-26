@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoPartSystem.Model;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,5 +45,9 @@ namespace AutoPartSystem
 
         }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            CheckUpdates.CheckUpdate();
+        }
     }
 }

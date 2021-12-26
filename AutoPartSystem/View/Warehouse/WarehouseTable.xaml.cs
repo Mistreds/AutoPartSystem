@@ -221,5 +221,10 @@ namespace AutoPartSystem.View.Warehouse
         {
 
         }
+
+        private void Thumb_DragDelta_2(object sender, DragDeltaEventArgs e)
+        {
+
+        }
     }
 }

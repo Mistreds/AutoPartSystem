@@ -76,7 +76,15 @@
                         <DataGridTextColumn Width="1*" Binding="{Binding Name}" Header="Наименование"></DataGridTextColumn>
                     </DataGrid.Columns>
                     <DataGrid.Resources>
-                    </DataGrid.Resources>
+                        <ContextMenu x:Key="menu">
+                            <MenuItem Header="Увеличить цену"  CommandParameter="{Binding Path=SelectedItem,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}}" Command="{Binding Path=DataContext.UpdateBrandPrice,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"></MenuItem>
+                        </ContextMenu>
+                        </DataGrid.Resources>
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="ContextMenu" Value="{StaticResource menu}"></Setter>
+                        </Style>
+                    </DataGrid.RowStyle>
                 </DataGrid>
                 <GroupBox Grid.Column="1" Header="Добавить модель" Margin="5">
                     <StackPanel  HorizontalAlignment="Center" VerticalAlignment="Center">

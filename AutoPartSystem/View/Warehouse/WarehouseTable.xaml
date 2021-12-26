@@ -96,7 +96,16 @@
                 
             </DataGrid.InputBindings>
             <DataGrid.Columns>
-                <DataGridTextColumn  Width="75" IsReadOnly="True" Header="Бренд" Binding="{Binding Goods.Brand.Name}">
+                <DataGridTextColumn  Width="105" IsReadOnly="True" Header="Бренд" Binding="{Binding Goods.Brand.Name}">
+                    <DataGridTextColumn.HeaderTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Бренд"></TextBlock>
+                                <ToggleButton  Margin="10,0,0,0" Width="15" Height="15" Style="{StaticResource Tooglefilter}" x:Name="Filter" IsChecked="{Binding ElementName=warehousetable, Path=DataContext.IsBrandFind}" ></ToggleButton>
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTextColumn.HeaderTemplate>
                     <DataGridTextColumn.ElementStyle>
                         <Style>
                             <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -529,6 +538,65 @@ Background="Black"
                    
                 </Button>
             </Grid>
+            </Border>
+        </Popup>
+        <Popup x:Name="PopupBrand"  Height="320" Width="260" Placement="Mouse" StaysOpen="False" IsOpen="{Binding DataContext.IsBrandFind, ElementName=warehousetable}"  >
+            <Border   BorderBrush="Black" BorderThickness="1">
+                <Grid Background="White" >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="60"/>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="50"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="16" />
+                    </Grid.ColumnDefinitions>
+                    <Thumb HorizontalAlignment="Right" Grid.Column="1" VerticalAlignment="Bottom" Width="16"  Height="30" Grid.RowSpan="4"
+                        Background="Black"
+                        DragStarted="onDragStarted"  DragDelta="Thumb_DragDelta_2" DragCompleted="onDragCompleted"/>
+                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
+                        <Button Style="{StaticResource MaterialDesignFlatButton}" Command="{Binding DataContext.SortWarehouse, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="BrandDown" Content="Сортировать по убыванию"/>
+                        <Button Command="{Binding DataContext.SortWarehouse, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="BrandUp" Style="{StaticResource MaterialDesignFlatButton}" Content="Сортировать по возрастанию"/>
+                    </StackPanel>
+                    <TextBox x:Name="ArtText1"   wpf:HintAssist.HintOpacity="1" Grid.Row="1" wpf:HintAssist.Hint="Описание" wpf:HintAssist.IsFloating="True"    HorizontalAlignment="Stretch" Margin="10,0,10,0" VerticalAlignment="Top" Height="40" >
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="PreviewKeyUp">
+                                <i:InvokeCommandAction Command="{Binding DataContext.SelectFindBrand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding Text, ElementName=ArtText1, UpdateSourceTrigger=PropertyChanged}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <DataGrid AutoGenerateColumns="False" Grid.Row="2" CanUserAddRows="False" CanUserDeleteRows="False" CanUserReorderColumns="False" IsReadOnly="True" CanUserResizeRows="False" CanUserSortColumns="False"   HeadersVisibility="None" ItemsSource="{Binding DataContext.BrandFind, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" >
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Width="3*">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"  >
+                                            <i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="Click">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.SelectAllBrand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding model_id}"/>
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>
+                                        </CheckBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Width="7*" Binding="{Binding model_name}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <Grid Grid.Row="3"  >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="1*"/>
+                            <ColumnDefinition Width="4*"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="1" Command="{Binding DataContext.SetFilter, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" Content="Ок"/>
+                        <Button Grid.Column="3" Content="Отмена"/>
+                    </Grid>
+                </Grid>
             </Border>
         </Popup>
     </Grid>

@@ -24,6 +24,7 @@ namespace AutoPartSystem.Model.MarkModel
         public ObservableCollection<Data.Model> GetModelFromMarkId(string name, int markId);
         public Data.Model GetModelFromNameFind(string name, int id);
         public ObservableCollection<ViewModel.MarkModelFind> MarkModelFind(string name);
+        public ObservableCollection<ViewModel.MarkModelFind> BrandFind(string name);
         public int GetMarkIdFromName(string name);
         public ObservableCollection<Brand> GetBrand();
         public void AddBrand(string brand);
@@ -134,6 +135,12 @@ namespace AutoPartSystem.Model.MarkModel
             a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
             return a;
         }
+        public ObservableCollection<MarkModelFind> BrandFind(string name)
+        {
+            var a = new ObservableCollection<MarkModelFind>(Brand.Where(p => p.Name.ToLower().Contains(name.ToLower())).OrderBy(p => p.Name).Select(p => new MarkModelFind { model_id = p.Id, model_name = p.Name, IsSelected = true })); ;
+            a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
+            return a;
+        }
         public ObservableCollection<Brand> GetBrand()
         {
             return Brand;
@@ -170,5 +177,7 @@ namespace AutoPartSystem.Model.MarkModel
             Mark = GetMark();
             GetBrandFromDb();
         }
+
+      
     }
 }

@@ -30,7 +30,7 @@ namespace AutoPartSystem.Model.Warehouse
         public ObservableCollection<ViewModel.MarkModelFind> GetAllArticle(string name);
         public ObservableCollection<ViewModel.MarkModelFind> GetAllVirtualDesctiption(string name);
         public ObservableCollection<ViewModel.MarkModelFind> GetAllVirtualArticle(string name);
-        public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
+        public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article, ObservableCollection<ViewModel.MarkModelFind> Brand);
         public ObservableCollection<WarehouseTable> GetWarehousesVirtualFilter(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
         public ObservableCollection<WarehouseTable> GetWarehousesFilterZav(ObservableCollection<ViewModel.MarkModelFind> model, ObservableCollection<ViewModel.MarkModelFind> desctiption, ObservableCollection<ViewModel.MarkModelFind> article);
         public void UpdateWarehouseCount(int almata, int astana, int ackau, int war_id);
@@ -47,6 +47,7 @@ namespace AutoPartSystem.Model.Warehouse
         public ViewModel.Warehouse.ImageGood GetGoodImage(int GoodId);
         public void UpdateAll();
         public ObservableCollection<WarehouseTable> GetWarehouseTextFilter(string Filter);
+        public void UpdateBrandPrice(Data.Brand brand, int proc);
     }
 
     public class WarehouseModel : ReactiveObject,IWarehouseModel
@@ -211,10 +212,10 @@ namespace AutoPartSystem.Model.Warehouse
             a.Insert(0, new ViewModel.MarkModelFind(0, "Выделить все"));
             return a;
         }
-        public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
+        public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article, ObservableCollection<MarkModelFind> Brand)
         {
             is_filter = 1;
-            WarehouseFilter = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false));
+            WarehouseFilter = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false &&  p.IsDelete==false && Brand.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));
             
             if (!MainViewModel.Employee.SetCell)
             {
@@ -606,6 +607,20 @@ namespace AutoPartSystem.Model.Warehouse
             
             
            
+        }
+
+        public void UpdateBrandPrice(Data.Brand brand, int proc)
+        {
+            var warehouse_brand = Warehouses.Where(p => p.Goods.BrandId == brand.Id);
+            using var db = new Data.ConDB();
+            foreach(var w_brand in warehouse_brand)
+            {
+                Console.WriteLine(w_brand.Goods.RecomPrice);
+                w_brand.Goods.RecomPrice = w_brand.Goods.RecomPrice + ((w_brand.Goods.RecomPrice * proc) / 100);
+                Console.WriteLine(w_brand.Goods.RecomPrice);
+                db.Warehouse.Update(w_brand);
+                db.SaveChanges();
+            }
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,13 +16,18 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Cash
 {
     /// <summary>
-    /// Логика взаимодействия для CloseCash.xaml
+    /// Логика взаимодействия для ExpenciveWindow.xaml
     /// </summary>
-    public partial class CloseCash : Window
+    public partial class ExpenciveWindow : Window
     {
-        public CloseCash()
+        public ExpenciveWindow()
         {
             InitializeComponent();
+        }
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+");
+            e.Handled = regex.IsMatch(e.Text);
         }
     }
 }

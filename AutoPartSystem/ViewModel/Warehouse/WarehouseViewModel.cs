@@ -110,6 +110,12 @@ namespace AutoPartSystem.ViewModel
             get => _is_article_find;
             set => this.RaiseAndSetIfChanged(ref _is_article_find, value);
         }
+        private bool _is_brand_find;
+        public bool IsBrandFind
+        {
+            get => _is_brand_find;
+            set => this.RaiseAndSetIfChanged(ref _is_brand_find, value);
+        }
         private bool _is_all_find;
         public bool IsAllFind
         {
@@ -135,6 +141,13 @@ namespace AutoPartSystem.ViewModel
 
             set => this.RaiseAndSetIfChanged(ref _description_find, value);
         }
+        private ObservableCollection<MarkModelFind>? _brand_find;
+        public ObservableCollection<MarkModelFind> BrandFind
+        {
+            get => _brand_find;
+
+            set => this.RaiseAndSetIfChanged(ref _brand_find, value);
+        }
         private ObservableCollection<MarkModelFind>? _article_find;
         public ObservableCollection<MarkModelFind> ArticleFind
         {
@@ -146,6 +159,7 @@ namespace AutoPartSystem.ViewModel
         #region WarehouseViewModelInit
         public Data.Employee Employee { get; set; }
         public int PosId { get;private set; }
+        private bool is_finded;
         public WarehouseViewModel(Model.MarkModel.MarkModel markModel)
         {
             Employee=MainViewModel.Employee;
@@ -188,18 +202,19 @@ namespace AutoPartSystem.ViewModel
             {
                 SetFilter = ReactiveCommand.Create(() =>
                 {
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind));
+                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind,BrandFind));
                 });
                 MarkModelFind = MarkModel.MarkModelFind("");
                 DescriptionFind = WarehouseModel.GetAllDesctiption("");
                 ArticleFind = WarehouseModel.GetAllArticle("");
+                BrandFind = MarkModel.BrandFind("");
                 WarehousesTable = WarehouseModel.GetAllWarehouseForSale();
             }
             if(type==1)
             {
                 SetFilter = ReactiveCommand.Create(() =>
                 {
-                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind));
+                    WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind,BrandFind));
                 });
                 MarkModelFind = MarkModel.MarkModelFind("");
                 DescriptionFind = WarehouseModel.GetAllVirtualDesctiption("");
@@ -232,11 +247,13 @@ namespace AutoPartSystem.ViewModel
             {
                 case "ZavSkladTable":
                     MainControl = _controls[0];
+                    
                     MarkModelFind = MarkModel.MarkModelFind("");
+                    BrandFind = MarkModel.BrandFind("");
                     DescriptionFind = WarehouseModel.GetAllDesctiption("");
                     ArticleFind = WarehouseModel.GetAllArticle("");
                     SetFilter = ReactiveCommand.Create(() => {
-                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind));
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesFilter(MarkModelFind, DescriptionFind, ArticleFind,BrandFind));
 
                     });
                     break;
@@ -340,29 +357,36 @@ namespace AutoPartSystem.ViewModel
         public ReactiveCommand<string, Unit> SelectFindModel => ReactiveCommand.Create<string>(SelectFindModelCommand);
             private void SelectFindModelCommand(string name)
             {
-                
+                is_finded=true;
                 MarkModelFind = MarkModel.MarkModelFind(name);
             }
 
             public ReactiveCommand<string, Unit> SelectFindDesctiption => ReactiveCommand.Create<string>(SelectFindDesctiptionCommand);
             private void SelectFindDesctiptionCommand(string name)
             {
-                DescriptionFind = WarehouseModel.GetAllDesctiption(name);
+            is_finded = true;
+            DescriptionFind = WarehouseModel.GetAllDesctiption(name);
             }
             public ReactiveCommand<string, Unit> SelectFindVirtualDesctiption => ReactiveCommand.Create<string>(SelectFindVirtualDesctiptionCommand);
             private void SelectFindVirtualDesctiptionCommand(string name)
             {
-                
-                DescriptionFind = WarehouseModel.GetAllVirtualDesctiption(name);
+            is_finded = true;
+            DescriptionFind = WarehouseModel.GetAllVirtualDesctiption(name);
             }
         public ReactiveCommand<string, Unit> SelectFindArticle => ReactiveCommand.Create<string>(SelectFindArticleCommand);
             private void SelectFindArticleCommand(string name)
-            {   
-                
-                ArticleFind = WarehouseModel.GetAllArticle(name);
+            {
+            is_finded = true;
+            ArticleFind = WarehouseModel.GetAllArticle(name);
             }
-            public ReactiveCommand<string, Unit> SortWarehouse => ReactiveCommand.Create<string>(SortWarehouseCommand);
-            private void SortWarehouseCommand(string name)
+        public ReactiveCommand<string, Unit> SelectFindBrand => ReactiveCommand.Create<string>(SelectFindBrandCommand);
+        private void SelectFindBrandCommand(string name)
+        {
+            is_finded = true;
+            BrandFind = MarkModel.BrandFind(name);
+        }
+        public ReactiveCommand<string, Unit> SortWarehouse => ReactiveCommand.Create<string>(SortWarehouseCommand);
+        private void SortWarehouseCommand(string name)
             {
                 switch (name)
                 {
@@ -384,10 +408,17 @@ namespace AutoPartSystem.ViewModel
                     case "ArticleUp":
                         WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.Article).ToList());
                         break;
-                }
+                    case "BrandDown":
+                            WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderByDescending(p => p.Goods.Brand.Name).ToList());
+                        break;
+                    case "BrandUp":
+                        WarehousesTable = new ObservableCollection<WarehouseTable>(WarehousesTable.OrderBy(p => p.Goods.Brand.Name).ToList());
+                        break;
+
             }
-            public ReactiveCommand<int, Unit> SelectAllModel => ReactiveCommand.Create<int>(SelectAllModelCommand);
-            private void SelectAllModelCommand(int name)
+            }
+        public ReactiveCommand<int, Unit> SelectAllModel => ReactiveCommand.Create<int>(SelectAllModelCommand);
+        private void SelectAllModelCommand(int name)
             {
                 var bools = MarkModelFind.FirstOrDefault(p => p.model_id == 0);
                 if (name == 0)
@@ -426,8 +457,8 @@ namespace AutoPartSystem.ViewModel
                     mod.IsSelected=MarkModelFind.FirstOrDefault(p => p.model_id == name).IsSelected;
             }
             }
-            public ReactiveCommand<int, Unit> SelectAllDesctiption => ReactiveCommand.Create<int>(SelectAllDesctiptionCommand);
-            private void SelectAllDesctiptionCommand(int name)
+        public ReactiveCommand<int, Unit> SelectAllDesctiption => ReactiveCommand.Create<int>(SelectAllDesctiptionCommand);
+        private void SelectAllDesctiptionCommand(int name)
             {
                 var bools = DescriptionFind.Where(p => p.model_id == 0).FirstOrDefault();
                 if (name == 0)
@@ -452,8 +483,8 @@ namespace AutoPartSystem.ViewModel
                     bools.IsSelected = false;
                 }
             }
-            public ReactiveCommand<int, Unit> SelectAllArticle => ReactiveCommand.Create<int>(SelectAllArticleCommand);
-            private void SelectAllArticleCommand(int name)
+        public ReactiveCommand<int, Unit> SelectAllArticle => ReactiveCommand.Create<int>(SelectAllArticleCommand);
+        private void SelectAllArticleCommand(int name)
             {
                 var bools = ArticleFind.Where(p => p.model_id == 0).FirstOrDefault();
                 if (name == 0)
@@ -478,7 +509,33 @@ namespace AutoPartSystem.ViewModel
                     bools.IsSelected = false;
                 }
             }
-            private ReactiveCommand<Unit, Unit> _set_filter;
+        public ReactiveCommand<int, Unit> SelectAllBrand => ReactiveCommand.Create<int>(SelectAllBrandCommand);
+        private void SelectAllBrandCommand(int name)
+        {
+            var bools = BrandFind.Where(p => p.model_id == 0).FirstOrDefault();
+            if (name == 0)
+            {
+                if (bools.IsSelected)
+                {
+                    foreach (var model in BrandFind)
+                    {
+                        model.IsSelected = true;
+                    }
+                }
+                else
+                {
+                    foreach (var model in BrandFind)
+                    {
+                        model.IsSelected = false;
+                    }
+                }
+            }
+            else
+            {
+                bools.IsSelected = false;
+            }
+        }
+        private ReactiveCommand<Unit, Unit> _set_filter;
             public ReactiveCommand<Unit, Unit> SetFilter
             {
                 get => _set_filter;
@@ -572,7 +629,42 @@ namespace AutoPartSystem.ViewModel
         }
         private async Task UpdateWare()
         {
-            await Task.Run(() => { Console.WriteLine("WorkSyka"); WarehousesTable = WarehouseModel.GetWarehouseUpdate(); });
+            await Task.Run(() => { Console.WriteLine("WorkSyka"); 
+                
+                
+                
+              var   Warehousess = WarehouseModel.GetWarehouseUpdate();
+                while(Warehousess == null)
+                { }
+                if (WarehousesTable == null) WarehousesTable = WarehouseModel.GetWarehouseUpdate();
+                else
+                {
+                    foreach (var Warehouse in WarehousesTable)
+                    {
+
+                        Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+
+                    }
+                    var not_in_ware = Warehousess.Where(p => !WarehousesTable.Select(s => s.Id).Contains(p.Id));
+                    foreach (var ware in not_in_ware)
+                    {
+                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                        {
+                            WarehousesTable.Add(ware);
+                        });
+                    }
+                }
+               
+                if (!is_finded)
+                {
+
+                
+                        MarkModelFind = MarkModel.MarkModelFind("");
+                        DescriptionFind = WarehouseModel.GetAllDesctiption("");
+                        ArticleFind = WarehouseModel.GetAllArticle("");
+                        BrandFind = MarkModel.BrandFind("");
+                }
+            });
         }
         public ReactiveCommand<Unit, Unit> UpdateTable => ReactiveCommand.Create(UpdateTableCom);
         public void UpdateTableCom()

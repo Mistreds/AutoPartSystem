@@ -31,6 +31,9 @@ namespace Data
         public DbSet<OpenCloseCash> OpenCloseCash { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<GoodsImage> GoodsImage { get; set; }
+        public DbSet<Data.TypeExpenses> TypeExpenses { get; set;}
+        public DbSet<Data.Expenses> Expenses { get; set; }
+        public DbSet<Data.BackInvoice> backInvoices { get; set; }
         private static string path_connect;
         private static string query_connect;
 
@@ -76,36 +79,40 @@ namespace Data
             modelBuilder.Entity<Mark>(b => b.ToTable("Mark"));
             modelBuilder.Entity<Mark>().HasData(new Mark[] { new Mark(1, "") });
             modelBuilder.Entity<Model>(b => b.ToTable("Model"));
-            modelBuilder.Entity<Model>().HasData(new Model[] { new Model(1, "",1) });
+            modelBuilder.Entity<Model>().HasData(new Model[] { new Model(1, "", 1) });
             modelBuilder.Entity<Brand>(b => b.ToTable("Brand"));
-            modelBuilder.Entity<Brand>().HasData(new Brand[] { new Brand(1,"") });
+            modelBuilder.Entity<Brand>().HasData(new Brand[] { new Brand(1, "") });
             #endregion
             #region Warehouse
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
             modelBuilder.Entity<Warehouse>(b => b.ToTable("Warehouse"));
-            modelBuilder.Entity<Goods>(b=>b.ToTable("Goods"));
-            modelBuilder.Entity<GoodsImage>(b=>b.ToTable("GoodsImage"));
-            modelBuilder.Entity<Goods>().Ignore(p=>p.CountCell);
-            modelBuilder.Entity<Goods>().Ignore(p=>p.PriceCell);
+            modelBuilder.Entity<Goods>(b => b.ToTable("Goods"));
+            modelBuilder.Entity<GoodsImage>(b => b.ToTable("GoodsImage"));
+            modelBuilder.Entity<Goods>().Ignore(p => p.CountCell);
+            modelBuilder.Entity<Goods>().Ignore(p => p.PriceCell);
             modelBuilder.Entity<Goods>().Property(p => p.BrandId).HasDefaultValue(1);
             modelBuilder.Entity<GoodsInvoice>(b => b.ToTable("GoodsInvoice"));
-            modelBuilder.Entity<GoodsInvoice>().Ignore(p=>p.DontHaveGoods);
+            modelBuilder.Entity<GoodsInvoice>().Ignore(p => p.DontHaveGoods);
             modelBuilder.Entity<Invoice>(b => b.ToTable("Invoice"));
             modelBuilder.Entity<Client>(b => b.ToTable("Client"));
-            modelBuilder.Entity<Client>().Ignore(p=>p.Mark);
+            modelBuilder.Entity<Client>().Ignore(p => p.Mark);
             modelBuilder.Entity<GoodsModel>(b => b.ToTable("GoodModel"));
             modelBuilder.Entity<Client>().Ignore(p => p.CityName);
             modelBuilder.Entity<Client>().Ignore(p => p.MarkId);
             modelBuilder.Entity<MoveGoods>(b => b.ToTable("MoveGoods"));
             modelBuilder.Entity<MainMove>(b => b.ToTable("MainMove"));
             modelBuilder.Entity<TypePay>(b => b.ToTable("TypePay"));
-            modelBuilder.Entity<TypePay>().HasData(new TypePay[] { new TypePay(1, "Наличная оплата"), new TypePay(2, "Карта")  });
+            modelBuilder.Entity<TypePay>().HasData(new TypePay[] { new TypePay(1, "Наличная оплата"), new TypePay(2, "Карта") });
             modelBuilder.Entity<MarzhEmployee>(b => b.ToTable("MarzhEmployee"));
             #endregion
             #region Cash
             modelBuilder.Entity<InsertOutCash>(b => b.ToTable("InsertOutCash"));
             modelBuilder.Entity<CashDay>(b => b.ToTable("CashDay"));
             modelBuilder.Entity<OpenCloseCash>(b => b.ToTable("OpenCloseCash"));
+            modelBuilder.Entity<Data.TypeExpenses>(b => b.ToTable("TypeExpenses"));
+            modelBuilder.Entity<Data.TypeExpenses>().HasData(new TypeExpenses[] { new TypeExpenses(1, "Личные расходы"), new TypeExpenses(2, "Расходы на аренду"), new TypeExpenses(3, "Расходы на рекламу"), new TypeExpenses(4, "Иные расходы"), new TypeExpenses(5, "Возврат"), });
+            modelBuilder.Entity<Data.Expenses>(b => b.ToTable("Expenses"));
+            modelBuilder.Entity<Data.BackInvoice>(b => b.ToTable("BackInvoice"));
             #endregion
         }
     }

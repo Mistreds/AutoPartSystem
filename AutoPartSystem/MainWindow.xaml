@@ -8,7 +8,7 @@
         xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel"
         d:DataContext="{d:DesignInstance Type=ViewModel:MainViewModel}"
         mc:Ignorable="d"
-        Background="White" WindowState="Maximized"
+        Background="White" WindowState="Maximized" 
         Title="MainWindow" Height="650" Width="1200">
     <Window.Resources>
         <ResourceDictionary>
@@ -47,37 +47,62 @@
                 <MenuItem Command="{Binding OpenPage}" x:Name="AddNewVirtualGood" CommandParameter="AddNewVirtualGoods" Header="Добавить товар на виртуальный склад">
                    
                 </MenuItem>
-                <MenuItem Header="Добавить кассу" Command="{Binding OpenPage}" x:Name="InsCash" CommandParameter="InsertCash"></MenuItem>
-                <MenuItem Header="Снять кассу" Command="{Binding OpenPage}" x:Name="OutCash"  CommandParameter="OutCash"></MenuItem>
+                
                 <MenuItem Click="Close_Click" x:Name="Close" Header="Закрыть"></MenuItem>
             </MenuItem>
-            <MenuItem Header="Касса" x:Name="Cash">
-                <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Open" Header="Открыть кассу"></MenuItem>
-                <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Close" Header="Закрыть кассу"></MenuItem>
+            <MenuItem IsEnabled="True"  Header="Касса" x:Name="Cash">
+                <MenuItem Command="{Binding OpenCloseCashCom}"  CommandParameter="Open" Header="Открыть кассу">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                            <Setter Property="IsEnabled" Value="False"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="0" >
+                                    <Setter Property="IsEnabled" Value="True"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
+                <MenuItem Command="{Binding OpenCloseCashCom}" CommandParameter="Close" Header="Закрыть кассу">
+                    <MenuItem.Style>
+                        <Style TargetType="MenuItem" BasedOn="{StaticResource MaterialDesignMenuItem}">
+                            <Setter Property="IsEnabled" Value="True"></Setter>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Status}" Value="0" >
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </MenuItem.Style>
+                </MenuItem>
+                <MenuItem Header="Добавить кассу" Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" x:Name="InsCash" CommandParameter="InsertCash"></MenuItem>
+                <MenuItem Header="Снять кассу" Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" x:Name="OutCash"  CommandParameter="OutCash"></MenuItem>
             </MenuItem>
             <MenuItem Header="Таблицы" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="VirtualSkladTable" Header="Виртуальный склад"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenAgentClientTable" x:Name="AgentMenu" Header="Таблица с контрагентами"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoice" x:Name="Invoce" Header="Накладные"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenInvoiceComm" x:Name="ComInvoice" Header="Коммерческие предложения"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenBooking" x:Name="MoveAgent" Header="Бронь товаров контрагентами"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="OpenMoveGoods" x:Name="MoveCity" Header="Заявки на перемещение товара">
-                   
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="ZavSkladTable" Header="Таблица завсклада"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="VirtualSkladTable" Header="Виртуальный склад"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="OpenClientTable" Header="Таблица с клиентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="OpenAgentClientTable" x:Name="AgentMenu" Header="Таблица с контрагентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="OpenInvoice" x:Name="Invoce" Header="Накладные"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="OpenInvoiceComm" x:Name="ComInvoice" Header="Коммерческие предложения"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="OpenBooking" x:Name="MoveAgent" Header="Бронь товаров контрагентами"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="OpenMoveGoods" x:Name="MoveCity" Header="Заявки на перемещение товара">
+
                 </MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="InOutCash" x:Name="InOutCash" Header="Таблица изменения кассы"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="Expoise" x:Name="ExpoiseCash" Header="Таблица расходов"></MenuItem>
             </MenuItem>
-            <MenuItem Command="{Binding OpenPage}" x:Name="Report"  CommandParameter="Report" Header="Отчет"></MenuItem>
-            <MenuItem Header="Администратор" x:Name="AdminMenu" IsEnabled="{Binding IsCloseCash,Converter={StaticResource InvertBooleanConverter}}">
-                <MenuItem Command="{Binding OpenPage}"  CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>
+            <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" x:Name="Report"  CommandParameter="Report" Header="Отчет"></MenuItem>
+            <MenuItem Header="Администратор" IsEnabled="{Binding IsBlockInterface}" x:Name="AdminMenu" >
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}"  CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
+                <MenuItem Command="{Binding OpenPage}" IsEnabled="{Binding IsBlockInterface}" CommandParameter="AdminCity" Header="Города и адреса"></MenuItem>
                
             </MenuItem>
            
             <MenuItem Header="Проверить наличие обновлений" Command="{Binding CheckUpdate}"></MenuItem>
         </Menu>
-        <ContentControl Grid.Row="1" Content="{Binding MainControl}"></ContentControl>
+        <ContentControl Grid.Row="1" IsEnabled="{Binding IsBlockInterface}" Content="{Binding MainControl}"></ContentControl>
         <StatusBar Grid.Row="2">
             <TextBlock Margin="10,0,0,0">
                 <Run Text="Касса: "></Run>

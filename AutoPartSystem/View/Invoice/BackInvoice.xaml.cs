@@ -12,14 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace AutoPartSystem.View.Cash
+namespace AutoPartSystem.View.Invoice
 {
     /// <summary>
-    /// Логика взаимодействия для CloseCash.xaml
+    /// Логика взаимодействия для BackInvoice.xaml
     /// </summary>
-    public partial class CloseCash : Window
+    public partial class BackInvoice : Window
     {
-        public CloseCash()
+        public BackInvoice()
         {
             InitializeComponent();
         }

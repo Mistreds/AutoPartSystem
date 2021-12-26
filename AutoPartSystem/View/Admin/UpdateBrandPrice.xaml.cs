@@ -13,16 +13,18 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace AutoPartSystem.View.Cash
+namespace AutoPartSystem.View.Admin
 {
     /// <summary>
-    /// Логика взаимодействия для OpenCash.xaml
+    /// Логика взаимодействия для UpdateBrandPrice.xaml
     /// </summary>
-    public partial class OpenCash : Window
+    public partial class UpdateBrandPrice : Window
     {
-        public OpenCash()
+        private Data.Brand brand;
+        public UpdateBrandPrice(Data.Brand brand)
         {
             InitializeComponent();
+            this.brand = brand;
         }
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
@@ -32,7 +34,7 @@ namespace AutoPartSystem.View.Cash
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ViewModel.MainViewModel.CashModel.OpenCash(Convert.ToInt32(Cash.Text));
+            ViewModel.MainViewModel.WarehouseModel.UpdateBrandPrice(brand, Convert.ToInt32(Proc.Text));
             Close();
         }
     }

@@ -3,46 +3,21 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ConnectDB.Migrations
 {
     [DbContext(typeof(ConDB))]
-    partial class ConDBModelSnapshot : ModelSnapshot
+    [Migration("20211225110227_10")]
+    partial class _10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.12");
-
-            modelBuilder.Entity("Data.BackInvoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<int>("EmployeeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GoodsInvoiceId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeId");
-
-                    b.HasIndex("GoodsInvoiceId");
-
-                    b.ToTable("BackInvoice");
-                });
 
             modelBuilder.Entity("Data.Brand", b =>
                 {
@@ -261,9 +236,6 @@ namespace ConnectDB.Migrations
 
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsOpenDay")
-                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext");
@@ -647,17 +619,11 @@ namespace ConnectDB.Migrations
                     b.Property<int>("EmployeeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Marz")
-                        .HasColumnType("int");
-
                     b.Property<int>("OpenCash")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("OpenDate")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<int>("Shortage")
-                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -738,11 +704,6 @@ namespace ConnectDB.Migrations
                         {
                             Id = 4,
                             Name = "Иные расходы"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Возврат"
                         });
                 });
 
@@ -808,25 +769,6 @@ namespace ConnectDB.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Warehouse");
-                });
-
-            modelBuilder.Entity("Data.BackInvoice", b =>
-                {
-                    b.HasOne("Data.Employee", "Employee")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Data.GoodsInvoice", "GoodsInvoice")
-                        .WithMany()
-                        .HasForeignKey("GoodsInvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
-
-                    b.Navigation("GoodsInvoice");
                 });
 
             modelBuilder.Entity("Data.CashDay", b =>

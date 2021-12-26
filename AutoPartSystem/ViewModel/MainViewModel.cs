@@ -22,6 +22,7 @@ namespace AutoPartSystem.ViewModel
         public static ClientViewModel ClientViewModel { get; set; }
         public static InvoiceViewModel InvoiceViewModel { get; set; }
         public static GetMoveGoodsViewModel GetMoveGoodsViewModel { get; set; }
+        public static Cash.ViewCashViewModel ViewCashViewModel { get; set; }
         public static Data.Employee Employee { get;private set; }
         private Data.Employee _employee;
         public Data.Employee Employee2
@@ -34,6 +35,7 @@ namespace AutoPartSystem.ViewModel
         public static Model.Client.ClientModel ClientModel;
         public static Model.Warehouse.WarehouseModel WarehouseModel;
         public static Model.Warehouse.MoveGoodsModel MoveGoodsModel;
+        public static Model.CashModel CashModel;
         private UserControl? _main_control;
         public UserControl? MainControl
         {
@@ -58,6 +60,12 @@ namespace AutoPartSystem.ViewModel
             get => is_not_close_cash;
             set => this.RaiseAndSetIfChanged(ref is_not_close_cash, value);
         }
+        private int _status;
+        public int Status
+        {
+            get => _status;
+            set => this.RaiseAndSetIfChanged(ref _status, value);
+        }
         private Data.OpenCloseCash _open_cash;
         public Data.OpenCloseCash OpenCloseCash
         {
@@ -66,6 +74,12 @@ namespace AutoPartSystem.ViewModel
         }
         public static int CityId { get;private set; }
         public static int PositId { get;private set; }
+        private bool _is_block_interface;
+        public bool IsBlockInterface
+        {
+            get => this._is_block_interface;
+            set => this.RaiseAndSetIfChanged(ref _is_block_interface, value);
+        }
         public MainViewModel(Data.Employee employee)
         {
             main = this;
@@ -80,31 +94,43 @@ namespace AutoPartSystem.ViewModel
             }
             _markModel =new Model.MarkModel.MarkModel();
             AdminModel= new Model.Admin.AdminModel();
-            AdminModel.GetNowCash(Employee.Cash);
-            var open_cash = AdminModel.GetOpenCash(Employee.Id);
-
-            if(open_cash==null)
+            CashModel = new Model.CashModel(employee);
+            if (Employee.SetCell && !Employee.IsAdmin)
             {
-                IsCloseCash = true;
-                var not_close_cash=AdminModel.GetNotCloseCashs(Employee.Id);
-                if (not_close_cash.Count != 0)
+                AdminModel.GetNowCash(Employee.Cash);
+                
+                Status = CashModel.GetStatus();
+                if(Status == 0)
                 {
-                    foreach (var not in not_close_cash)
-                    {
-                        MessageBox.Show($"Необходимо закрыть кассу за {not.OpenDate.ToString("dd-MM-yyyy")}", "Внимание");
-                        var Close_cash = new View.Admin.CloseCash(not);
-                        Close_cash.Show();
-                        IsNotCloseCash = true;
-                    }
+                    IsBlockInterface = false;
+                    IsCloseCash = true;
+                    IsNotCloseCash = false;
                 }
-                
-                
+                if(Status == 1)
+                {
+                    OpenCloseCash = CashModel.GetCashDay();
+                    IsBlockInterface = true;
+                }
+                if(Status == 2)
+                {
+                    OpenCloseCash = CashModel.GetCashDay();
+                    IsBlockInterface = true;
+                    MessageBox.Show("Касса на сегодня закрыта, если необходимо продолжить работу, обратитесь к администратору","Внимание",MessageBoxButton.OK,MessageBoxImage.Information) ;
+                    IsBlockInterface = false;
+                }
+                if(Status == 3)
+                {
+                    OpenCloseCash = CashModel.GetCashDay();
+                    MessageBox.Show("Во время предыдущей работы касса была не закрыта", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
+                    IsBlockInterface = false;
+                    IsNotCloseCash =true;
+                }
             }
             else
             {
-                IsCloseCash = false;
+                IsBlockInterface = true;   
             }
-            ClientModel=new Model.Client.ClientModel();
+            ClientModel =new Model.Client.ClientModel();
             AdminViewModel = new AdminViewModel(_markModel);
             InvoiceViewModel = new InvoiceViewModel();
             WarehouseViewModel =new WarehouseViewModel(_markModel);
@@ -112,6 +138,7 @@ namespace AutoPartSystem.ViewModel
            
             MoveGoodsModel=new Model.Warehouse.MoveGoodsModel();
             GetMoveGoodsViewModel=new GetMoveGoodsViewModel();
+            ViewCashViewModel = new Cash.ViewCashViewModel(employee);
             _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage(), new View.MoveGoods.GetMoveGoods()};
             IsCloseCash = false;
             if (!IsCloseCash)
@@ -188,8 +215,34 @@ namespace AutoPartSystem.ViewModel
                     report.DataContext= reportViewModel;
                     report.Show();
                     break;
+                case "InOutCash":
+                    ViewCashViewModel.OpenPage(page_id);
+                    break;
+                case "Expoise":
+                    ViewCashViewModel.OpenPage(page_id);
+                    break;
+
             }
             
+        }
+        public void UpdateOpenCash()
+        {
+            Status = CashModel.GetStatus();
+            OpenCloseCash = CashModel.GetCashDay();
+            if(Status==0)
+            {
+                IsBlockInterface = false;
+                IsCloseCash = true;
+                IsNotCloseCash = false;
+            }
+            if(Status==1)
+            {
+                IsBlockInterface = true;
+            }
+            if (Status == 2)
+            {
+                IsBlockInterface = false;
+            }
         }
         public ReactiveCommand<string, Unit> OpenCloseCashCom => ReactiveCommand.Create<string>(OpenCloseCashCommand);
         private void OpenCloseCashCommand(string name)
@@ -197,8 +250,11 @@ namespace AutoPartSystem.ViewModel
             switch (name)
             {
                 case "Open":
+                    View.Cash.OpenCash openCash= new View.Cash.OpenCash();
+                    openCash.Show();
                     break;
                 case "Close":
+                    ViewModel.Cash.CloseCashViewModel closeCash = new Cash.CloseCashViewModel(OpenCloseCash);
                     break;
             }
         }

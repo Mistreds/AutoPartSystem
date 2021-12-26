@@ -1,12 +1,44 @@
-﻿<Window x:Class="AutoPartSystem.View.Admin.CloseCash"
+﻿<Window x:Class="AutoPartSystem.View.Cash.CloseCash"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AutoPartSystem.View.Admin"
+        xmlns:local="clr-namespace:AutoPartSystem.View.Cash"
+          xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel.Cash"
+        d:DataContext="{d:DesignInstance Type=ViewModel:CloseCashViewModel}"
         mc:Ignorable="d"
-        Title="CloseCash" Height="450" Width="800">
+        Title="CloseCash" Height="250" Width="500">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="15"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="15"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="10"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center"  Text="Введите кол-во денег в кассе"></TextBlock>
+        <Button Command="{Binding OpenExpencive}" Visibility="{Binding IsNeedExpence, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Column="5" Content="Выбрать расходы" Style="{StaticResource MaterialDesignFlatButton}" FontSize="12"></Button>
+        <TextBox Text="{Binding CloseCash, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" Grid.Column="3" VerticalAlignment="Center" ></TextBox>
+        <TextBlock Grid.Row="1" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center"  Text="Введите маржу"></TextBlock>
+        <TextBox Grid.Row="1" Text="{Binding Marz, UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" VerticalAlignment="Center" ></TextBox>
+        <TextBlock Grid.Row="1" Grid.Column="5" TextWrapping="Wrap" VerticalAlignment="Center">  
+            <Run Text="Маржа, высчитаная программой: " ></Run>
+            <Run Text="{Binding RecMarz}"></Run>
+        </TextBlock>
+        <TextBlock Grid.Row="2" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Center"  Text="Введите кол-во переданное бухгалтеру"></TextBlock>
+        <TextBox Text="{Binding CashToBuch,UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" ></TextBox>
+        <TextBlock  Grid.Column="1" Grid.Row="3" TextWrapping="Wrap" >
+            <Run Text="Кол-во денег в кассе при закрытии: " ></Run>
+            <Run Text="{Binding NewCash}"></Run>
+        </TextBlock>
+        <Button Content="Сохранить" Command="{Binding CloseCashCommand}" Grid.Column="3" Grid.Row="3"></Button>
     </Grid>
 </Window>

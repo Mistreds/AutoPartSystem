@@ -1,0 +1,72 @@
+﻿<Window x:Class="AutoPartSystem.View.Cash.ExpenciveWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AutoPartSystem.View.Cash"
+        xmlns:ViewModel="clr-namespace:AutoPartSystem.ViewModel.Cash"
+        d:DataContext="{d:DesignInstance Type=ViewModel:CashViewModel}"
+        mc:Ignorable="d"
+        Title="ExpenciveWindow" Height="450" Width="800">
+    <Grid>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition ></RowDefinition>
+            <RowDefinition Height="60" ></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock VerticalAlignment="Center" >
+                <Run Text="Недостача: "></Run>
+                <Run Text="{Binding  Expen}"></Run>
+            </TextBlock>
+            <TextBlock  Grid.Column="1" Text="{Binding InfoText}" TextWrapping="Wrap" VerticalAlignment="Center"></TextBlock>
+        </Grid>
+        <DataGrid AutoGenerateColumns="False" Grid.Row="1" ItemsSource="{Binding Expenses}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Width="1*" Header="Сумма">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Cash, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox PreviewTextInput="NumberValidationTextBox" Text="{Binding Cash, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Width="1*"  Header="Пояснение" Binding="{Binding Name}"></DataGridTextColumn>
+                <DataGridTemplateColumn Width="1*"  Header="Тип расходов">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding  TypeExpenses.Name, UpdateSourceTrigger=PropertyChanged}"></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <ComboBox ItemsSource="{Binding Path=DataContext.TypeExpenses,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" SelectedItem="{Binding TypeExpenses, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="Name" SelectedValuePath="Id"></ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Row="2" Width="150" Content="Сохранить" Command="{Binding SaveExpensive}">
+            <Button.Style>
+                <Style TargetType="Button" BasedOn="{StaticResource  MaterialDesignFlatAccentBgButton}">
+                    <Setter Property="IsEnabled" Value="False"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Expen, UpdateSourceTrigger=PropertyChanged}" Value="0">
+                            <Setter Property="IsEnabled" Value="True"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+    </Grid>
+</Window>

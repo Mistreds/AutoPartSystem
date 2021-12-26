@@ -1,6 +1,7 @@
 ﻿using ReactiveUI;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Reactive.Linq;
 namespace Data
@@ -235,8 +236,7 @@ namespace Data
             this.AllTrans = goodsInvoice.AllTrans;
             this.Marz=goodsInvoice.Marz;
             this.TypePayId = goodsInvoice.TypePayId;
-            
-
+           
         }
         public GoodsInvoice()
         { }
@@ -245,6 +245,13 @@ namespace Data
         {
             get => _all_trans;
             set=>this.RaiseAndSetIfChanged(ref _all_trans, value);
+        }
+        private int _back_count;
+        [NotMapped]
+        public int BackCount
+        {
+            get => _back_count;
+            set=>this.RaiseAndSetIfChanged(ref _back_count, value);
         }
         private int trans;
         public GoodsInvoice(GoodsInvoice goodsInvoice, int invoice_id)
@@ -435,6 +442,51 @@ namespace Data
         {
             get=> _type_pay;
             set=>this.RaiseAndSetIfChanged(ref _type_pay, value);
+        }
+    }
+    public class BackInvoice : ReactiveObject
+    {
+        private int _id;
+        public int Id
+        {
+            get => _id;
+            set => this.RaiseAndSetIfChanged(ref _id, value);
+        }
+        private DateTime _date;
+        public DateTime Date
+        {
+            get => _date;
+            set => this.RaiseAndSetIfChanged(ref _date, value);
+        }
+        private int _employee_id;
+        public int EmployeeId
+        {
+            get => this._employee_id;
+            set => this.RaiseAndSetIfChanged(ref _employee_id, value);
+        }
+        private Employee _employee;
+        public Employee Employee
+        {
+            get => this._employee;
+            set => this.RaiseAndSetIfChanged(ref _employee, value);
+        }
+        private GoodsInvoice _good_invoice;
+        public GoodsInvoice GoodsInvoice
+        {
+            get => this._good_invoice;
+            set => this.RaiseAndSetIfChanged(ref _good_invoice, value);
+        }
+        private int _good_invoice_id;
+        public int GoodsInvoiceId
+        {
+            get => _good_invoice_id;
+            set => this.RaiseAndSetIfChanged(ref _good_invoice_id, value);
+        }
+        private int count;
+        public int Count
+        {
+            get => count;
+            set => this.RaiseAndSetIfChanged(ref count, value);
         }
     }
     public class Client : MainClass

@@ -11,6 +11,7 @@ using System.IO;
 using OfficeOpenXml.Style;
 using System.Windows.Controls;
 using System.Windows;
+using Microsoft.EntityFrameworkCore;
 
 namespace AutoPartSystem.ViewModel
 {
@@ -254,7 +255,7 @@ namespace AutoPartSystem.ViewModel
             }; 
             CityName = "";
             Client = new Data.Client();
-            InitNewAgent.WhenAnyValue(vm => this.IsNewClient).Subscribe();
+          
             IsEdit = true;
             Invoice = invoice;
             IsInvoice = Invoice.IsInvoice;
@@ -264,17 +265,20 @@ namespace AutoPartSystem.ViewModel
             {
                 CreateInvoiceBase = ReactiveCommand.Create(() =>
                 {
-                    if (MessageBox.Show("После возврата товаров, удалить накладную из базы?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-                    {
-                        WarehouseInvoceModel.ReturnInvoice(Invoice,true); ;
+                    //if (MessageBox.Show("После возврата товаров, удалить накладную из базы?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+                    //{
+                    //    WarehouseInvoceModel.ReturnInvoice(Invoice,true); ;
                         
-                    }
-                    else
-                    {
-                        WarehouseInvoceModel.ReturnInvoice(Invoice,false);
-                    }
-                    MessageBox.Show("Товары возвращены на склад", "Успех");
-                    invoiceGood.Close();
+                    //}
+                    //else
+                    //{
+                    //    WarehouseInvoceModel.ReturnInvoice(Invoice,false);
+                    //}
+                    //MessageBox.Show("Товары возвращены на склад", "Успех");
+                    //invoiceGood.Close();
+                    View.Invoice.BackInvoice backInvoice= new View.Invoice.BackInvoice();
+                    backInvoice.DataContext = this;
+                    backInvoice.Show();
                 });
             }
             else
@@ -302,6 +306,7 @@ namespace AutoPartSystem.ViewModel
             CreateInvoice = new View.Invoice.CreateInvoice(this);
             InvoiceTable = new View.Invoice.InvoceTable();
             MainControl = InvoiceTable;
+            TypePay = MainViewModel.WarehouseModel.GetTypePay();
             invoiceGood = new View.Warehouse.InvoiceGood(this);
             //this.WhenAnyValue(vm =>ViewModel.MainViewModel.AdminModel.Cities.Count).Subscribe(x=> UpdateCity());
             invoiceGood.Show();
@@ -377,6 +382,85 @@ namespace AutoPartSystem.ViewModel
             
             Models=MarkModel.GetModelFromMarkId(mark_id);
         }
+        public ReactiveCommand<Unit, Unit> BackInvoiceCommand => ReactiveCommand.Create(() => {
+
+
+
+            foreach (var inv in Invoice.GoodsInvoice)
+            {
+                using var db = new Data.ConDB();
+                var back_ind = db.backInvoices.Where(p => p.GoodsInvoiceId == inv.Id).FirstOrDefault();
+                if (inv.BackCount == 0)
+                {
+                    continue;
+                }
+                if (back_ind==null)
+                {
+                    if (inv.BackCount > inv.Count)
+                    {
+                        inv.DontHaveGoods = true;
+                        MessageBox.Show("Возвращаемого товара не может быть больше проданного","",MessageBoxButton.OK, MessageBoxImage.Error);
+                        continue;
+                    }
+                    
+                    else
+                        inv.DontHaveGoods = false;
+                    back_ind = new Data.BackInvoice { Count = inv.BackCount, Date = DateTime.Now, EmployeeId = Invoice.EmployeeId, GoodsInvoiceId = inv.Id };
+                    Data.Expenses expenses = new Data.Expenses { Name=inv.Goods.Description, TypePayId=inv.TypePayId, EmployeeId=invoice.EmployeeId, Date=DateTime.Now, Cash=inv.BackCount*inv.Price, TypeExpensesId=5  };
+                    db.Expenses.Add(expenses);
+                    db.backInvoices.Add(back_ind);
+                    
+                  var ware=  db.Warehouse.Include(p => p.Goods).Where(p => p.Goods.Id == inv.GoodsId).FirstOrDefault();
+                    switch(Invoice.Employee.CityId)
+                    {
+                        case 1:
+                            ware.InAlmata += inv.BackCount;
+                            break;
+                        case 2:
+                            ware.InAstana += inv.BackCount;
+                            break;
+                        case 3:
+                            ware.InAktau+=inv.BackCount;
+                            break;
+
+                    }
+                    db.Update(ware);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    if (inv.BackCount > (inv.Count- back_ind.Count))
+                    {
+
+                        inv.DontHaveGoods = true;
+                        MessageBox.Show("Возвращаемого товара не может быть больше проданного и которого вернули", "", MessageBoxButton.OK, MessageBoxImage.Error);
+                        continue;
+                    }
+                    back_ind.Count = inv.BackCount;
+                    Data.Expenses expenses = new Data.Expenses { Name = inv.Goods.Description, TypePayId = inv.TypePayId, EmployeeId = invoice.EmployeeId, Date = DateTime.Now, Cash = inv.BackCount * inv.Price, TypeExpensesId = 5 };
+                    db.Expenses.Update(expenses);
+                    db.backInvoices.Add(back_ind);
+
+                    var ware = db.Warehouse.Include(p => p.Goods).Where(p => p.Goods.Id == inv.GoodsId).FirstOrDefault();
+                    switch (Invoice.Employee.CityId)
+                    {
+                        case 1:
+                            ware.InAlmata += inv.BackCount;
+                            break;
+                        case 2:
+                            ware.InAstana += inv.BackCount;
+                            break;
+                        case 3:
+                            ware.InAktau += inv.BackCount;
+                            break;
+
+                    }
+                    db.Update(ware);
+                    
+                    db.SaveChanges();
+                }
+            }
+        });
         public ReactiveCommand<Data.GoodsInvoice, Unit> DeleteGoodInvoice => ReactiveCommand.Create<Data.GoodsInvoice>(DeleteGoodInvoiceCom);
         private void DeleteGoodInvoiceCom(Data.GoodsInvoice goodsInvoice)
         {

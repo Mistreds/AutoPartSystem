@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace AutoPartSystem.View.Cash
 {
     /// <summary>
-    /// Логика взаимодействия для CloseCash.xaml
+    /// Логика взаимодействия для InOutCash.xaml
     /// </summary>
-    public partial class CloseCash : Window
+    public partial class InOutCash : Window
     {
-        public CloseCash()
+        public InOutCash()
         {
             InitializeComponent();
         }
