@@ -10,7 +10,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         x:Name="MainControl"
-        Title="AddToVirtualWarehouse" Height="450" Width="800">
+        Title="AddToVirtualWarehouse" Height="270" Width="1000">
     <Grid  DataContext="{Binding WarehouseVirtual}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
@@ -34,18 +34,19 @@
                     <Button Command="{Binding ElementName=MainControl,Path=DataContext.AddModelToWareTable}">+</Button>
 
                 </StackPanel>
-                <DataGrid Width="320" VerticalScrollBarVisibility="Visible" MinHeight="150"  ItemsSource="{Binding Goods.GoodsModel}" IsReadOnly="True" CanUserAddRows="False" AutoGenerateColumns="False">
+                <DataGrid Width="320" VerticalScrollBarVisibility="Visible" MinHeight="150"  ItemsSource="{Binding Goods.GoodsModel}" CanUserAddRows="False" AutoGenerateColumns="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Width="1*" Header="Марка" Binding="{Binding Model.Mark.Name}"></DataGridTextColumn>
-                        <DataGridTextColumn Width="1*" Header="Модель"  Binding="{Binding Model.Name}"></DataGridTextColumn>
+                        <DataGridTextColumn Width="1*" IsReadOnly="True" Header="Марка" Binding="{Binding Model.Mark.Name}"></DataGridTextColumn>
+                        <DataGridTextColumn Width="1*"  IsReadOnly="True" Header="Модель"  Binding="{Binding Model.Name}"></DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </StackPanel>
             <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Description}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Товар" wpf:HintAssist.IsFloating="True"></TextBox>
+            <TextBox TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.Article}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Артикул" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Note}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Магазин" wpf:HintAssist.IsFloating="True"></TextBox>
             <TextBox  TextWrapping="Wrap" Height="40" Width="150" Text="{Binding Goods.InputPrice}" wpf:HintAssist.HintOpacity="1" Margin="10" wpf:HintAssist.Hint="Закупочная цена" wpf:HintAssist.IsFloating="True"></TextBox>
         </StackPanel>
-        <Grid Grid.Row="5">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"></ColumnDefinition>
                 <ColumnDefinition Width="2*"></ColumnDefinition>

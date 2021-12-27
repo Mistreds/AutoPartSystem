@@ -74,9 +74,24 @@ namespace AutoPartSystem.View.Warehouse
             if (e.Key == Key.C && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
 
-                ViewModel.WarehouseTable warehouseTable = (ViewModel.WarehouseTable)warehouse.SelectedItem;
-                Console.WriteLine($"{warehouseTable.Goods.GoodsModel.FirstOrDefault().Model.Mark.Name} {warehouseTable.Goods.GoodsModel.FirstOrDefault().Model.Name} {warehouseTable.Goods.Description} {warehouseTable.Goods.Article} {warehouseTable.WarehousePlace} ");
-                Clipboard.SetText($"{warehouseTable.Goods.GoodsModel.FirstOrDefault().Model.Mark.Name} {warehouseTable.Goods.GoodsModel.FirstOrDefault().Model.Name} {warehouseTable.Goods.Description} {warehouseTable.Goods.Article} {warehouseTable.WarehousePlace} ");
+                var warehouseTables = warehouse.SelectedItems;
+                Console.WriteLine(warehouseTables.Count);
+                string text = "";
+                bool first = true;
+                foreach(var table in warehouseTables)
+                {
+                    ViewModel.WarehouseTable warehouseTable = (ViewModel.WarehouseTable)table;
+                    if (first)
+                    {
+                        first = false;
+                    }
+                    else
+                    {
+                        text += "\n";
+                    }
+                    text += $"{warehouseTable.Goods.GoodsModel.FirstOrDefault().Model.Mark.Name} {warehouseTable.Goods.GoodsModel.FirstOrDefault().Model.Name}   |  {warehouseTable.Goods.Description}   |  {warehouseTable.InAlmata}  |   {warehouseTable.Goods.Article}  |   {warehouseTable.WarehousePlace}";
+                }
+                Clipboard.SetText(text);
             }
         }
 

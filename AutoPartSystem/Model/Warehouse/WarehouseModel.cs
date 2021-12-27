@@ -58,6 +58,12 @@ namespace AutoPartSystem.Model.Warehouse
             get=>this.update;
             set=>this.RaiseAndSetIfChanged(ref update, value);
         }
+        private int updateVirt;
+        public int UpdateVirt
+        {
+            get => this.update;
+            set => this.RaiseAndSetIfChanged(ref update, value);
+        }
         private ObservableCollection<WarehouseTable> _warehouses;
         public ObservableCollection<WarehouseTable> Warehouses
         {
@@ -76,9 +82,22 @@ namespace AutoPartSystem.Model.Warehouse
             get => _warehouse_filter;
             set=>this.RaiseAndSetIfChanged(ref _warehouse_filter,value);
         }
-        private int is_filter;
+        public int is_filter;
+        public int is_filter_virt;
         private ObservableCollection<WarehouseTable> WarehouseVirtual;
-        private List<Data.TypePay> TypePay;
+        private ObservableCollection<WarehouseTable> _warehouse_virtual_sel;
+        public ObservableCollection<WarehouseTable>  WarehouseVirtualSel
+        {
+            get=> _warehouse_virtual_sel;
+            set => this.RaiseAndSetIfChanged(ref _warehouse_virtual_sel, value);
+        }
+        private ObservableCollection<WarehouseTable> _warehouse_virtual_filter_sel;
+        public ObservableCollection<WarehouseTable> WarehouseVirtualFilterSel
+        {
+            get => _warehouse_virtual_sel;
+            set => this.RaiseAndSetIfChanged(ref _warehouse_virtual_sel, value);
+        }
+        private List<Data.TypePay> TypePay; 
         private async Task getWareHouse()
         {
             await Task.Run(() => {
@@ -87,6 +106,81 @@ namespace AutoPartSystem.Model.Warehouse
                 if(Warehouses==null)
                 {
                     Warehouses = new ObservableCollection<WarehouseTable>();
+                }
+                _ = _get_warehouse_from_db();
+            });
+        }
+        private async Task getWareHouseVirt()
+        {
+            await Task.Run(() => {
+                using var db = new Data.ConDB();
+                WarehouseVirtual = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+                if (WarehouseVirtual == null)
+                {
+                    WarehouseVirtual = new ObservableCollection<WarehouseTable>();
+                }
+                WarehouseVirtualFilterSel = new ObservableCollection<WarehouseTable>();
+                _ = _get_warehouse_from_db_virtual();
+            });
+        }
+        private async Task _get_warehouse_from_db_virtual()
+        {
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+
+                    using var db = new Data.ConDB();
+                    try
+                    {
+                        var Warehousess = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == true && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
+
+                        while (WarehouseVirtual == null) { }
+                        foreach (var Warehouse in WarehouseVirtual)
+                        {
+
+                            Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+
+                        }
+                        var not_in_ware = Warehousess.Where(p => !WarehouseVirtual.Select(s => s.Id).Contains(p.Id));
+                        foreach (var ware in not_in_ware)
+                        {
+                            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                            {
+                                WarehouseVirtual.Add(ware);
+                            });
+                        }
+                        if (is_filter == 1)
+                        {
+                            foreach (var Warehouse in WarehouseVirtualFilterSel)
+                            {
+                                Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+                            }
+                        }
+                        if (is_filter == 0)
+                        {
+                            foreach (var Warehouse in WarehouseVirtualFilterSel)
+                            {
+                                Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+                            }
+                            not_in_ware = Warehousess.Where(p => !WarehouseVirtualFilterSel.Select(s => s.Id).Contains(p.Id));
+                            foreach (var ware in not_in_ware)
+                            {
+                                foreach (var item2 in ware.Goods.GoodsModel)
+                                {
+                                    var bi = WarehouseTable.NewTable(ware);
+                                    bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
+                                    App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                                    {
+                                        WarehouseVirtualFilterSel.Add(bi);
+                                    });
+                                }
+                            }
+                        }
+                        UpdateVirt++;
+                        Thread.Sleep(1000);
+                    }
+                    catch (Exception e) { Console.WriteLine(e.StackTrace); }
                 }
             });
         }
@@ -102,7 +196,7 @@ namespace AutoPartSystem.Model.Warehouse
                     {
                 var Warehousess = new ObservableCollection<WarehouseTable>(db.Warehouse.Include(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Goods.Brand).Include(p => p.Goods.GoodsModel).ThenInclude(p => p.Model).ThenInclude(p => p.Mark).Where(p => p.IsVirtual == false && p.IsDelete == false).Select(p => new WarehouseTable(p.Id, p.Goods, p.InAlmata, p.InAstana, p.InAktau, p.WarehousePlace, p.TypePay, p.Note, p.IsVirtual)).ToList());
                         
-                        while (Warehouses == null) { }
+                        while (Warehouses == null) {}
                         foreach (var Warehouse in Warehouses)
                         {
 
@@ -130,7 +224,7 @@ namespace AutoPartSystem.Model.Warehouse
                             {
                                 Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
                             }
-                            not_in_ware = Warehousess.Where(p => !Warehouses.Select(s => s.Id).Contains(p.Id));
+                            not_in_ware = Warehousess.Where(p => !WarehousesSale.Select(s => s.Id).Contains(p.Id));
                             foreach (var ware in not_in_ware)
                             {
                                 foreach (var item2 in ware.Goods.GoodsModel)
@@ -145,7 +239,7 @@ namespace AutoPartSystem.Model.Warehouse
                             }
                         }
                         Update++;
-                        Thread.Sleep(10000);
+                        Thread.Sleep(1000);
                     }
                     catch(Exception e) { Console.WriteLine(e.Message);  }
                 }
@@ -154,14 +248,17 @@ namespace AutoPartSystem.Model.Warehouse
         private WarehouseViewModel _view_model;
         public WarehouseModel(ViewModel.WarehouseViewModel ViewModel)
         {
-            _=getWareHouse();
-            if(MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
-                _ = SaleWarehouse();
             Update = 0;
+            UpdateVirt = 0;
             is_filter = 0;
+            is_filter_virt = 0;
+            _ =getWareHouse();
+            _ = getWareHouseVirt();
+            if (MainViewModel.Employee.SetCell && !MainViewModel.Employee.IsAdmin)
+                _ = SaleWarehouse();
+            
             _view_model = ViewModel;
-            using var db = new Data.ConDB();
-            _ = _get_warehouse_from_db();
+            using var db = new Data.ConDB();          
             TypePay = db.TypePay.ToList();
             GetWarehouseVirtualFromDb();
            
@@ -214,8 +311,14 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehousesFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article, ObservableCollection<MarkModelFind> Brand)
         {
+            Console.WriteLine("####");
+            Console.WriteLine(model.Where(p=>p.IsSelected==true).Count());
+            Console.WriteLine(desctiption.Where(p => p.IsSelected == true).Count());
+            Console.WriteLine(article.Where(p => p.IsSelected == true).Count());
+            Console.WriteLine(Brand.Where(p => p.IsSelected == true).Count());
+            Console.WriteLine("####");
             is_filter = 1;
-            WarehouseFilter = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false &&  p.IsDelete==false && Brand.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));
+            WarehouseFilter = new ObservableCollection<WarehouseTable>(Warehouses.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && p.IsVirtual == false &&  p.IsDelete==false && Brand.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Goods.BrandId)));
             
             if (!MainViewModel.Employee.SetCell)
             {
@@ -234,6 +337,7 @@ namespace AutoPartSystem.Model.Warehouse
                     WarehouseFilter.Add(bi);
                 }
             }
+            Console.WriteLine(WarehouseFilter.Count);
                 return WarehouseFilter;
             }
             
@@ -264,6 +368,7 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehouseUpdate()
         {
+            Console.WriteLine(is_filter);
             if(is_filter==0)
             {
                 return Warehouses;
@@ -280,7 +385,20 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehouseVirtualTables()
         {
-            return WarehouseVirtual;
+            is_filter_virt = 0;
+            return WarehouseVirtualSel;
+        }
+        public ObservableCollection<WarehouseTable> GetWarehouseVirtualUpdate()
+        {
+            if (is_filter == 0)
+            {
+                return WarehouseVirtualSel;
+            }
+            if (is_filter == 1)
+            {
+                return WarehouseFilter;
+            }
+            return null;
         }
         public ObservableCollection<MarkModelFind> GetAllVirtualDesctiption(string name)
         {
@@ -311,22 +429,19 @@ namespace AutoPartSystem.Model.Warehouse
         }
         public ObservableCollection<WarehouseTable> GetWarehousesVirtualFilter(ObservableCollection<MarkModelFind> model, ObservableCollection<MarkModelFind> desctiption, ObservableCollection<MarkModelFind> article)
         {
+            is_filter_virt = 1;
             var a = new ObservableCollection<WarehouseTable>(WarehouseVirtual.Where(p => model.Any(m => m.IsSelected == true && p.Goods.GoodsModel.Select(p => p.ModelId).ToList().Contains(m.model_id)) && desctiption.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id) && article.Where(m => m.IsSelected == true).Select(d => d.model_id).ToList().Contains(p.Id)));
-            if (model.Count() == model.Count(p => p.IsSelected == true))
-            {
-                return a;
-            }
-            var b = new ObservableCollection<WarehouseTable>();
+            WarehouseVirtualFilterSel = new ObservableCollection<WarehouseTable>();
             foreach (var item in a)
             {
                 foreach (var item2 in item.Goods.GoodsModel.Where(p => model.Where(s => s.IsSelected == true).Select(s => s.model_id).Contains(p.ModelId)))
                 {
                     var bi = WarehouseTable.NewTable(item);
                     bi.Goods.GoodsModel = new ObservableCollection<Data.GoodsModel> { item2 };
-                    b.Add(bi);
+                    WarehouseVirtualFilterSel.Add(bi);
                 }
             }
-            return b;
+            return WarehouseVirtualFilterSel;
         }
         private async Task SaleWarehouse()
         {

@@ -37,11 +37,33 @@
                 <ComboBox ItemsSource="{Binding EmployersTable}"  SelectedValue="{Binding EmpDay}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1"  wpf:HintAssist.Hint="Сотрудник" wpf:HintAssist.IsFloating="True" Height="40" Grid.Column="1"></ComboBox>
                 <DatePicker SelectedDate="{Binding  DateDay}" wpf:HintAssist.HintOpacity="1"  wpf:HintAssist.Hint="Дата" wpf:HintAssist.IsFloating="True" Height="40" Grid.Column="3"></DatePicker>
                 <Button Grid.Column="5" Width="150" Content="Сформировать" Command="{Binding CreateDayReport}"></Button>
-                <ProgressBar Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="5" Height="30" ></ProgressBar>
             </Grid>
         </GroupBox>
         <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch"  Height="5"></GridSplitter>
-        <GroupBox Header="Отчет за месяц" Grid.Row="2"></GroupBox>
+        <GroupBox Header="Отчет за месяц" Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="15"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="10"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="15"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="5"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <ComboBox ItemsSource="{Binding EmployersTable}"  SelectedValue="{Binding EmpMonth}" DisplayMemberPath="Name" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1"  wpf:HintAssist.Hint="Сотрудник" wpf:HintAssist.IsFloating="True" Height="40" Grid.Column="1"></ComboBox>
+                <ComboBox ItemsSource="{Binding Month}" SelectedValue="{Binding MonthName}" Grid.Column="3" DisplayMemberPath="Name"  Height="40" SelectedValuePath="Id" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.IsFloating="True"  wpf:HintAssist.Hint="Месяц" >
+                </ComboBox>
+                <ComboBox ItemsSource="{Binding Year}" Grid.Column="3" DisplayMemberPath="Name" SelectedValuePath="Name"  Height="40" SelectedValue="{Binding YearMonth}" wpf:HintAssist.HintOpacity="1" wpf:HintAssist.IsFloating="True" Grid.Row="2"  wpf:HintAssist.Hint="Год" >
+                </ComboBox>
+                <Button Grid.Column="5" Width="150" Content="Сформировать" Command="{Binding CreateMonthReport}"></Button>
+            </Grid>
+        </GroupBox>
         <GridSplitter Grid.Row="3" HorizontalAlignment="Stretch" Width="auto" Height="3"></GridSplitter>
         <GroupBox Header="Отчет за год" Grid.Row="4"></GroupBox>
     </Grid>

@@ -8,6 +8,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using AutoPartSystem.Model.Warehouse;
 using Data;
@@ -160,6 +161,7 @@ namespace AutoPartSystem.ViewModel
         public Data.Employee Employee { get; set; }
         public int PosId { get;private set; }
         private bool is_finded;
+        private bool is_virtual_finded;
         public WarehouseViewModel(Model.MarkModel.MarkModel markModel)
         {
             Employee=MainViewModel.Employee;
@@ -188,6 +190,7 @@ namespace AutoPartSystem.ViewModel
             TypePay=WarehouseModel.GetTypePay();
             this.WhenAnyValue(s => s.MarkModel.Model).Subscribe(_ => TestModel());
             WarehouseModel.WhenAnyValue(s => s.Update).Subscribe(async _ => await UpdateWare());
+           
         }
         private View.Warehouse.WarehouseWindows WarehouseWindows;
         public WarehouseViewModel(Data.Invoice Invoice, int type)
@@ -259,9 +262,11 @@ namespace AutoPartSystem.ViewModel
                     break;
                 case "VirtualSkladTable":
                     MainControl = _controls[1];
+                    is_virtual_finded = false;
                     MarkModelFind = MarkModel.MarkModelFind("");
                     DescriptionFind = WarehouseModel.GetAllVirtualDesctiption("");
                     ArticleFind = WarehouseModel.GetAllVirtualArticle("");
+                    WarehousesVirtualTable = WarehouseModel.GetWarehouseVirtualTables();
                     SetFilter = ReactiveCommand.Create(() => {
                             WarehousesVirtualTable = new ObservableCollection<WarehouseTable>(WarehouseModel.GetWarehousesVirtualFilter(MarkModelFind, DescriptionFind, ArticleFind));
                     });
@@ -294,22 +299,29 @@ namespace AutoPartSystem.ViewModel
         }
         private void NewWarehouse(WarehouseAdd war)
         {
-            foreach(var a in war.Goods.GoodsModel)
+            foreach (var a in war.Goods.GoodsModel)
             {
-                if(a.Model.Id!=0)
+                if (a.Model.Id != 0)
                 {
                     a.ModelId = a.Model.Id;
-                    a.Model=null;
+                    a.Model = null;
                 }
                 else
                 {
-                    if(a.Model.Mark.Id!=0)
+                    if (a.Model.Mark.Id != 0)
                     {
-                        a.Model.MarkId=a.Model.Mark.Id;
-                        a.Model.Mark=null;
+                        a.Model.MarkId = a.Model.Mark.Id;
+                        a.Model.Mark = null;
                     }
                 }
             }
+            if (war.IsVirtual == true)
+                {
+                war.Goods.BrandId = 1;
+
+            }
+            else
+            { 
             if(war.Goods.Brand==null)
             {
                 var brand = MarkModel.GetBrandFind(war.BrandName);
@@ -329,10 +341,12 @@ namespace AutoPartSystem.ViewModel
                 war.Goods.Brand = null;
 
             }
+            }
             WarehouseModel.AddWarehouse(war);
             war = new WarehouseAdd();
             Warehouse=new WarehouseAdd();
             WarehouseVirtual = new WarehouseAdd();
+            WarehousesVirtualTable = WarehouseModel.GetWarehouseVirtualTables();
         }
         private void NewWarehouseVirt(WarehouseAdd war)
         {
@@ -629,43 +643,71 @@ namespace AutoPartSystem.ViewModel
         }
         private async Task UpdateWare()
         {
-            await Task.Run(() => { Console.WriteLine("WorkSyka"); 
-                
-                
-                
+            await Task.Run(() => {
+            
               var   Warehousess = WarehouseModel.GetWarehouseUpdate();
                 while(Warehousess == null)
                 { }
                 if (WarehousesTable == null) WarehousesTable = WarehouseModel.GetWarehouseUpdate();
+                
                 else
                 {
-                    foreach (var Warehouse in WarehousesTable)
+                    if (WarehouseModel.is_filter == 1)
+                    {
+                        if(WarehousesTable.Count!= WarehouseModel.GetWarehouseUpdate().Count)
+                        {
+                            WarehousesTable = WarehouseModel.GetWarehouseUpdate();
+                        }
+                        else
+                        {
+                            foreach (var Warehouse in WarehousesTable)
+                            {
+                                if (Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault() == null) continue;
+                                Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+
+                            }
+                        }
+                    }
+                    else
                     {
 
-                        Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
+                   
+                    foreach (var Warehouse in WarehousesTable)
+                    {
+                            if (Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault() == null) continue;
+                            Warehouse.UpdateWare(Warehousess.Where(p => p.Id == Warehouse.Id).FirstOrDefault());
 
                     }
                     var not_in_ware = Warehousess.Where(p => !WarehousesTable.Select(s => s.Id).Contains(p.Id));
-                    foreach (var ware in not_in_ware)
+                    if(WarehouseModel.is_filter!=1)
                     {
-                        App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                        foreach (var ware in not_in_ware)
                         {
-                            WarehousesTable.Add(ware);
-                        });
+                            App.Current.Dispatcher.Invoke((Action)delegate // <--- HERE
+                            {
+                                WarehousesTable.Add(ware);
+                            });
+                        }
+                    }
                     }
                 }
-               
                 if (!is_finded)
                 {
-
-                
-                        MarkModelFind = MarkModel.MarkModelFind("");
+                        
+                    if(DescriptionFind.Count==0)
+                    {
                         DescriptionFind = WarehouseModel.GetAllDesctiption("");
+                    }
+                    if (ArticleFind.Count == 0)
+                    {
                         ArticleFind = WarehouseModel.GetAllArticle("");
-                        BrandFind = MarkModel.BrandFind("");
+                    }
+                   
+                       
                 }
             });
         }
+        
         public ReactiveCommand<Unit, Unit> UpdateTable => ReactiveCommand.Create(UpdateTableCom);
         public void UpdateTableCom()
         {

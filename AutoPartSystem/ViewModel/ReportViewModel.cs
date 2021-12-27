@@ -26,14 +26,36 @@ namespace AutoPartSystem.ViewModel
             get => _emp_day;
             set => this.RaiseAndSetIfChanged(ref _emp_day, value);
         }
+        private int _emp_month;
+        public int EmpMonth
+        {
+            get => _emp_day;
+            set => this.RaiseAndSetIfChanged(ref _emp_day, value);
+        }
+        private int _month_name;
+        public int MonthName
+        {
+            get => _month_name;
+            set=>this.RaiseAndSetIfChanged(ref _month_name, value); 
+        }
+        private string _year_month;
+        public string YearMonth
+        {
+            get => _year_month;
+            set=>this.RaiseAndSetIfChanged(ref _year_month, value);
+        }
         private DateTime _date_day;
         public DateTime DateDay
-        {
+        {  
             get => _date_day;
             set => this.RaiseAndSetIfChanged(ref _date_day, value);
         }
+        public List<Model.MonthYear> Month { get; set; }
+        public List<Model.MonthYear> Year { get; set; }
         public ReportViewModel()
         {
+            Month = new List<Model.MonthYear> { new Model.MonthYear(1, "Январь"), new Model.MonthYear(2, "Февраль"), new Model.MonthYear(3, "Март"), new Model.MonthYear(4, "Апрель"), new Model.MonthYear(5, "Май"), new Model.MonthYear(6, "Июнь"), new Model.MonthYear(7, "Июль"), new Model.MonthYear(8, "Август"), new Model.MonthYear(9, "Сентябрь"), new Model.MonthYear(10, "Октябрь"), new Model.MonthYear(11, "Ноябрь"), new Model.MonthYear(12, "Декабрь"), };
+            Year = new List<Model.MonthYear> { new Model.MonthYear(1, "2021"), new Model.MonthYear(1, "2022") , new Model.MonthYear(1, "2023") , new Model.MonthYear(1, "2024") };
             EmployersTable = MainViewModel.AdminModel.GetManagerEmp();
             DateDay = DateTime.Now;
         }
@@ -56,15 +78,21 @@ namespace AutoPartSystem.ViewModel
                 var date = new DateTime(DateDay.Year, DateDay.Month, DateDay.Day);
                 var day_start = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
                 var day_end = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
-                var openCloseCash = db.OpenCloseCash.Where(p => p.EmployeeId == EmpDay && p.OpenDate >= day_start && p.OpenDate <= day_end && p.Status == 2).FirstOrDefault();
+                var openCloseCashList = db.OpenCloseCash.Where(p => p.EmployeeId == EmpDay && p.OpenDate >= day_start && p.OpenDate <= day_end && p.Status == 2).ToList();
                 int cash = 0;
-                if (openCloseCash == null)
+                int i = 4;
+                if (openCloseCashList == null)
                     sheet.Cells["B1"].Value = $"{DateDay.ToString("dd-MM-yyyy")} - касса не открыта, либо не закрыта";
                 else
                 {
+
+                    foreach(var openCloseCash in openCloseCashList)
+                    {
+
+                   
                     sheet.Cells["B1"].Value = $"{DateDay.ToString("dd-MM-yyyy")} - касса  {openCloseCash.OpenCash}";
                     cash = openCloseCash.OpenCash;
-                }
+              
                     
                 sheet.Cells["A3"].Value = "№";
                 sheet.Cells["B3"].Value = "описание товара";
@@ -77,7 +105,6 @@ namespace AutoPartSystem.ViewModel
                 var date_start = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
                 var date_end = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
                 var invoices = db.Invoices.Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.GoodsInvoice).Where(p => p.Date >= openCloseCash.OpenDate && p.Date <= openCloseCash.CloseData && p.IsEnd == false && p.IsInvoice && p.EmployeeId == EmpDay).ToList();
-                int i = 4;
                 int i1 = 1;
                 foreach (var inv in invoices)
                 {
@@ -294,10 +321,180 @@ namespace AutoPartSystem.ViewModel
                     sheet.Cells[$"B{i}:G{i}"].Value = $"Расходы {e.Cash} причина {e.Name} {e.TypeExpenses.Name}";
                     i++;
                 }
+                    }
+                }
                 package.Save();
             }
 
 
         });
+        public ReactiveCommand<Unit, Unit> CreateMonthReport => ReactiveCommand.Create(() => {
+        var saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+        saveFileDialog1.Filter = "Excel (*.xlsx)|*.xlsx";
+        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+        if (saveFileDialog1.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            return;
+        var newFile = new FileInfo(saveFileDialog1.FileName);
+           
+            using (ExcelPackage package = new ExcelPackage(newFile))
+            {
+                string month_names = Month.Where(p => p.Id == MonthName).FirstOrDefault().Name;
+                ExcelWorksheet sheet = package.Workbook.Worksheets.Add(month_names);
+                var day = new DateTime(Convert.ToInt32(YearMonth), MonthName, 1, 0, 0, 0);
+                using var db = new Data.ConDB();
+                var emp = db.Employees.Include(p => p.City).Where(p => p.Id == EmpMonth).FirstOrDefault();
+                sheet.Cells[$"A1:D1"].Merge = true;
+                sheet.Cells[$"A1:D1"].Value = emp.Name;
+                sheet.Cells[$"A2:A3"].Merge = true;
+                sheet.Cells[$"A2:A3"].Value = "Дата";
+                sheet.Cells[$"B2:B3"].Merge = true;
+                sheet.Cells[$"B2:B3"].Value = "Доход";
+                sheet.Cells[$"C2:D2"].Merge = true;
+                sheet.Cells[$"C2:D2"].Value = "Отправленные";
+                sheet.Cells[$"C3:C3"].Value = "Наличными";
+                sheet.Cells[$"D3:D3"].Value = "Со счета";
+                int i = 4;
+                int all_price = 0;
+                int all_nal = 0;
+                int all_account = 0;
+                DateTime end_day=new DateTime();
+                while(day.Month==MonthName)
+                {
+                    end_day = new DateTime(day.Year, day.Month, day.Day, 23, 59, 59);
+                    sheet.Cells[$"A{i}"].Value = day.ToString("dd.MM.yyyy");
+                    var price=db.Invoices.Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.GoodsInvoice).Where(p => p.Date >= day && p.Date <= end_day && p.IsEnd == false && p.IsInvoice && p.EmployeeId == EmpMonth).Sum(p => p.AllPrice);
+                    
+                    sheet.Cells[$"B{i}"].Value = price;
+                    all_price += price;
+                    var nal = db.GoodsInvoices.Include(p => p.Invoice).Where(p => p.Invoice.Date >= day && p.Invoice.Date <= end_day && p.Invoice.IsInvoice && p.Invoice.IsEnd == false && p.TypePayId == 1 && p.Invoice.EmployeeId == EmpMonth).Sum(p => p.AllPrice);
+                    all_nal += nal;
+                    sheet.Cells[$"C{i}"].Value = nal;
+                    var acc = db.GoodsInvoices.Include(p => p.Invoice).Where(p => p.Invoice.Date >= day && p.Invoice.Date <= end_day && p.Invoice.IsInvoice && p.Invoice.IsEnd == false && p.TypePayId == 2 && p.Invoice.EmployeeId == EmpMonth).Sum(p => p.AllPrice);
+                    sheet.Cells[$"D{i}"].Value = acc;
+                    all_account += acc;
+                    day =day.AddDays(1);
+                    i++;
+                }
+                sheet.Cells[$"A{i}"].Value = "Итого за месяц: ";
+                sheet.Cells[$"B{i}"].Value = all_price;
+                sheet.Cells[$"D{i}"].Value = all_account;
+                i++;
+                sheet.Cells[$"A{i}:B{i}"].Merge = true;
+                sheet.Cells[$"A{i}:B{i}"].Value = "Остаток: ";
+                sheet.Cells[$"c{i}"].Value = all_nal;
+
+                i = 3;
+                sheet.Cells[$"G{i}:J{i}"].Merge = true;
+                sheet.Cells[$"G{i}:J{i}"].Value = $"Отчет за {month_names}";
+                i++;
+                sheet.Cells[$"G{i}:J{i}"].Merge = true;
+                sheet.Cells[$"G{i}:J{i}"].Value = $"доход за месяц";
+                i++;
+                var daystart = new DateTime(Convert.ToInt32(YearMonth), MonthName, 1, 0, 0, 0);
+                var day_mid_1_end = new DateTime(Convert.ToInt32(YearMonth), MonthName, 10, 23, 59, 59);
+                var day_mid_1_start = new DateTime(Convert.ToInt32(YearMonth), MonthName, 11, 0, 0, 0);
+                var day_mid_2_end = new DateTime(Convert.ToInt32(YearMonth), MonthName, 20, 23, 59, 59);
+                var day_mid_2_start = new DateTime(Convert.ToInt32(YearMonth), MonthName, 21, 0, 0, 0);
+                sheet.Cells[$"G{i}"].Value = $"c {daystart.Day} по {day_mid_1_end.ToString("dd.MM.yyyy")}";
+                sheet.Cells[$"H{i}:J{i}"].Merge=true;
+                sheet.Cells[$"H{i}:J{i}"].Value= db.Invoices.Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.GoodsInvoice).Where(p => p.Date >= daystart && p.Date <= day_mid_1_end && p.IsEnd == false && p.IsInvoice && p.EmployeeId == EmpMonth).Sum(p => p.AllPrice);
+                i++;
+                sheet.Cells[$"G{i}"].Value = $"c {day_mid_1_start.Day} по {day_mid_2_end.ToString("dd.MM.yyyy")}";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = db.Invoices.Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.GoodsInvoice).Where(p => p.Date >= day_mid_1_start && p.Date <= day_mid_2_end && p.IsEnd == false && p.IsInvoice && p.EmployeeId == EmpMonth).Sum(p => p.AllPrice);
+                i++;
+                sheet.Cells[$"G{i}"].Value = $"c {day_mid_2_start.Day} по {end_day.ToString("dd.MM.yyyy")}";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = db.Invoices.Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.GoodsInvoice).Where(p => p.Date >= day_mid_2_start && p.Date <= end_day && p.IsEnd == false && p.IsInvoice && p.EmployeeId == EmpMonth).Sum(p => p.AllPrice);
+                i++;
+                i++;
+                sheet.Cells[$"G{i}"].Value = "Дата";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = $"Расходы за месяц";
+                i++;
+                int all_exp = 0;
+                var expoise = db.Expenses.Include(p => p.TypeExpenses).Where(p => p.Date >= daystart && p.Date <= end_day && p.EmployeeId == EmpMonth && p.TypeExpensesId!=5 && p.TypeExpensesId!=3 && p.TypeExpensesId!=2).ToList();
+                foreach(var exp in expoise)
+                {
+                    sheet.Cells[$"G{i}"].Value = $"{exp.Date.ToString("dd.MM.yyyy")}";
+                    sheet.Cells[$"H{i}:I{i}"].Merge = true;
+                    sheet.Cells[$"H{i}:I{i}"].Value = $"{exp.TypeExpenses.Name}";
+                    sheet.Cells[$"J{i}"].Value = $"{exp.Cash}";
+                    all_exp+=exp.Cash;
+                    i++;
+                }
+                sheet.Cells[$"G{i}"].Value = "Итого";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = all_exp;
+                i++;
+                sheet.Cells[$"G{i}"].Value = "Дата";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = $"Реклама";
+                int all_exp_rekl = 0;
+                i++;
+                var expoise_rekl = db.Expenses.Include(p => p.TypeExpenses).Where(p => p.Date >= daystart && p.Date <= end_day && p.EmployeeId == EmpMonth && p.TypeExpensesId == 3).ToList();
+                foreach (var exp in expoise_rekl)
+                {
+                    sheet.Cells[$"G{i}"].Value = $"{exp.Date.ToString("dd.MM.yyyy")}";
+                    sheet.Cells[$"H{i}:I{i}"].Merge = true;
+                    sheet.Cells[$"H{i}:I{i}"].Value = $"{exp.TypeExpenses.Name}";
+                    sheet.Cells[$"J{i}"].Value = $"{exp.Cash}";
+                    all_exp_rekl += exp.Cash;
+                    i++;
+                }
+                sheet.Cells[$"G{i}"].Value = "Итого за рекламу";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = all_exp_rekl;
+                i++;
+                sheet.Cells[$"G{i}"].Value = "Дата";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = $"Возвраты";
+                i++;
+                int exp_back = 0;
+                var expoise_back = db.Expenses.Include(p => p.TypeExpenses).Where(p => p.Date >= daystart && p.Date <= end_day && p.EmployeeId == EmpMonth && p.TypeExpensesId == 5).ToList();
+                foreach (var exp in expoise_back)
+                {
+                    sheet.Cells[$"G{i}"].Value = $"{exp.Date.ToString("dd.MM.yyyy")}";
+                    sheet.Cells[$"H{i}:I{i}"].Merge = true;
+                    sheet.Cells[$"H{i}:I{i}"].Value = $"{exp.Name}";
+                    sheet.Cells[$"J{i}"].Value = $"{exp.Cash}";
+                    exp_back += exp.Cash;
+                    i++;
+                }
+                sheet.Cells[$"G{i}"].Value = "Итого за возвраты";
+                sheet.Cells[$"H{i}:J{i}"].Merge = true;
+                sheet.Cells[$"H{i}:J{i}"].Value = exp_back;
+                var all_expoise = all_exp + exp_back + all_exp_rekl;
+                i++;
+                i++;
+                sheet.Cells[$"G{i}"].Value = "Итого доход";
+                sheet.Cells[$"G{i+1}"].Value = all_price;
+                sheet.Cells[$"H{i}"].Value = "Итого за аренду";
+                sheet.Cells[$"H{i+1}"].Value = db.Expenses.Include(p => p.TypeExpenses).Where(p => p.Date >= daystart && p.Date <= end_day && p.EmployeeId == EmpMonth && p.TypeExpensesId == 2).Sum(p=>p.Cash);
+                all_expoise += db.Expenses.Include(p => p.TypeExpenses).Where(p => p.Date >= daystart && p.Date <= end_day && p.EmployeeId == EmpMonth && p.TypeExpensesId == 2).Sum(p => p.Cash);
+                sheet.Cells[$"I{i}"].Value = "Счет %";
+                sheet.Cells[$"I{i + 1}"].Value =  Convert.ToInt32(all_account * 0.01);
+                all_expoise += Convert.ToInt32(all_account * 0.01);
+                sheet.Cells[$"J{i}"].Value = "Расходы";
+                sheet.Cells[$"J{i + 1}"].Value = all_exp;
+                sheet.Cells[$"K{i}"].Value = "Возвраты";
+                sheet.Cells[$"K{i + 1}"].Value = exp_back;
+                sheet.Cells[$"L{i}"].Value = "OLX\\Реклама";
+                sheet.Cells[$"L{i + 1}"].Value = all_exp_rekl;
+                sheet.Cells[$"M{i}"].Value = "Итого расход";
+                sheet.Cells[$"M{i + 1}"].Value = all_expoise;
+                i++;
+                i++;
+                i++;
+                sheet.Cells[$"K{i}"].Value = "Итого";
+                sheet.Cells[$"K{i + 1}"].Value = all_price-all_expoise;
+                package.Save();
+                
+
+            }
+
+        });
+    
     }
+
 }

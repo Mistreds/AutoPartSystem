@@ -39,22 +39,23 @@ namespace Data
 
         public ConDB()
         {
-            if(string.IsNullOrEmpty(path_connect))
-                path_connect = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AutoPartSystem\connect.ini";
-            if(string.IsNullOrEmpty(query_connect))
-                if (File.Exists(path_connect))
-                {
-                    using (FileStream fstream = new FileStream(path_connect, FileMode.Open))
-                    {
-                        byte[] array = new byte[fstream.Length];
-                        // считываем данные
-                        fstream.Read(array, 0, array.Length);
-                        // декодируем байты в строку
-                        query_connect = Encoding.Default.GetString(array);
-                        //Database.EnsureDeleted();
-                        Database.EnsureCreated();
-                    }
-                }
+            query_connect = "server=spiriddp.beget.tech;user=spiriddp_auto_te;password=AutoPart123;database=spiriddp_auto_te;";
+            //if (string.IsNullOrEmpty(path_connect))
+            //    path_connect = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\AutoPartSystem\connect.ini";
+            //if(string.IsNullOrEmpty(query_connect))
+            //    if (File.Exists(path_connect))
+            //    {
+            //        using (FileStream fstream = new FileStream(path_connect, FileMode.Open))
+            //        {
+            //            byte[] array = new byte[fstream.Length];
+            //            // считываем данные
+            //            fstream.Read(array, 0, array.Length);
+            //            // декодируем байты в строку
+            //            query_connect = Encoding.Default.GetString(array);
+            //            //Database.EnsureDeleted();
+            //            Database.EnsureCreated();
+            //        }
+                //}
 
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

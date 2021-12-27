@@ -91,7 +91,7 @@
     </UserControl.Resources>
     <Grid  PreviewKeyDown="warehouse_KeyDown" Background="White" >
 
-        <DataGrid VirtualizingStackPanel.VirtualizationMode="Recycling"  ClipboardCopyMode="None" SourceUpdated="warehouse_SourceUpdated" CopyingRowClipboardContent="warehouse_CopyingRowClipboardContent" FrozenColumnCount="8" ContextMenuOpening="warehouse_ContextMenuOpening" ContextMenuClosing="warehouse_ContextMenuClosing" MouseMove="warehouse_MouseMove" KeyDown="warehouse_KeyDown" KeyUp="warehouse_KeyDown"  PreviewKeyDown="warehouse_KeyDown"   BorderBrush="Black"  LoadingRow="warehouse_LoadingRow" BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable, UpdateSourceTrigger=PropertyChanged}" Background="White" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
+        <DataGrid VirtualizingStackPanel.VirtualizationMode="Recycling"  SelectionMode="Extended" ClipboardCopyMode="None" SourceUpdated="warehouse_SourceUpdated" CopyingRowClipboardContent="warehouse_CopyingRowClipboardContent" FrozenColumnCount="8" ContextMenuOpening="warehouse_ContextMenuOpening" ContextMenuClosing="warehouse_ContextMenuClosing" MouseMove="warehouse_MouseMove" KeyDown="warehouse_KeyDown" KeyUp="warehouse_KeyDown"  PreviewKeyDown="warehouse_KeyDown"   BorderBrush="Black"  LoadingRow="warehouse_LoadingRow" BorderThickness="1" GridLinesVisibility="All" HeadersVisibility="All"  x:Name="warehouse"  ItemsSource="{Binding WarehousesTable, UpdateSourceTrigger=PropertyChanged}" Background="White" AutoGenerateColumns="False"  CanUserDeleteRows="False" CanUserAddRows="False"  >
             <DataGrid.InputBindings>
                 
             </DataGrid.InputBindings>

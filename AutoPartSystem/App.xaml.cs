@@ -18,7 +18,7 @@ namespace AutoPartSystem
         public static string AppData;
         public App()
         {
-            
+            //ConsoleHelper.AllocConsole();
 #if DEBUG || DEBUG2
             ConsoleHelper.AllocConsole();
 #endif

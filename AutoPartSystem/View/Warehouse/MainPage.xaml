@@ -29,6 +29,9 @@
             <Button Height="35" x:Name="AddGood" Foreground="Black" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0" Content="Добавить товар">
                
             </Button>
+            <Button Height="35" x:Name="AddVirtualGood" Foreground="Black" Command="{Binding Path=DataContext.AddNewWarehouseWinOpen,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Margin="15,0,0,0" Padding="0" Content="Добавить на виртуальный склад">
+
+            </Button>
             <Button Height="35" x:Name="CellThis" Foreground="Black" Margin="15,0,0,0" Command="{Binding Path=DataContext.AddSale,RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" FontSize="12" Padding="0">Продать выбранные
                 
             </Button>
