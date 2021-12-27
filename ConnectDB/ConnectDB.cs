@@ -50,7 +50,7 @@ namespace Data
             //            byte[] array = new byte[fstream.Length];
             //            // считываем данные
             //            fstream.Read(array, 0, array.Length);
-            //            // декодируем байты в строку
+            //            // декодируем байты в строку b 
             //            query_connect = Encoding.Default.GetString(array);
             //            //Database.EnsureDeleted();
             //            Database.EnsureCreated();

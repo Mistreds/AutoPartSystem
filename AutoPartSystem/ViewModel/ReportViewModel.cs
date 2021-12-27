@@ -80,28 +80,27 @@ namespace AutoPartSystem.ViewModel
                 var day_end = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
                 var openCloseCashList = db.OpenCloseCash.Where(p => p.EmployeeId == EmpDay && p.OpenDate >= day_start && p.OpenDate <= day_end && p.Status == 2).ToList();
                 int cash = 0;
-                int i = 4;
+                int i = 1;
+                bool first = true;
                 if (openCloseCashList == null)
-                    sheet.Cells["B1"].Value = $"{DateDay.ToString("dd-MM-yyyy")} - касса не открыта, либо не закрыта";
+                    sheet.Cells[$"B{i}"].Value = $"{DateDay.ToString("dd-MM-yyyy")} - касса не открыта, либо не закрыта";
                 else
                 {
 
                     foreach(var openCloseCash in openCloseCashList)
                     {
 
-                   
-                    sheet.Cells["B1"].Value = $"{DateDay.ToString("dd-MM-yyyy")} - касса  {openCloseCash.OpenCash}";
+                    sheet.Cells[$"B{i}"].Value = $"{DateDay.ToString("dd-MM-yyyy")} - касса  {openCloseCash.OpenCash}";
+                        i += 2;
                     cash = openCloseCash.OpenCash;
-              
-                    
-                sheet.Cells["A3"].Value = "№";
-                sheet.Cells["B3"].Value = "описание товара";
-                sheet.Cells["C3"].Value = "склад";
-                sheet.Cells["D3"].Value = "количества";
-                sheet.Cells["E3"].Value = "сумма ";
-                sheet.Cells["F3"].Value = "поступление";
-                sheet.Cells["G3"].Value = "маржа";
-                sheet.Cells["H3"].Value = "";
+                sheet.Cells[$"A{i}"].Value = "№";
+                sheet.Cells[$"B{i}"].Value = "описание товара";
+                sheet.Cells[$"C{i}"].Value = "склад";
+                sheet.Cells[$"D{i}"].Value = "количества";
+                sheet.Cells[$"E{i}"].Value = "сумма ";
+                sheet.Cells[$"F{i}"].Value = "поступление";
+                sheet.Cells[$"G{i}"].Value = "маржа";
+                sheet.Cells[$"H{i}"].Value = "";
                 var date_start = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0);
                 var date_end = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59);
                 var invoices = db.Invoices.Include(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.GoodsInvoice).Where(p => p.Date >= openCloseCash.OpenDate && p.Date <= openCloseCash.CloseData && p.IsEnd == false && p.IsInvoice && p.EmployeeId == EmpDay).ToList();
@@ -156,6 +155,10 @@ namespace AutoPartSystem.ViewModel
                     }
 
                 }
+                if(first)
+                        {
+
+                     
                 var marz_emps = db.MarzhEmployee.Include(p => p.Invoice).ThenInclude(p => p.GoodsInvoice).ThenInclude(p => p.Goods).ThenInclude(p => p.Warehouse).Include(p => p.Invoice.Employee).ThenInclude(p => p.City).Where(p => p.Invoice.Date >= date_start && p.Invoice.Date <= date_end && p.EmployeeId == EmpDay).ToList();
                 foreach (var mar in marz_emps)
                 {
@@ -189,7 +192,9 @@ namespace AutoPartSystem.ViewModel
                     }
                     
                 }
-                i++;
+                            first = false;
+                        }
+                        i++;
                 sheet.Cells[$"F{i}"].Value = input;
                 sheet.Cells[$"G{i}"].Value = all_marz;
                 i++;
@@ -204,7 +209,7 @@ namespace AutoPartSystem.ViewModel
                 sheet.Cells[$"B{i}:G{i}"].Value ="Изменение в кассе при открытии кассы";
                 i++;
                 var add_to_open_cash=db.InsertOutCash.Where(p => p.EmployeeId == EmpDay && p.Date >= openCloseCash.OpenDate && p.Date <= openCloseCash.CloseData && (p.Type == "Добавление в кассу")).FirstOrDefault();
-                if(add_to_open_cash==null)
+                if(add_to_open_cash!=null)
                 {
                 sheet.Cells[$"B{i}:G{i}"].Merge = true;
                 sheet.Cells[$"B{i}:G{i}"].Value = $"Добавление в кассу {add_to_open_cash.OldCash} + {add_to_open_cash.Cash} = {add_to_open_cash.NewCash}";

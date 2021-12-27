@@ -186,6 +186,12 @@ namespace Data
             get => is_admin;
             set=>this.RaiseAndSetIfChanged(ref is_admin, value);
         }
+        private bool _is_open_cash;
+        public bool IsOpenCash
+        {
+            get => _is_open_cash;
+            set=>this.RaiseAndSetIfChanged(ref _is_open_cash, value);
+        }
         public Employee(int id, string name,string login,string password, int position_id, int CityId)
         {
             Id = id;

@@ -125,6 +125,12 @@ namespace AutoPartSystem.ViewModel
                     IsBlockInterface = false;
                     IsNotCloseCash =true;
                 }
+                if (Status == 4)
+                {
+                   
+                    IsBlockInterface = false;
+                    
+                }
             }
             else
             {
@@ -228,6 +234,7 @@ namespace AutoPartSystem.ViewModel
         public void UpdateOpenCash()
         {
             Status = CashModel.GetStatus();
+            Console.WriteLine(Status);
             OpenCloseCash = CashModel.GetCashDay();
             if(Status==0)
             {
@@ -243,6 +250,10 @@ namespace AutoPartSystem.ViewModel
             {
                 IsBlockInterface = false;
             }
+            if(Status==4)
+            {
+                IsBlockInterface = false;
+            }    
         }
         public ReactiveCommand<string, Unit> OpenCloseCashCom => ReactiveCommand.Create<string>(OpenCloseCashCommand);
         private void OpenCloseCashCommand(string name)

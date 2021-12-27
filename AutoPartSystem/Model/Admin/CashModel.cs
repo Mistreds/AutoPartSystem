@@ -32,6 +32,7 @@ namespace AutoPartSystem.Model
         /// 1 - касса открыта на данный момент
         /// 2 - касса на сегодня уже закрыта
         /// 3 - касса ранее не была закрыта
+        /// 4 - касса сегодня закрыта, но можно открыть
         /// </summary>
         private int status;
         private Data.OpenCloseCash openCloseCash;
@@ -47,9 +48,9 @@ namespace AutoPartSystem.Model
             status = 0;
             GetIsNotCloseCash();
             if (status != 0) return;
-            GetCloseCashDayFromDb();
-            if(status !=0) return;
             GetCashDayFromDb();
+            if (status !=0) return;
+            GetCloseCashDayFromDb();
         }
         private void GetIsNotCloseCash()
         {
@@ -66,7 +67,7 @@ namespace AutoPartSystem.Model
             using var db= new Data.ConDB();
             var day_start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             var day_end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
-            openCloseCash = db.OpenCloseCash.Where(p => p.EmployeeId == Employee.Id && p.OpenDate >= day_start && p.OpenDate <= day_end && p.Status==1).FirstOrDefault();
+            openCloseCash = db.OpenCloseCash.Where(p => p.EmployeeId == Employee.Id && p.OpenDate >= day_start && p.OpenDate <= day_end && p.Status==1).OrderByDescending(p=>p.Id).FirstOrDefault();
             if(openCloseCash!=null)
             {
                 status = 1;
@@ -81,11 +82,16 @@ namespace AutoPartSystem.Model
             using var db = new Data.ConDB();
             var day_start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0);
             var day_end = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 23, 59, 59);
-            openCloseCash = db.OpenCloseCash.Where(p => p.EmployeeId == Employee.Id && p.CloseData>= day_start && p.CloseData <= day_end && p.Status == 2).FirstOrDefault();
+            openCloseCash = db.OpenCloseCash.Where(p => p.EmployeeId == Employee.Id && p.CloseData>= day_start && p.CloseData <= day_end && p.Status == 2).OrderByDescending(p => p.Id).FirstOrDefault();
             if(openCloseCash != null)
             {
                 status = 2;
             }
+            if(Employee.IsOpenCash)
+            {
+                status = 4;
+            }
+
         }
 
         public int GetStatus()

@@ -18,6 +18,7 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Name, UpdateSourceTrigger=PropertyChanged}" Header="Имя пользователя"></DataGridTextColumn>
                 <DataGridTextColumn  Binding="{Binding Login, UpdateSourceTrigger=PropertyChanged}" Header="Логин"></DataGridTextColumn>
+                <DataGridTextColumn  Binding="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Header="Пароль"></DataGridTextColumn>
                 <DataGridTextColumn  Binding="{Binding PhoneNumber, UpdateSourceTrigger=PropertyChanged}" Header="Номер телефона"></DataGridTextColumn>
                 <DataGridTemplateColumn   Header="Должность">
                     <DataGridTemplateColumn.CellTemplate>
@@ -54,6 +55,7 @@
                 <DataGridCheckBoxColumn Header="Приход" Binding="{Binding  SetGoodCount}"></DataGridCheckBoxColumn>
                 <DataGridCheckBoxColumn Header="Добавить товар" Binding="{Binding SetGood}"></DataGridCheckBoxColumn>
                 <DataGridCheckBoxColumn Header="Продажа" Binding="{Binding SetCell}"></DataGridCheckBoxColumn>
+                <DataGridCheckBoxColumn Header="Возможность открывать несколько касс" Binding="{Binding IsOpenCash}"></DataGridCheckBoxColumn>
             </DataGrid.Columns>
             <DataGrid.Resources>
                 <ContextMenu x:Key="menu">

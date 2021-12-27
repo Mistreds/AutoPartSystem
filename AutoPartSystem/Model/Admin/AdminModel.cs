@@ -60,7 +60,6 @@ namespace AutoPartSystem.Model.Admin
         public ObservableCollection<Employee> AddEmployers(Data.Employee employee)
         {
             using var db = new ConDB();
-            employee.HashPassword();
             db.Employees.Add(employee);
             db.SaveChanges();
             Employees.Add(employee);

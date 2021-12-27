@@ -59,6 +59,9 @@
                                 <DataTrigger Binding="{Binding Status}" Value="0" >
                                     <Setter Property="IsEnabled" Value="True"></Setter>
                                 </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="4" >
+                                    <Setter Property="IsEnabled" Value="True"></Setter>
+                                </DataTrigger>
                             </Style.Triggers>
                         </Style>
                     </MenuItem.Style>
@@ -69,6 +72,12 @@
                             <Setter Property="IsEnabled" Value="True"></Setter>
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Status}" Value="0" >
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="2" >
+                                    <Setter Property="IsEnabled" Value="False"></Setter>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Status}" Value="4" >
                                     <Setter Property="IsEnabled" Value="False"></Setter>
                                 </DataTrigger>
                             </Style.Triggers>
