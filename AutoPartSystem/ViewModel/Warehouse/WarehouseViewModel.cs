@@ -694,11 +694,11 @@ namespace AutoPartSystem.ViewModel
                 if (!is_finded)
                 {
                         
-                    if(DescriptionFind.Count==0)
+                    if(DescriptionFind==null|| DescriptionFind.Count==0)
                     {
                         DescriptionFind = WarehouseModel.GetAllDesctiption("");
                     }
-                    if (ArticleFind.Count == 0)
+                    if (ArticleFind==null || ArticleFind.Count == 0)
                     {
                         ArticleFind = WarehouseModel.GetAllArticle("");
                     }
