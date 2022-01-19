@@ -36,7 +36,6 @@ namespace Data
         public DbSet<Data.BackInvoice> backInvoices { get; set; }
         private static string path_connect;
         private static string query_connect;
-
         public ConDB()
         {
             query_connect = "server=spiriddp.beget.tech;user=spiriddp_auto_te;password=AutoPart123;database=spiriddp_auto_te;";
