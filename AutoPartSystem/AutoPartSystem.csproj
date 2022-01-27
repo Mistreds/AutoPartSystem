@@ -8,7 +8,7 @@
     <Platforms>AnyCPU;x64</Platforms>
     <UseWindowsForms>True</UseWindowsForms>
     <StartupObject>AutoPartSystem.App</StartupObject>
-    <AssemblyVersion>0.0.2.5</AssemblyVersion>
+    <AssemblyVersion>0.0.2.6</AssemblyVersion>
     <SignAssembly>False</SignAssembly>
   </PropertyGroup>
 

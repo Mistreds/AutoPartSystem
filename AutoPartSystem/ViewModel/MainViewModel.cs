@@ -95,47 +95,7 @@ namespace AutoPartSystem.ViewModel
             _markModel =new Model.MarkModel.MarkModel();
             AdminModel= new Model.Admin.AdminModel();
             CashModel = new Model.CashModel(employee);
-            if (Employee.SetCell && !Employee.IsAdmin)
-            {
-                AdminModel.GetNowCash(Employee.Cash);
-                
-                Status = CashModel.GetStatus();
-                if(Status == 0)
-                {
-                    IsBlockInterface = false;
-                    IsCloseCash = true;
-                    IsNotCloseCash = false;
-                }
-                if(Status == 1)
-                {
-                    OpenCloseCash = CashModel.GetCashDay();
-                    IsBlockInterface = true;
-                }
-                if(Status == 2)
-                {
-                    OpenCloseCash = CashModel.GetCashDay();
-                    IsBlockInterface = true;
-                    MessageBox.Show("Касса на сегодня закрыта, если необходимо продолжить работу, обратитесь к администратору","Внимание",MessageBoxButton.OK,MessageBoxImage.Information) ;
-                    IsBlockInterface = false;
-                }
-                if(Status == 3)
-                {
-                    OpenCloseCash = CashModel.GetCashDay();
-                    MessageBox.Show("Во время предыдущей работы касса была не закрыта", "Внимание", MessageBoxButton.OK, MessageBoxImage.Information);
-                    IsBlockInterface = false;
-                    IsNotCloseCash =true;
-                }
-                if (Status == 4)
-                {
-                   
-                    IsBlockInterface = false;
-                    
-                }
-            }
-            else
-            {
-                IsBlockInterface = true;   
-            }
+            
             ClientModel =new Model.Client.ClientModel();
             AdminViewModel = new AdminViewModel(_markModel);
             InvoiceViewModel = new InvoiceViewModel();

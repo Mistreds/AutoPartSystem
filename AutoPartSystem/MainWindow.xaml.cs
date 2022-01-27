@@ -27,9 +27,7 @@ namespace AutoPartSystem
             this.Title = $"Сотружник {employee.Position.Name.ToLower() } {employee.Name } город {employee.City.Name}";
             AddNewGood.Visibility =  Setting.BoolToVisibility(employee.SetGood);
             AddNewVirtualGood.Visibility = Setting.BoolToVisibility(employee.SetGood);
-            Cash.Visibility = Setting.BoolToVisibility(employee.SetCell);
-            InsCash.Visibility = Setting.BoolToVisibility(employee.SetCell);
-            OutCash.Visibility = Setting.BoolToVisibility(employee.SetCell);
+         
             AdminMenu.Visibility = Setting.BoolToVisibility(employee.IsAdmin);
             Report.Visibility = Setting.BoolToVisibility(employee.SetReport);
             MoveAgent.Visibility = Setting.BoolToVisibility(employee.SetMoveAgent);
