@@ -105,7 +105,7 @@ namespace AutoPartSystem.ViewModel
             MoveGoodsModel=new Model.Warehouse.MoveGoodsModel();
             GetMoveGoodsViewModel=new GetMoveGoodsViewModel();
             ViewCashViewModel = new Cash.ViewCashViewModel(employee);
-            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage(), new View.MoveGoods.GetMoveGoods()};
+            _controls = new ObservableCollection<UserControl> { new View.Warehouse.MainPage(), new View.Admin.MainAdminPage(), new View.Client.ClientPage(), new View.Invoice.InvoiceMainPage(), new View.MoveGoods.GetMoveGoods(), new View.Statistic()};
             IsCloseCash = false;
             if (!IsCloseCash)
             OpenPageCommand("ZavSkladTable");
@@ -186,6 +186,9 @@ namespace AutoPartSystem.ViewModel
                     break;
                 case "Expoise":
                     ViewCashViewModel.OpenPage(page_id);
+                    break;
+                case "Statistic":
+                    MainControl = _controls[5];
                     break;
 
             }

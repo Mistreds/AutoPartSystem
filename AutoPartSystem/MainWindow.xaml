@@ -63,7 +63,7 @@
 
                 </MenuItem>
             </MenuItem>
-            <MenuItem   x:Name="Report"  CommandParameter="Report" Header="Статистика"></MenuItem>
+            <MenuItem   x:Name="Report" Command="{Binding OpenPage}"  Visibility="Collapsed" CommandParameter="Statistic" Header="Статистика"></MenuItem>
             <MenuItem Header="Администратор"   x:Name="AdminMenu" >
                 <MenuItem Command="{Binding OpenPage}"    CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}"   CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
