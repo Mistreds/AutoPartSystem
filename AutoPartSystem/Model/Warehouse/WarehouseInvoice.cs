@@ -278,7 +278,7 @@ namespace AutoPartSystem.Model.Warehouse
                     var wares = new ObservableCollection<WarehouseTable>(ViewModel.MainViewModel.WarehouseModel.GetAllWarehouse().Where(p => invoice.GoodsInvoice.Select(s => s.Goods.WarehouseId).Contains(p.Id)));
                     foreach (var invo in invoice.GoodsInvoice)
                     {
-                        MainViewModel.AdminModel.UpdateCash(invo.AllPrice, $"Оплата товара {invo.Goods.Description}", MainViewModel.SelMain().Employee2, "Оплата товара");
+                       // MainViewModel.AdminModel.UpdateCash(invo.AllPrice, $"Оплата товара {invo.Goods.Description}", MainViewModel.SelMain().Employee2, "Оплата товара");
                         if (invo.Goods.Warehouse.IsVirtual == true) continue;
                         var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
                         switch (MainViewModel.Employee.CityId)
@@ -356,7 +356,7 @@ namespace AutoPartSystem.Model.Warehouse
                     {
                         if(invo.Goods.TypePayId==1)
                         {
-                            MainViewModel.AdminModel.UpdateCash(invo.AllPrice,"Оплата товара", MainViewModel.SelMain().Employee2,"Оплата товара");
+                            //MainViewModel.AdminModel.UpdateCash(invo.AllPrice,"Оплата товара", MainViewModel.SelMain().Employee2,"Оплата товара");
                         }
                         if (invo.Goods.Warehouse.IsVirtual == true) continue;
                         var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
@@ -429,7 +429,7 @@ namespace AutoPartSystem.Model.Warehouse
                         {
                             if (invo.Goods.TypePayId == 1)
                             {
-                                MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Оплата товара", invoice.Employee, "Оплата товара");
+                             //   MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Оплата товара", invoice.Employee, "Оплата товара");
                             }
                             if (invo.Goods.Warehouse.IsVirtual == true) continue;
                             var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();
@@ -516,7 +516,7 @@ namespace AutoPartSystem.Model.Warehouse
                     {
                         if (invo.Goods.TypePayId == 1)
                         {
-                            MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Оплата товара", MainViewModel.SelMain().Employee2, "Оплата товара");
+                          //  MainViewModel.AdminModel.UpdateCash(invo.AllPrice, "Оплата товара", MainViewModel.SelMain().Employee2, "Оплата товара");
                         }
                         if (invo.Goods.Warehouse.IsVirtual == true) continue;
                         var war = wares.Where(p => p.Id == invo.Goods.WarehouseId).FirstOrDefault();

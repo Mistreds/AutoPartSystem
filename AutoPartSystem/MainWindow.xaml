@@ -62,10 +62,8 @@
                 <MenuItem Command="{Binding OpenPage}"   CommandParameter="OpenMoveGoods" x:Name="MoveCity" Header="Заявки на перемещение товара">
 
                 </MenuItem>
-                <MenuItem Command="{Binding OpenPage}"   CommandParameter="InOutCash" x:Name="InOutCash" Header="Таблица изменения кассы"></MenuItem>
-                <MenuItem Command="{Binding OpenPage}"   CommandParameter="Expoise" x:Name="ExpoiseCash" Header="Таблица расходов"></MenuItem>
             </MenuItem>
-            <MenuItem Command="{Binding OpenPage}"   x:Name="Report"  CommandParameter="Report" Header="Отчет"></MenuItem>
+            <MenuItem   x:Name="Report"  CommandParameter="Report" Header="Статистика"></MenuItem>
             <MenuItem Header="Администратор"   x:Name="AdminMenu" >
                 <MenuItem Command="{Binding OpenPage}"    CommandParameter="AdminEmp" Header="Сотрудники"></MenuItem>
                 <MenuItem Command="{Binding OpenPage}"   CommandParameter="AdminModel" Header="Марки и модели"></MenuItem>
